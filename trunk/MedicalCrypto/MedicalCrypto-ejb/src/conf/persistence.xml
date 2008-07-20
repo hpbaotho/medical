@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence version="1.0" xmlns="http://java.sun.com/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_1_0.xsd">
+  <persistence-unit name="Medical-adminmedPU" transaction-type="JTA">
+    <jta-data-source>jdbc/medical-adminmed</jta-data-source>
+    <class>entities.medical.KeyManifest</class>
+    <class>entities.medical.Persons</class>
+    <class>entities.medical.Treatment</class>
+    <class>entities.medical.Visit</class>
+    <exclude-unlisted-classes>true</exclude-unlisted-classes>
+    <properties/>
+  </persistence-unit>
+  <persistence-unit name="Crypto-admincryptoPU" transaction-type="JTA">
+    <jta-data-source>jdbc/crypto-admincrypto</jta-data-source>
+    <class>entities.crypto.Ekey</class>
+    <class>entities.crypto.Engine</class>
+    <class>entities.crypto.Seckey</class>
+    <exclude-unlisted-classes>true</exclude-unlisted-classes>
+    <properties/>
+  </persistence-unit>
+</persistence>
