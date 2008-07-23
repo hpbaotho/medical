@@ -10,6 +10,7 @@ import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 
 /**
  *
@@ -34,6 +35,13 @@ public class KeyManifestFacade implements KeyManifestFacadeLocal {
 
     public KeyManifest find(Object id) {
         return em.find(entities.medical.KeyManifest.class, id);
+    }
+    
+    public List<KeyManifest> findByFamilyStatus(String family, String status) {
+        Query queryByImieNazwisko = em.createNamedQuery("KeyManifest.findByKeyFamilyStatus");
+        queryByImieNazwisko.setParameter("keyFamily", family);
+        queryByImieNazwisko.setParameter("status", status);
+        return queryByImieNazwisko.getResultList();
     }
 
     public List<KeyManifest> findAll() {

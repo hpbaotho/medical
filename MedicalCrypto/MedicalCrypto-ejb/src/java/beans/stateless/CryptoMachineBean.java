@@ -4,7 +4,6 @@
  */
 package beans.stateless;
 
-import entities.crypto.Seckey;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
@@ -24,32 +23,32 @@ import javax.ejb.Stateless;
 @Stateless
 public class CryptoMachineBean implements CryptoMachineLocal {
 
-    public byte[] encrypt(final byte[] plainText, final byte[] iv, Seckey seckey)
+    public byte[] encrypt(final byte[] plainText, final byte[] iv, SecretKey seckey)
             throws NoSuchAlgorithmException,
             NoSuchPaddingException,
             InvalidKeyException,
             InvalidAlgorithmParameterException,
             IllegalBlockSizeException,
             BadPaddingException {
-        String algorithm = seckey.getEngineId().getEngine();
+        String algorithm = seckey.getAlgorithm();
         IvParameterSpec initializationVector = new IvParameterSpec(iv);
         Cipher cipher = this.initializeCipher(algorithm);
-        SecretKey key = new SecretKeySpec(seckey.getSeckey(), algorithm);
+        SecretKey key = new SecretKeySpec(seckey.getEncoded(), algorithm);
         cipher.init(Cipher.ENCRYPT_MODE, key, initializationVector);
         return cipher.doFinal(plainText);
     }
 
-    public byte[] decrypt(final byte[] cipherText, final byte[] iv, Seckey seckey)
+    public byte[] decrypt(final byte[] cipherText, final byte[] iv, SecretKey seckey)
             throws NoSuchAlgorithmException,
             NoSuchPaddingException,
             InvalidKeyException,
             InvalidAlgorithmParameterException,
             IllegalBlockSizeException,
             BadPaddingException {
-        String algorithm = seckey.getEngineId().getEngine();
+        String algorithm = seckey.getAlgorithm();
         IvParameterSpec initializationVector = new IvParameterSpec(iv);
         Cipher cipher = this.initializeCipher(algorithm);
-        SecretKey key = new SecretKeySpec(seckey.getSeckey(), algorithm);
+        SecretKey key = new SecretKeySpec(seckey.getEncoded(), algorithm);
         cipher.init(Cipher.DECRYPT_MODE, key, initializationVector);
         return cipher.doFinal(cipherText);
     }

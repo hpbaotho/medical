@@ -35,9 +35,9 @@ import javax.persistence.Version;
     @NamedQuery(name = "KeyManifest.findByKeyId", query = "SELECT k FROM KeyManifest k WHERE k.keyId = :keyId"), 
     @NamedQuery(name = "KeyManifest.findByKeyActivationDate", query = "SELECT k FROM KeyManifest k WHERE k.keyActivationDate = :keyActivationDate"), 
     @NamedQuery(name = "KeyManifest.findByStatus", query = "SELECT k FROM KeyManifest k WHERE k.status = :status"), 
-    @NamedQuery(name = "KeyManifest.findByVersion", query = "SELECT k FROM KeyManifest k WHERE k.version = :version")
+    @NamedQuery(name = "KeyManifest.findByKeyFamilyStatus", query = "SELECT k FROM KeyManifest k WHERE k.keyFamily = :keyFamily AND k.status = :status")
 })
-public class KeyManifest implements Serializable {
+public class KeyManifest implements Serializable, Comparable {
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -170,6 +170,17 @@ public class KeyManifest implements Serializable {
             return false;
         }
         return true;
+    }
+    
+    public int compareTo(Object o) {
+        KeyManifest compare= (KeyManifest)o;
+        if(keyActivationDate.before(compare.getKeyActivationDate()))
+            return -1;
+        else if(keyActivationDate.after(compare.getKeyActivationDate()))
+            return 1;
+        else
+            return 0;
+        
     }
 
     @Override
