@@ -21,7 +21,7 @@ import javax.ejb.Local;
  * @author Piotrek
  */
 @Local
-public interface ProviderBeanLocal {
+public interface ProviderLocal {
 
     CipherTask encrypt(CipherTask encryptRequesr, String family) 
             throws NoSuchAlgorithmException, 

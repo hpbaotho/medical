@@ -36,7 +36,7 @@ import javax.ejb.Stateless;
  * @author Piotrek
  */
 @Stateless
-public class ProviderBeanBean implements ProviderBeanLocal {
+public class ProviderBean implements ProviderLocal {
 
     @EJB
     private CryptoMachineLocal cryptoMachineBean;
