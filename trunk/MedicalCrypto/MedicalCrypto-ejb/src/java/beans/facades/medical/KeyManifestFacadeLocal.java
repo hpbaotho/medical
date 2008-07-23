@@ -23,6 +23,8 @@ public interface KeyManifestFacadeLocal {
     void remove(KeyManifest keyManifest);
 
     KeyManifest find(Object id);
+    
+    List<KeyManifest> findByFamilyStatus(String family, String status);
 
     List<KeyManifest> findAll();
 
