@@ -17,7 +17,7 @@ import javax.persistence.PersistenceContext;
  */
 @Stateless
 public class EkeyFacade implements EkeyFacadeLocal {
-    @PersistenceContext(unitName="Crypto-admincryptoPU")
+    @PersistenceContext(unitName="Crypto-keyproviderPU")
     private EntityManager em;
 
     public void create(Ekey ekey) {

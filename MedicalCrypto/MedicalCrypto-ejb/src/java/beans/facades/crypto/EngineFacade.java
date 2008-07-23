@@ -17,7 +17,7 @@ import javax.persistence.PersistenceContext;
  */
 @Stateless
 public class EngineFacade implements EngineFacadeLocal {
-    @PersistenceContext(unitName="Crypto-admincryptoPU")
+    @PersistenceContext(unitName="Crypto-keyproviderPU")
     private EntityManager em;
 
     public void create(Engine engine) {
