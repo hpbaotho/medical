@@ -5,9 +5,9 @@
 
 package beans.test;
 
-import entities.medical.Persons;
 import entities.medical.Treatment;
 import entities.medical.Visit;
+import entities.medical.dto.PersonsDTO;
 import java.math.BigInteger;
 import javax.ejb.Remote;
 
@@ -18,7 +18,7 @@ import javax.ejb.Remote;
 @Remote
 public interface TestRemote {
     
-    boolean addPerson(Persons person, BigInteger idKeyManifest);
+    boolean addPerson(PersonsDTO person);
     
     boolean addVisit(Visit visit, BigInteger idPatient, BigInteger idDoc, BigInteger idKeyManifest);
 

@@ -59,24 +59,12 @@ public class Seckey implements Serializable {
         return seckey;
     }
 
-    public void setSeckey(byte[] key) {
-        this.seckey = key;
-    }
-
     public Ekey getEkeyId() {
         return ekeyId;
     }
 
-    public void setEkeyId(Ekey ekeyId) {
-        this.ekeyId = ekeyId;
-    }
-
     public Engine getEngineId() {
         return engineId;
-    }
-
-    public void setEngineId(Engine engineId) {
-        this.engineId = engineId;
     }
 
     @Override

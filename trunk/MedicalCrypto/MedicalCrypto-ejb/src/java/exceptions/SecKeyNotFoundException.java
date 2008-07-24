@@ -5,14 +5,16 @@
 
 package exceptions;
 
+import java.security.GeneralSecurityException;
+
 /**
  *
  * @author Piotrek
  */
-public class SecKeyNotFoundException extends Exception{
+public class SecKeyNotFoundException extends GeneralSecurityException{
 
     public SecKeyNotFoundException() {
-        super("SecKey not found");
+        super("SecKey not found exception");
     }
 
 }

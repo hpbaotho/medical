@@ -20,7 +20,7 @@ import javax.ejb.Local;
 @Local
 public interface CryptoMachineLocal {
 
-    byte[] encrypt(final byte[] plainText, final byte[] iv, SecretKey seckey)
+    byte[] encrypt(final byte[] plainText, final byte[] iv, final SecretKey seckey)
             throws NoSuchAlgorithmException, 
             NoSuchPaddingException, 
             InvalidKeyException, 
@@ -28,7 +28,7 @@ public interface CryptoMachineLocal {
             IllegalBlockSizeException,
             BadPaddingException;
 
-    byte[] decrypt(final byte[] plainText, final byte[] iv, SecretKey seckey)
+    byte[] decrypt(final byte[] plainText, final byte[] iv, final SecretKey seckey)
             throws NoSuchAlgorithmException, 
             NoSuchPaddingException, 
             InvalidKeyException, 

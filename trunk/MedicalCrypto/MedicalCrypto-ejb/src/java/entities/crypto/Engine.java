@@ -59,24 +59,12 @@ public class Engine implements Serializable {
         return engine;
     }
 
-    public void setEngine(String engine) {
-        this.engine = engine;
-    }
-
     public int getKeysize() {
         return keysize;
     }
 
-    public void setKeysize(int keysize) {
-        this.keysize = keysize;
-    }
-
     public List<Seckey> getSeckeyList() {
         return seckeyList;
-    }
-
-    public void setSeckeyList(List<Seckey> seckeyList) {
-        this.seckeyList = seckeyList;
     }
 
     @Override

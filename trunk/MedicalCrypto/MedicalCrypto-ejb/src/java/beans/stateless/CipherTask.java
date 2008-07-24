@@ -34,11 +34,11 @@ public class CipherTask implements Serializable{
         this.aliasId= null;
     }
 
-    public HashMap getData() {
+    public HashMap<String, String> getData() {
         return data;
     }
 
-    public void setData(HashMap data) {
+    public void setData(HashMap<String, String> data) {
         this.data = data;
     }
 

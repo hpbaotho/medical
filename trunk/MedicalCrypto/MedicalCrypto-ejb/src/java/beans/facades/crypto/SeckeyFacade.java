@@ -8,6 +8,8 @@ package beans.facades.crypto;
 import entities.crypto.Seckey;
 import java.util.List;
 import javax.ejb.Stateless;
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
@@ -32,6 +34,7 @@ public class SeckeyFacade implements SeckeyFacadeLocal {
         em.remove(em.merge(seckey));
     }
 
+    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
     public Seckey find(Object id) {
         return em.find(entities.crypto.Seckey.class, id);
     }

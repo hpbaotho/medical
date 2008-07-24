@@ -64,24 +64,12 @@ public class Ekey implements Serializable {
         return ekey;
     }
 
-    public void setEkey(byte[] ekey) {
-        this.ekey = ekey;
-    }
-
     public Date getActivationDate() {
         return activationDate;
     }
 
-    public void setActivationDate(Date activationDate) {
-        this.activationDate = activationDate;
-    }
-
     public List<Seckey> getSeckeyList() {
         return seckeyList;
-    }
-
-    public void setSeckeyList(List<Seckey> seckeyList) {
-        this.seckeyList = seckeyList;
     }
 
     @Override

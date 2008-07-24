@@ -29,21 +29,20 @@ import javax.persistence.Version;
 @Entity
 @Table(name = "persons")
 @NamedQueries({
-    @NamedQuery(name = "Persons.findByIdPersons", query = "SELECT p FROM Persons p WHERE p.idPersons = :idPersons"), 
-    @NamedQuery(name = "Persons.findByLogin", query = "SELECT p FROM Persons p WHERE p.login = :login"), 
-    @NamedQuery(name = "Persons.findByPass", query = "SELECT p FROM Persons p WHERE p.pass = :pass"), 
-    @NamedQuery(name = "Persons.findByName", query = "SELECT p FROM Persons p WHERE p.name = :name"), 
-    @NamedQuery(name = "Persons.findByInn", query = "SELECT p FROM Persons p WHERE p.inn = :inn"), 
-    @NamedQuery(name = "Persons.findBySurname", query = "SELECT p FROM Persons p WHERE p.surname = :surname"), 
-    @NamedQuery(name = "Persons.findByIns", query = "SELECT p FROM Persons p WHERE p.ins = :ins"), 
-    @NamedQuery(name = "Persons.findByStreet", query = "SELECT p FROM Persons p WHERE p.street = :street"), 
-    @NamedQuery(name = "Persons.findByNumber", query = "SELECT p FROM Persons p WHERE p.number = :number"), 
-    @NamedQuery(name = "Persons.findByCity", query = "SELECT p FROM Persons p WHERE p.city = :city"), 
-    @NamedQuery(name = "Persons.findByZip", query = "SELECT p FROM Persons p WHERE p.zip = :zip"), 
-    @NamedQuery(name = "Persons.findByPhone", query = "SELECT p FROM Persons p WHERE p.phone = :phone"), 
-    @NamedQuery(name = "Persons.findByPesel", query = "SELECT p FROM Persons p WHERE p.pesel = :pesel"), 
-    @NamedQuery(name = "Persons.findByRol", query = "SELECT p FROM Persons p WHERE p.role = :role"), 
-    @NamedQuery(name = "Persons.findByVersion", query = "SELECT p FROM Persons p WHERE p.version = :version")
+    @NamedQuery(name = "Persons.findByIdPersons", query = "SELECT p FROM Persons p WHERE p.idPersons = :idPersons"),
+    @NamedQuery(name = "Persons.findByPass", query = "SELECT p FROM Persons p WHERE p.pass = :pass"),
+    @NamedQuery(name = "Persons.findByName", query = "SELECT p FROM Persons p WHERE p.name = :name"),
+    @NamedQuery(name = "Persons.findByInn", query = "SELECT p FROM Persons p WHERE p.inn = :inn"),
+    @NamedQuery(name = "Persons.findBySurname", query = "SELECT p FROM Persons p WHERE p.surname = :surname"),
+    @NamedQuery(name = "Persons.findByIns", query = "SELECT p FROM Persons p WHERE p.ins = :ins"),
+    @NamedQuery(name = "Persons.findByStreet", query = "SELECT p FROM Persons p WHERE p.street = :street"),
+    @NamedQuery(name = "Persons.findByNumber", query = "SELECT p FROM Persons p WHERE p.number = :number"),
+    @NamedQuery(name = "Persons.findByCity", query = "SELECT p FROM Persons p WHERE p.city = :city"),
+    @NamedQuery(name = "Persons.findByZip", query = "SELECT p FROM Persons p WHERE p.zip = :zip"),
+    @NamedQuery(name = "Persons.findByPhone", query = "SELECT p FROM Persons p WHERE p.phone = :phone"),
+    @NamedQuery(name = "Persons.findByPesel", query = "SELECT p FROM Persons p WHERE p.pesel = :pesel"),
+    @NamedQuery(name = "Persons.findByRole", query = "SELECT p FROM Persons p WHERE p.role = :role"),
+    @NamedQuery(name = "Persons.findByInitials", query = "SELECT p FROM Persons p WHERE p.inn = :inn AND p.ins = :ins")
 })
 public class Persons implements Serializable {
 
@@ -52,8 +51,6 @@ public class Persons implements Serializable {
     @Column(name = "id_persons", nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private BigInteger idPersons;
-    @Column(name = "login", nullable = false)
-    private String login;
     @Column(name = "pass", nullable = false)
     private String pass;
     @Column(name = "name", nullable = false)
@@ -75,7 +72,7 @@ public class Persons implements Serializable {
     @Column(name = "phone", nullable = false)
     private int phone;
     @Column(name = "pesel", nullable = false)
-    private long pesel;
+    private BigInteger pesel;
     @Column(name = "role", nullable = false)
     private String role;
     @Lob
@@ -85,19 +82,18 @@ public class Persons implements Serializable {
     @Column(name = "version")
     private Integer version;
     @OneToMany(mappedBy = "doctorId")
-    private List<Visit> visitDocList= new ArrayList<Visit>();
+    private List<Visit> visitDocList = new ArrayList<Visit>();
     @OneToMany(mappedBy = "patientId")
-    private List<Visit> visitPatientList= new ArrayList<Visit>();
-    @JoinColumn(name = "key_manifest_id", referencedColumnName = "id_key_manifest", nullable=false)
+    private List<Visit> visitPatientList = new ArrayList<Visit>();
+    @JoinColumn(name = "key_manifest_id", referencedColumnName = "id_key_manifest", nullable = false)
     @ManyToOne
     private KeyManifest keyManifestId;
 
     public Persons() {
     }
 
-    public Persons(String login, String pass, String name, String surname, String street, int number, 
-            String city, int zip, int phone, long pesel, String role, byte[] iv) {
-        this.login = login;
+    public Persons(String pass, String name, String surname, String street, int number,
+            String city, int zip, int phone, BigInteger pesel, String role, byte[] iv) {
         this.pass = pass;
         this.name = name;
         this.inn = name.charAt(0);
@@ -115,14 +111,6 @@ public class Persons implements Serializable {
 
     public BigInteger getIdPersons() {
         return idPersons;
-    }
-
-    public String getLogin() {
-        return login;
-    }
-
-    public void setLogin(String login) {
-        this.login = login;
     }
 
     public String getPass() {
@@ -205,14 +193,14 @@ public class Persons implements Serializable {
         this.phone = phone;
     }
 
-    public long getPesel() {
+    public BigInteger getPesel() {
         return pesel;
     }
 
-    public void setPesel(long pesel) {
+    public void setPesel(BigInteger pesel) {
         this.pesel = pesel;
     }
-    
+
     public String getRole() {
         return role;
     }

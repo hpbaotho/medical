@@ -23,7 +23,7 @@ import javax.ejb.Stateless;
 @Stateless
 public class CryptoMachineBean implements CryptoMachineLocal {
 
-    public byte[] encrypt(final byte[] plainText, final byte[] iv, SecretKey seckey)
+    public byte[] encrypt(final byte[] plainText, final byte[] iv, final SecretKey seckey)
             throws NoSuchAlgorithmException,
             NoSuchPaddingException,
             InvalidKeyException,
@@ -38,7 +38,7 @@ public class CryptoMachineBean implements CryptoMachineLocal {
         return cipher.doFinal(plainText);
     }
 
-    public byte[] decrypt(final byte[] cipherText, final byte[] iv, SecretKey seckey)
+    public byte[] decrypt(final byte[] cipherText, final byte[] iv, final SecretKey seckey)
             throws NoSuchAlgorithmException,
             NoSuchPaddingException,
             InvalidKeyException,
@@ -62,8 +62,8 @@ public class CryptoMachineBean implements CryptoMachineLocal {
             return Cipher.getInstance("DES/CBC/PKCS5Padding");
         } else if ("DESede".equals(algorithm)) {
             return Cipher.getInstance("DESede/CBC/PKCS5Padding");
-        } else if ("RC2 ".equals(algorithm)) {
-            return Cipher.getInstance("RC2 /CBC/PKCS5Padding");
+        } else if ("RC2".equals(algorithm)) {
+            return Cipher.getInstance("RC2/CBC/PKCS5Padding");
         } else {
             throw new NoSuchAlgorithmException();
         }

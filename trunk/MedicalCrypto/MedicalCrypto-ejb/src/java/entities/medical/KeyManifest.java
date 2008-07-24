@@ -49,7 +49,7 @@ public class KeyManifest implements Serializable, Comparable {
     @Column(name = "key_family", nullable = false)
     private String keyFamily;
     @Column(name = "key_id", nullable = false)
-    private long keyId;
+    private BigInteger keyId;
     @Column(name = "key_activation_date", nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
     private Date keyActivationDate;
@@ -68,7 +68,7 @@ public class KeyManifest implements Serializable, Comparable {
     public KeyManifest() {
     }
 
-    public KeyManifest(String keyAlias, String keyFamily, long keyId, Date keyActivationDate, String status) {
+    public KeyManifest(String keyAlias, String keyFamily, BigInteger keyId, Date keyActivationDate, String status) {
         this.keyAlias = keyAlias;
         this.keyFamily = keyFamily;
         this.keyId = keyId;
@@ -84,72 +84,36 @@ public class KeyManifest implements Serializable, Comparable {
         return keyAlias;
     }
 
-    public void setKeyAlias(String keyAlias) {
-        this.keyAlias = keyAlias;
-    }
-
     public String getKeyFamily() {
         return keyFamily;
     }
 
-    public void setKeyFamily(String keyFamily) {
-        this.keyFamily = keyFamily;
-    }
-
-    public long getKeyId() {
+    public BigInteger getKeyId() {
         return keyId;
     }
-
-    public void setKeyId(long keyId) {
-        this.keyId = keyId;
-    }
-
+    
     public Date getKeyActivationDate() {
         return keyActivationDate;
-    }
-
-    public void setKeyActivationDate(Date keyActivationDate) {
-        this.keyActivationDate = keyActivationDate;
     }
 
     public String getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
     public Integer getVersion() {
         return version;
-    }
-
-    public void setVersion(Integer version) {
-        this.version = version;
     }
 
     public List<Treatment> getTreatmentList() {
         return treatmentList;
     }
 
-    public void setTreatmentList(List<Treatment> treatmentList) {
-        this.treatmentList = treatmentList;
-    }
-
     public List<Visit> getVisitList() {
         return visitList;
     }
 
-    public void setVisitList(List<Visit> visitList) {
-        this.visitList = visitList;
-    }
-
     public List<Persons> getPersonsList() {
         return personsList;
-    }
-
-    public void setPersonsList(List<Persons> personsList) {
-        this.personsList = personsList;
     }
 
     @Override
@@ -179,8 +143,7 @@ public class KeyManifest implements Serializable, Comparable {
         else if(keyActivationDate.after(compare.getKeyActivationDate()))
             return 1;
         else
-            return 0;
-        
+            return 0;        
     }
 
     @Override
