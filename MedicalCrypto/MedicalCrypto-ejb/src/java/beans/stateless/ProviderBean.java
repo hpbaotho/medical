@@ -122,6 +122,7 @@ public class ProviderBean implements ProviderLocal {
                 continue;
             } else {
                 liveKeyManifest = keyManifest;
+                break;
             }
         }
         return liveKeyManifest;

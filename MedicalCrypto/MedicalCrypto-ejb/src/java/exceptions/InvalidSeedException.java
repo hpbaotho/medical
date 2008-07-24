@@ -5,14 +5,15 @@
 
 package exceptions;
 
+import java.security.GeneralSecurityException;
+
 /**
  *
  * @author Piotrek
  */
-public class InvalidSeedException extends Exception{
-
+public class InvalidSeedException extends GeneralSecurityException{
     public InvalidSeedException() {
-        super("Wrong seed");
+        super("Wrong seed exception");
     }
 
 }

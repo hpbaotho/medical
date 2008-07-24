@@ -38,10 +38,10 @@ public class KeyManifestFacade implements KeyManifestFacadeLocal {
     }
     
     public List<KeyManifest> findByFamilyStatus(String family, String status) {
-        Query queryByImieNazwisko = em.createNamedQuery("KeyManifest.findByKeyFamilyStatus");
-        queryByImieNazwisko.setParameter("keyFamily", family);
-        queryByImieNazwisko.setParameter("status", status);
-        return queryByImieNazwisko.getResultList();
+        Query queryByFamilyStatus = em.createNamedQuery("KeyManifest.findByKeyFamilyStatus");
+        queryByFamilyStatus.setParameter("keyFamily", family);
+        queryByFamilyStatus.setParameter("status", status);
+        return queryByFamilyStatus.getResultList();
     }
 
     public List<KeyManifest> findAll() {

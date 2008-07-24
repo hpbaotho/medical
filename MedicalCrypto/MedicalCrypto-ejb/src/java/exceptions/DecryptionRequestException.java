@@ -5,14 +5,16 @@
 
 package exceptions;
 
+import java.security.GeneralSecurityException;
+
 /**
  *
  * @author Piotrek
  */
-public class DecryptionRequestException extends Exception{
+public class DecryptionRequestException extends GeneralSecurityException{
 
     public DecryptionRequestException() {
-        super("Decryption request error");
+        super("Decryption request exception");
     }
 
 }

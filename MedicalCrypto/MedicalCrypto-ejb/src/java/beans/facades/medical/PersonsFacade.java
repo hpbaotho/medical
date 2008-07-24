@@ -2,14 +2,16 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package beans.facades.medical;
 
 import entities.medical.Persons;
+import java.math.BigInteger;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.PersistenceException;
+import javax.persistence.Query;
 
 /**
  *
@@ -17,7 +19,8 @@ import javax.persistence.PersistenceContext;
  */
 @Stateless
 public class PersonsFacade implements PersonsFacadeLocal {
-    @PersistenceContext(unitName="Medical-adminmedPU")
+
+    @PersistenceContext(unitName = "Medical-adminmedPU")
     private EntityManager em;
 
     public void create(Persons persons) {
@@ -36,8 +39,30 @@ public class PersonsFacade implements PersonsFacadeLocal {
         return em.find(entities.medical.Persons.class, id);
     }
 
+    public Persons findByPesel(BigInteger pesel) {
+        Query queryByPesel = em.createNamedQuery("Persons.findByPesel");
+        queryByPesel.setParameter("pesel", pesel);
+        try {
+            return (Persons) queryByPesel.getSingleResult();
+        } catch (PersistenceException ex) {
+            return null;
+        }
+    }
+
+    public List<Persons> findByInitials(char inn, char ins) {
+        Query queryByInitials = em.createNamedQuery("Persons.findByInitials");
+        queryByInitials.setParameter("inn", inn);
+        queryByInitials.setParameter("ins", ins);
+        return queryByInitials.getResultList();
+    }
+
+    public List<Persons> findByZip(int zip) {
+        Query queryByZip = em.createNamedQuery("Persons.findByZip");
+        queryByZip.setParameter("zip", zip);
+        return queryByZip.getResultList();
+    }
+
     public List<Persons> findAll() {
         return em.createQuery("select object(o) from Persons as o").getResultList();
     }
-
 }
