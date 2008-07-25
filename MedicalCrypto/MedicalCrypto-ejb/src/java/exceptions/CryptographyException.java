@@ -11,8 +11,8 @@ package exceptions;
  */
 public class CryptographyException extends Exception{
     
-    public CryptographyException(){
-        super("Cryptography exception");
+    public CryptographyException(Throwable reason){
+        super("Cryptography exception",reason);
     }
 
 }

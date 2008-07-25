@@ -22,7 +22,7 @@ public class PersonsDTO implements Serializable {
     private int number;
     private String city;
     private int zip;
-    private int phone;
+    private String phone;
     private BigInteger pesel;
     private String role;
 
@@ -35,7 +35,7 @@ public class PersonsDTO implements Serializable {
         this.number = -1;
         this.city = null;
         this.zip = -1;
-        this.phone = -1;
+        this.phone = null;
         this.pesel = null;
         this.role = null;
     }
@@ -49,13 +49,13 @@ public class PersonsDTO implements Serializable {
         this.number = personsEntity.getNumber();
         this.city = null;
         this.zip = personsEntity.getZip();
-        this.phone = personsEntity.getPhone();
+        this.phone = null;
         this.pesel = personsEntity.getPesel();
         this.role = personsEntity.getRole();
     }
 
     public PersonsDTO(String pass, String name, String surname, String street, int number,
-            String city, int zip, int phone, BigInteger pesel, String role) {
+            String city, int zip, String phone, BigInteger pesel, String role) {
         this.idPersons = null;
         this.pass = pass;
         this.name = name;
@@ -65,12 +65,16 @@ public class PersonsDTO implements Serializable {
         this.city = city;
         this.zip = zip;
         this.phone = phone;
-        this.pesel = pesel;
+        this.pesel = this.flipPesel(pesel);
         this.role = role;
     }
 
     public BigInteger getIdPersons() {
         return idPersons;
+    }
+
+    public void setIdPersons(BigInteger idPersons) {
+        this.idPersons = idPersons;
     }
 
     public String getPass() {
@@ -129,16 +133,20 @@ public class PersonsDTO implements Serializable {
         this.zip = zip;
     }
 
-    public int getPhone() {
+    public String getPhone() {
         return phone;
     }
 
-    public void setPhone(int phone) {
+    public void setPhone(String phone) {
         this.phone = phone;
     }
 
     public BigInteger getPesel() {
         return pesel;
+    }
+
+    public BigInteger getFlippedPesel() {
+        return this.flipPesel(pesel);
     }
 
     public void setPesel(BigInteger pesel) {
@@ -151,5 +159,14 @@ public class PersonsDTO implements Serializable {
 
     public void setRole(String role) {
         this.role = role;
+    }
+
+    private BigInteger flipPesel(BigInteger pesel) {
+        char[] peselToFlip = pesel.toString().toCharArray();
+        char[] flippedPesel = new char[peselToFlip.length];
+        for (int i = peselToFlip.length - 1, j = 0; i >= 0; i--, j++) {
+            flippedPesel[j] = peselToFlip[i];
+        }
+        return new BigInteger(new String(flippedPesel));
     }
 }

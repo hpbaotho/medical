@@ -54,7 +54,7 @@ public class CryptoMachineBean implements CryptoMachineLocal {
     }
 
     private Cipher initializeCipher(String algorithm) throws NoSuchAlgorithmException, NoSuchPaddingException {
-        if ("Bolwfish".equals(algorithm)) {
+        if ("Blowfish".equals(algorithm)) {
             return Cipher.getInstance("Blowfish/CBC/PKCS5Padding");
         } else if ("AES".equals(algorithm)) {
             return Cipher.getInstance("AES/CBC/PKCS5Padding");

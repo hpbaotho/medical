@@ -13,8 +13,8 @@ import java.security.GeneralSecurityException;
  */
 public class DecryptionRequestException extends GeneralSecurityException{
 
-    public DecryptionRequestException() {
-        super("Decryption request exception");
+    public DecryptionRequestException(Throwable reason) {
+        super("Decryption request exception",reason);
     }
 
 }

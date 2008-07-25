@@ -15,6 +15,7 @@ import entities.medical.Treatment;
 import entities.medical.Visit;
 import entities.medical.dto.PersonsDTO;
 import java.math.BigInteger;
+import java.util.List;
 import javax.ejb.EJB;
 import javax.ejb.Stateful;
 
@@ -39,6 +40,25 @@ public class TestBean implements TestRemote {
     public boolean addPerson(PersonsDTO person) {
         try {
             return personsBean.createPerson(person);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return false;
+        }
+    }
+
+    public List<PersonsDTO> findPersonByZip(int zip) {
+        try {
+            return personsBean.findByZip(zip);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return null;
+        }
+
+    }
+
+    public boolean editPerson(PersonsDTO personToEditDTO) {
+        try {
+            return personsBean.editPerson(personToEditDTO);
         } catch (Exception ex) {
             ex.printStackTrace();
             return false;

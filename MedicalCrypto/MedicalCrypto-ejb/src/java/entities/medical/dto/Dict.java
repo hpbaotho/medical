@@ -17,6 +17,7 @@ public class Dict {
     public static final String SURNAMECOLUMN= "surname";
     public static final String STREETCOLUMN= "street";
     public static final String CITYCOLUMN= "city";
+    public static final String PHONECOLUMN= "phone";
 
     public static String bytes2HexString(byte[] bytes) {
         String result = "";
