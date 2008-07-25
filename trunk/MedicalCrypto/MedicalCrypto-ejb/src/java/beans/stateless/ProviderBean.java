@@ -61,7 +61,7 @@ public class ProviderBean implements ProviderLocal {
                     secKeyWrapped.getSeckey(),
                     secKeyWrapped.getEngineId().getEngine(),
                     this.unwrapEkey(secKeyWrapped.getEkeyId().getEkey(), secKeyWrapped.getEkeyId().getActivationDate().getTime()));
-            byte[] iv = this.createIV(secKeyTransparent.getEncoded().length / 8);
+            byte[] iv = this.createIV(secKeyTransparent.getAlgorithm());
             HashMap encryptionRequestData = encryptRequest.getData();
             Set columnsToEncrypt = encryptionRequestData.keySet();
             for (Iterator it = columnsToEncrypt.iterator(); it.hasNext();) {
@@ -101,14 +101,14 @@ public class ProviderBean implements ProviderLocal {
                 for (Iterator it = columnsToDecrypt.iterator(); it.hasNext();) {
                     String column = (String) it.next();
                     String cipherText = (String) decryptionRequestData.get(column);
-                    String plainText = new String(cryptoMachineBean.encrypt(cipherText.getBytes(), iv, secKeyTransparent));
+                    String plainText = new String(cryptoMachineBean.decrypt(cipherText.getBytes(), iv, secKeyTransparent));
                     decryptionRequestData.put(column, plainText);
                 }
                 return decryptionRequest;
             }
             throw new SecKeyNotFoundException();
         }
-        throw new DecryptionRequestException();
+        throw new DecryptionRequestException(new Throwable("No keyManifest or IV"));
     }
 
     private KeyManifest findLiveKey(String family) {
@@ -167,8 +167,16 @@ public class ProviderBean implements ProviderLocal {
         return seed;
     }
 
-    private final byte[] createIV(int size) throws NoSuchAlgorithmException {
+    private final byte[] createIV(String algorithm) throws NoSuchAlgorithmException {
         SecureRandom ivGenerator = SecureRandom.getInstance("SHA1PRNG");
+        int size;
+        if ("Blowfish".equals(algorithm) || "DES".equals(algorithm) || "DESede".equals(algorithm) || "RC2".equals(algorithm)) {
+            size=8;
+        } else if ("AES".equals(algorithm)) {
+            size=16;
+        } else {
+            throw new NoSuchAlgorithmException();
+        }
         byte[] iv = new byte[size];
         ivGenerator.nextBytes(iv);
         return iv;

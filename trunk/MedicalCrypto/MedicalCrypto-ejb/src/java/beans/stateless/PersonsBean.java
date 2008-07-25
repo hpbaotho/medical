@@ -37,30 +37,32 @@ public class PersonsBean implements PersonsLocal {
     @EJB
     private PersonsFacadeLocal personsFacade;
 
-    public boolean createPerson(PersonsDTO personToEditDTO) throws PersonsLoginException, PersonsPeselException, CryptographyException, DatabaseException {
-        if (personToEditDTO.getPass() != null && personToEditDTO.getName() != null &&
-                personToEditDTO.getSurname() != null && personToEditDTO.getStreet() != null && personToEditDTO.getNumber() > 0 &&
-                personToEditDTO.getCity() != null && personToEditDTO.getZip() > 0 && personToEditDTO.getPesel() != null &&
-                personToEditDTO.getRole() != null) {
-            Persons personToAddEntity = personsFacade.findByPesel(personToEditDTO.getPesel());
+    public boolean createPerson(PersonsDTO personToAddDTO) throws PersonsLoginException, PersonsPeselException, CryptographyException, DatabaseException {
+        if (personToAddDTO.getPass() != null && personToAddDTO.getName() != null &&
+                personToAddDTO.getSurname() != null && personToAddDTO.getStreet() != null && personToAddDTO.getNumber() > 0 &&
+                personToAddDTO.getCity() != null && personToAddDTO.getZip() > 0 && personToAddDTO.getPesel() != null &&
+                personToAddDTO.getRole() != null) {
+            Persons personToAddEntity = personsFacade.findByPesel(personToAddDTO.getPesel());
             if (personToAddEntity != null) {
                 throw new PersonsPeselException();
             }
-            HashMap<String, String> encryptionRequestData = createCipherTaskData(personToEditDTO.getName(), personToEditDTO.getSurname(), personToEditDTO.getStreet(), personToEditDTO.getCity());
+            HashMap<String, String> encryptionRequestData = createCipherTaskData(personToAddDTO.getName(), personToAddDTO.getSurname(), personToAddDTO.getStreet(), personToAddDTO.getCity(), personToAddDTO.getPhone());
             CipherTask encryptionRequest = new CipherTask(encryptionRequestData);
             try {
                 encryptionRequest = providerBean.encrypt(encryptionRequest, Dict.PERSONS);
                 personToAddEntity = new Persons(
-                        personToEditDTO.getPass(),
+                        personToAddDTO.getPass(),
                         encryptionRequest.getData().get(Dict.NAMECOLUMN),
+                        personToAddDTO.getName().charAt(0),
                         encryptionRequest.getData().get(Dict.SURNAMECOLUMN),
+                        personToAddDTO.getSurname().charAt(0),
                         encryptionRequest.getData().get(Dict.STREETCOLUMN),
-                        personToEditDTO.getNumber(),
+                        personToAddDTO.getNumber(),
                         encryptionRequest.getData().get(Dict.CITYCOLUMN),
-                        personToEditDTO.getZip(),
-                        personToEditDTO.getPhone(),
-                        personToEditDTO.getPesel(),
-                        personToEditDTO.getRole(),
+                        personToAddDTO.getZip(),
+                        encryptionRequest.getData().get(Dict.PHONECOLUMN),
+                        personToAddDTO.getPesel(),
+                        personToAddDTO.getRole(),
                         encryptionRequest.getIv());
                 KeyManifest keyManifest = keyManifestFacade.find(encryptionRequest.getAliasId());
                 if (keyManifest != null) {
@@ -69,9 +71,11 @@ public class PersonsBean implements PersonsLocal {
                     return true;
                 }
             } catch (GeneralSecurityException ex) {
-                throw new CryptographyException();
+                ex.printStackTrace();
+                throw new CryptographyException(ex.getCause());
             } catch (PersistenceException ex) {
-                throw new DatabaseException();
+                ex.printStackTrace();
+                throw new DatabaseException(ex.getCause());
             }
         }
         return false;
@@ -91,7 +95,7 @@ public class PersonsBean implements PersonsLocal {
             } else {
                 personToEditEntity = personsFacade.find(personToEditDTO.getIdPersons());
             }
-            HashMap<String, String> encryptionRequestData = createCipherTaskData(personToEditDTO.getName(), personToEditDTO.getSurname(), personToEditDTO.getStreet(), personToEditDTO.getCity());
+            HashMap<String, String> encryptionRequestData = createCipherTaskData(personToEditDTO.getName(), personToEditDTO.getSurname(), personToEditDTO.getStreet(), personToEditDTO.getCity(), personToEditDTO.getPhone());
             CipherTask encryptionRequest = new CipherTask(encryptionRequestData);
             try {
                 encryptionRequest = providerBean.encrypt(encryptionRequest, Dict.PERSONS);
@@ -104,7 +108,7 @@ public class PersonsBean implements PersonsLocal {
                 personToEditEntity.setNumber(personToEditDTO.getNumber());
                 personToEditEntity.setCity(encryptionRequest.getData().get(Dict.CITYCOLUMN));
                 personToEditEntity.setZip(personToEditDTO.getZip());
-                personToEditEntity.setPhone(personToEditDTO.getPhone());
+                personToEditEntity.setPhone(encryptionRequest.getData().get(Dict.PHONECOLUMN));
                 personToEditEntity.setPesel(personToEditDTO.getPesel());
                 personToEditEntity.setRole(personToEditDTO.getRole());
                 personToEditEntity.setIv(encryptionRequest.getIv());
@@ -115,7 +119,8 @@ public class PersonsBean implements PersonsLocal {
                     return true;
                 }
             } catch (GeneralSecurityException ex) {
-                throw new CryptographyException();
+                ex.printStackTrace();
+                throw new CryptographyException(ex.getCause());
             }
         }
         return false;
@@ -126,7 +131,7 @@ public class PersonsBean implements PersonsLocal {
         List<Persons> personsList = personsFacade.findByInitials(name.charAt(0), surname.charAt(0));
         for (int i = 0; i < personsList.size(); i++) {
             Persons person = personsList.get(i);
-            HashMap<String, String> decryptionRequestData = createCipherTaskData(person.getName(), person.getSurname(), person.getStreet(), person.getCity());
+            HashMap<String, String> decryptionRequestData = createCipherTaskData(person.getName(), person.getSurname(), person.getStreet(), person.getCity(), person.getPhone());
             CipherTask decryptionRequest = new CipherTask(decryptionRequestData, person.getIv(), person.getKeyManifestId().getIdKeyManifest());
             try {
                 decryptionRequest = providerBean.decrypt(decryptionRequest);
@@ -135,9 +140,11 @@ public class PersonsBean implements PersonsLocal {
                 personDTO.setSurname(decryptionRequest.getData().get(Dict.SURNAMECOLUMN));
                 personDTO.setStreet(decryptionRequest.getData().get(Dict.STREETCOLUMN));
                 personDTO.setCity(decryptionRequest.getData().get(Dict.CITYCOLUMN));
+                personDTO.setPhone(decryptionRequest.getData().get(Dict.PHONECOLUMN));
                 result.add(personDTO);
             } catch (GeneralSecurityException ex) {
-                throw new CryptographyException();
+                ex.printStackTrace();
+                throw new CryptographyException(ex.getCause());
             }
         }
         return result;
@@ -148,7 +155,7 @@ public class PersonsBean implements PersonsLocal {
         List<Persons> personsList = personsFacade.findByZip(zip);
         for (int i = 0; i < personsList.size(); i++) {
             Persons person = personsList.get(i);
-            HashMap<String, String> decryptionRequestData = createCipherTaskData(person.getName(), person.getSurname(), person.getStreet(), person.getCity());
+            HashMap<String, String> decryptionRequestData = createCipherTaskData(person.getName(), person.getSurname(), person.getStreet(), person.getCity(), person.getPhone());
             CipherTask decryptionRequest = new CipherTask(decryptionRequestData, person.getIv(), person.getKeyManifestId().getIdKeyManifest());
             try {
                 decryptionRequest = providerBean.decrypt(decryptionRequest);
@@ -157,9 +164,11 @@ public class PersonsBean implements PersonsLocal {
                 personDTO.setSurname(decryptionRequest.getData().get(Dict.SURNAMECOLUMN));
                 personDTO.setStreet(decryptionRequest.getData().get(Dict.STREETCOLUMN));
                 personDTO.setCity(decryptionRequest.getData().get(Dict.CITYCOLUMN));
+                personDTO.setPhone(decryptionRequest.getData().get(Dict.PHONECOLUMN));
                 result.add(personDTO);
             } catch (GeneralSecurityException ex) {
-                throw new CryptographyException();
+                ex.printStackTrace();
+                throw new CryptographyException(ex.getCause());
             }
         }
         return result;
@@ -169,7 +178,7 @@ public class PersonsBean implements PersonsLocal {
         PersonsDTO result = null;
         Persons person = personsFacade.find(idPerson);
         if (person != null) {
-            HashMap<String, String> decryptionRequestData = createCipherTaskData(person.getName(), person.getSurname(), person.getStreet(), person.getCity());
+            HashMap<String, String> decryptionRequestData = createCipherTaskData(person.getName(), person.getSurname(), person.getStreet(), person.getCity(), person.getPhone());
             CipherTask decryptionRequest = new CipherTask(decryptionRequestData, person.getIv(), person.getKeyManifestId().getIdKeyManifest());
             try {
                 decryptionRequest = providerBean.decrypt(decryptionRequest);
@@ -178,19 +187,22 @@ public class PersonsBean implements PersonsLocal {
                 result.setSurname(decryptionRequest.getData().get(Dict.SURNAMECOLUMN));
                 result.setStreet(decryptionRequest.getData().get(Dict.STREETCOLUMN));
                 result.setCity(decryptionRequest.getData().get(Dict.CITYCOLUMN));
+                result.setPhone(decryptionRequest.getData().get(Dict.PHONECOLUMN));
             } catch (GeneralSecurityException ex) {
-                throw new CryptographyException();
+                ex.printStackTrace();
+                throw new CryptographyException(ex.getCause());
             }
         }
         return result;
     }
 
-    private HashMap<String, String> createCipherTaskData(String name, String surname, String street, String city) {
+    private HashMap<String, String> createCipherTaskData(String name, String surname, String street, String city, String phone) {
         HashMap<String, String> result = new HashMap<String, String>();
         result.put(Dict.NAMECOLUMN, name);
         result.put(Dict.SURNAMECOLUMN, surname);
         result.put(Dict.STREETCOLUMN, street);
         result.put(Dict.CITYCOLUMN, city);
+        result.put(Dict.PHONECOLUMN, phone);
         return result;
     }
 }

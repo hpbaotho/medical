@@ -39,6 +39,10 @@ public class TreatmentDTO implements Serializable {
     public BigInteger getIdTreatment() {
         return idTreatment;
     }
+    
+    public void setIdTreatment(BigInteger idTreatment) {
+        this.idTreatment = idTreatment;
+    }
 
     public String getMedicine() {
         return medicine;

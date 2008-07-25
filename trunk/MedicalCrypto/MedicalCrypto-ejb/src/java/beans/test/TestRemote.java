@@ -9,6 +9,7 @@ import entities.medical.Treatment;
 import entities.medical.Visit;
 import entities.medical.dto.PersonsDTO;
 import java.math.BigInteger;
+import java.util.List;
 import javax.ejb.Remote;
 
 /**
@@ -23,5 +24,9 @@ public interface TestRemote {
     boolean addVisit(Visit visit, BigInteger idPatient, BigInteger idDoc, BigInteger idKeyManifest);
 
     boolean addTreatment(Treatment treatment, BigInteger idVisit, BigInteger idKeyManifest);
+    
+    List<PersonsDTO> findPersonByZip(int zip);
+    
+    boolean editPerson(PersonsDTO personToEditDTO);
     
 }

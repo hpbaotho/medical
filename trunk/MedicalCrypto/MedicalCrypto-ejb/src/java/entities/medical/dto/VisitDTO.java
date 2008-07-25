@@ -44,6 +44,10 @@ public class VisitDTO implements Serializable {
     public BigInteger getIdVisit() {
         return idVisit;
     }
+    
+    public void setIdVisit(BigInteger idVisit) {
+        this.idVisit = idVisit;
+    }
 
     public String getDiagnose() {
         return diagnose;
