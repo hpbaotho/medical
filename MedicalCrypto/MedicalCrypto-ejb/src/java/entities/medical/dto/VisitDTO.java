@@ -29,8 +29,8 @@ public class VisitDTO implements Serializable {
 
     public VisitDTO(Visit visitEntity) {
         this.idVisit = visitEntity.getIdVisit();
-        this.diagnose = visitEntity.getDiagnose();
-        this.info = visitEntity.getInfo();
+        this.diagnose = null;
+        this.info = null;
         this.date = visitEntity.getDate();
     }
 

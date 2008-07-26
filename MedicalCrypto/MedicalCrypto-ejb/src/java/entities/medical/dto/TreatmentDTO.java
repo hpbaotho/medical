@@ -26,8 +26,8 @@ public class TreatmentDTO implements Serializable {
 
     public TreatmentDTO(Treatment treatmentEntity) {
         this.idTreatment = treatmentEntity.getIdTreatment();
-        this.medicine = treatmentEntity.getMedicine();
-        this.dosage = treatmentEntity.getDosage();
+        this.medicine = null;
+        this.dosage = null;
     }
 
     public TreatmentDTO(String medicine, String dosage) {
