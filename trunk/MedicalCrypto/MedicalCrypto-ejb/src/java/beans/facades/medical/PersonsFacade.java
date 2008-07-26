@@ -61,8 +61,8 @@ public class PersonsFacade implements PersonsFacadeLocal {
         queryByZip.setParameter("zip", zip);
         return queryByZip.getResultList();
     }
-
-    public List<Persons> findAll() {
+    
+       public List<Persons> findAll() {
         return em.createQuery("select object(o) from Persons as o").getResultList();
     }
 }

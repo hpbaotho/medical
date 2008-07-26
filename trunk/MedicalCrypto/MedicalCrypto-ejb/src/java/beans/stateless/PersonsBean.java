@@ -125,17 +125,23 @@ public class PersonsBean implements PersonsLocal {
         }
         return false;
     }
+    
+    // metoda do dokonczenia- kogo mozna usuwac?
+    public boolean removePerson(BigInteger idPersonToRemove){
+        
+        return false;
+    }
 
     public List<PersonsDTO> findByInitials(String name, String surname) throws CryptographyException {
         List<PersonsDTO> result = new ArrayList<PersonsDTO>();
-        List<Persons> personsList = personsFacade.findByInitials(name.charAt(0), surname.charAt(0));
-        for (int i = 0; i < personsList.size(); i++) {
-            Persons person = personsList.get(i);
-            HashMap<String, String> decryptionRequestData = createCipherTaskData(person.getName(), person.getSurname(), person.getStreet(), person.getCity(), person.getPhone());
-            CipherTask decryptionRequest = new CipherTask(decryptionRequestData, person.getIv(), person.getKeyManifestId().getIdKeyManifest());
+        List<Persons> personsEntityList = personsFacade.findByInitials(name.charAt(0), surname.charAt(0));
+        for (int i = 0; i < personsEntityList.size(); i++) {
+            Persons personEntity = personsEntityList.get(i);
+            HashMap<String, String> decryptionRequestData = createCipherTaskData(personEntity.getName(), personEntity.getSurname(), personEntity.getStreet(), personEntity.getCity(), personEntity.getPhone());
+            CipherTask decryptionRequest = new CipherTask(decryptionRequestData, personEntity.getIv(), personEntity.getKeyManifestId().getIdKeyManifest());
             try {
                 decryptionRequest = providerBean.decrypt(decryptionRequest);
-                PersonsDTO personDTO = new PersonsDTO(person);
+                PersonsDTO personDTO = new PersonsDTO(personEntity);
                 personDTO.setName(decryptionRequest.getData().get(Dict.NAMECOLUMN));
                 personDTO.setSurname(decryptionRequest.getData().get(Dict.SURNAMECOLUMN));
                 personDTO.setStreet(decryptionRequest.getData().get(Dict.STREETCOLUMN));
@@ -152,14 +158,14 @@ public class PersonsBean implements PersonsLocal {
 
     public List<PersonsDTO> findByZip(int zip) throws CryptographyException {
         List<PersonsDTO> result = new ArrayList<PersonsDTO>();
-        List<Persons> personsList = personsFacade.findByZip(zip);
-        for (int i = 0; i < personsList.size(); i++) {
-            Persons person = personsList.get(i);
-            HashMap<String, String> decryptionRequestData = createCipherTaskData(person.getName(), person.getSurname(), person.getStreet(), person.getCity(), person.getPhone());
-            CipherTask decryptionRequest = new CipherTask(decryptionRequestData, person.getIv(), person.getKeyManifestId().getIdKeyManifest());
+        List<Persons> personsEntityList = personsFacade.findByZip(zip);
+        for (int i = 0; i < personsEntityList.size(); i++) {
+            Persons personEntity = personsEntityList.get(i);
+            HashMap<String, String> decryptionRequestData = createCipherTaskData(personEntity.getName(), personEntity.getSurname(), personEntity.getStreet(), personEntity.getCity(), personEntity.getPhone());
+            CipherTask decryptionRequest = new CipherTask(decryptionRequestData, personEntity.getIv(), personEntity.getKeyManifestId().getIdKeyManifest());
             try {
                 decryptionRequest = providerBean.decrypt(decryptionRequest);
-                PersonsDTO personDTO = new PersonsDTO(person);
+                PersonsDTO personDTO = new PersonsDTO(personEntity);
                 personDTO.setName(decryptionRequest.getData().get(Dict.NAMECOLUMN));
                 personDTO.setSurname(decryptionRequest.getData().get(Dict.SURNAMECOLUMN));
                 personDTO.setStreet(decryptionRequest.getData().get(Dict.STREETCOLUMN));
@@ -173,16 +179,38 @@ public class PersonsBean implements PersonsLocal {
         }
         return result;
     }
+    
+    public PersonsDTO findByPesel(BigInteger pesel) throws CryptographyException {
+        PersonsDTO result = null;
+        Persons personEntity = personsFacade.findByPesel(pesel);
+        if (personEntity != null) {
+            HashMap<String, String> decryptionRequestData = createCipherTaskData(personEntity.getName(), personEntity.getSurname(), personEntity.getStreet(), personEntity.getCity(), personEntity.getPhone());
+            CipherTask decryptionRequest = new CipherTask(decryptionRequestData, personEntity.getIv(), personEntity.getKeyManifestId().getIdKeyManifest());
+            try {
+                decryptionRequest = providerBean.decrypt(decryptionRequest);
+                result = new PersonsDTO(personEntity);
+                result.setName(decryptionRequest.getData().get(Dict.NAMECOLUMN));
+                result.setSurname(decryptionRequest.getData().get(Dict.SURNAMECOLUMN));
+                result.setStreet(decryptionRequest.getData().get(Dict.STREETCOLUMN));
+                result.setCity(decryptionRequest.getData().get(Dict.CITYCOLUMN));
+                result.setPhone(decryptionRequest.getData().get(Dict.PHONECOLUMN));
+            } catch (GeneralSecurityException ex) {
+                ex.printStackTrace();
+                throw new CryptographyException(ex.getCause());
+            }
+        }
+        return result;
+    }
 
     public PersonsDTO findById(BigInteger idPerson) throws CryptographyException {
         PersonsDTO result = null;
-        Persons person = personsFacade.find(idPerson);
-        if (person != null) {
-            HashMap<String, String> decryptionRequestData = createCipherTaskData(person.getName(), person.getSurname(), person.getStreet(), person.getCity(), person.getPhone());
-            CipherTask decryptionRequest = new CipherTask(decryptionRequestData, person.getIv(), person.getKeyManifestId().getIdKeyManifest());
+        Persons personEntity = personsFacade.find(idPerson);
+        if (personEntity != null) {
+            HashMap<String, String> decryptionRequestData = createCipherTaskData(personEntity.getName(), personEntity.getSurname(), personEntity.getStreet(), personEntity.getCity(), personEntity.getPhone());
+            CipherTask decryptionRequest = new CipherTask(decryptionRequestData, personEntity.getIv(), personEntity.getKeyManifestId().getIdKeyManifest());
             try {
                 decryptionRequest = providerBean.decrypt(decryptionRequest);
-                result = new PersonsDTO(person);
+                result = new PersonsDTO(personEntity);
                 result.setName(decryptionRequest.getData().get(Dict.NAMECOLUMN));
                 result.setSurname(decryptionRequest.getData().get(Dict.SURNAMECOLUMN));
                 result.setStreet(decryptionRequest.getData().get(Dict.STREETCOLUMN));
