@@ -132,7 +132,7 @@ public class PersonsBean implements PersonsLocal {
         return false;
     }
 
-    public List<PersonsDTO> findByInitials(String name, String surname) throws CryptographyException {
+    public List<PersonsDTO> findPersonByInitials(String name, String surname) throws CryptographyException {
         List<PersonsDTO> result = new ArrayList<PersonsDTO>();
         List<Persons> personsEntityList = personsFacade.findByInitials(name.charAt(0), surname.charAt(0));
         for (int i = 0; i < personsEntityList.size(); i++) {
@@ -156,7 +156,7 @@ public class PersonsBean implements PersonsLocal {
         return result;
     }
 
-    public List<PersonsDTO> findByZip(int zip) throws CryptographyException {
+    public List<PersonsDTO> findPersonByZip(int zip) throws CryptographyException {
         List<PersonsDTO> result = new ArrayList<PersonsDTO>();
         List<Persons> personsEntityList = personsFacade.findByZip(zip);
         for (int i = 0; i < personsEntityList.size(); i++) {
@@ -180,7 +180,7 @@ public class PersonsBean implements PersonsLocal {
         return result;
     }
     
-    public PersonsDTO findByPesel(BigInteger pesel) throws CryptographyException {
+    public PersonsDTO findPersonByPesel(BigInteger pesel) throws CryptographyException {
         PersonsDTO result = null;
         Persons personEntity = personsFacade.findByPesel(pesel);
         if (personEntity != null) {
@@ -202,7 +202,7 @@ public class PersonsBean implements PersonsLocal {
         return result;
     }
 
-    public PersonsDTO findById(BigInteger idPerson) throws CryptographyException {
+    public PersonsDTO findPersonById(BigInteger idPerson) throws CryptographyException {
         PersonsDTO result = null;
         Persons personEntity = personsFacade.find(idPerson);
         if (personEntity != null) {

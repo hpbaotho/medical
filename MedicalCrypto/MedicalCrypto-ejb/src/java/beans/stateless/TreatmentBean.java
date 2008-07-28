@@ -45,8 +45,8 @@ public class TreatmentBean implements TreatmentLocal {
 
     public boolean createTreatment(TreatmentDTO treatmentToAddDTO, BigInteger idVisit) throws CryptographyException, DatabaseException {
         if (treatmentToAddDTO.getMedicine() != null && treatmentToAddDTO.getDosage() != null && idVisit != null) {
-            Visit visit = visitFacade.find(idVisit);
-            if (visit != null) {
+            Visit visitEntity = visitFacade.find(idVisit);
+            if (visitEntity != null) {
                 HashMap<String, String> encryptionRequestData = createCipherTaskData(treatmentToAddDTO.getMedicine(), treatmentToAddDTO.getDosage());
                 CipherTask encryptionRequest = new CipherTask(encryptionRequestData);
                 try {
@@ -55,6 +55,7 @@ public class TreatmentBean implements TreatmentLocal {
                             encryptionRequest.getData().get(Dict.MEDICINECOLUMN),
                             encryptionRequest.getData().get(Dict.DOSAGECOLUMN),
                             encryptionRequest.getIv());
+                    treatmentToAddEntity.setVisitId(visitEntity);
                     KeyManifest keyManifest = keyManifestFacade.find(encryptionRequest.getAliasId());
                     if (keyManifest != null) {
                         treatmentToAddEntity.setKeyManifestId(keyManifest);
@@ -110,7 +111,7 @@ public class TreatmentBean implements TreatmentLocal {
         return false;
     }
 
-    public List<TreatmentDTO> findByVisit(BigInteger idVisit) throws CryptographyException {
+    public List<TreatmentDTO> findTreatmentByVisit(BigInteger idVisit) throws CryptographyException {
         List<TreatmentDTO> result = new ArrayList<TreatmentDTO>();
         Visit visitEntity = visitFacade.find(idVisit);
         if (visitEntity != null) {
@@ -134,7 +135,7 @@ public class TreatmentBean implements TreatmentLocal {
         return result;
     }
 
-    public List<TreatmentDTO> findByPatient(BigInteger idPatient) throws CryptographyException {
+    public List<TreatmentDTO> findTreatmentByPatient(BigInteger idPatient) throws CryptographyException {
         List<TreatmentDTO> result = new ArrayList<TreatmentDTO>();
         Persons patientEntity = personsFacade.find(idPatient);
         if (patientEntity != null) {

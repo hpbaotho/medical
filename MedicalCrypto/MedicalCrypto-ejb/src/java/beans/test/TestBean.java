@@ -4,17 +4,14 @@
  */
 package beans.test;
 
-import beans.facades.medical.KeyManifestFacadeLocal;
-import beans.facades.medical.PersonsFacadeLocal;
-import beans.facades.medical.TreatmentFacadeLocal;
-import beans.facades.medical.VisitFacadeLocal;
 import beans.stateless.PersonsLocal;
-import entities.medical.KeyManifest;
-import entities.medical.Persons;
-import entities.medical.Treatment;
-import entities.medical.Visit;
+import beans.stateless.TreatmentLocal;
+import beans.stateless.VisitLocal;
 import entities.medical.dto.PersonsDTO;
+import entities.medical.dto.TreatmentDTO;
+import entities.medical.dto.VisitDTO;
 import java.math.BigInteger;
+import java.util.ArrayList;
 import java.util.List;
 import javax.ejb.EJB;
 import javax.ejb.Stateful;
@@ -27,15 +24,11 @@ import javax.ejb.Stateful;
 public class TestBean implements TestRemote {
 
     @EJB
+    private VisitLocal visitBean;
+    @EJB
+    private TreatmentLocal treatmentBean;
+    @EJB
     private PersonsLocal personsBean;
-    @EJB
-    private TreatmentFacadeLocal treatmentFacade;
-    @EJB
-    private VisitFacadeLocal visitFacade;
-    @EJB
-    private KeyManifestFacadeLocal keyManifestFacade;
-    @EJB
-    private PersonsFacadeLocal personsFacade;
 
     public boolean addPerson(PersonsDTO person) {
         try {
@@ -44,16 +37,6 @@ public class TestBean implements TestRemote {
             ex.printStackTrace();
             return false;
         }
-    }
-
-    public List<PersonsDTO> findPersonByZip(int zip) {
-        try {
-            return personsBean.findByZip(zip);
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            return null;
-        }
-
     }
 
     public boolean editPerson(PersonsDTO personToEditDTO) {
@@ -65,23 +48,109 @@ public class TestBean implements TestRemote {
         }
     }
 
-    public boolean addVisit(Visit visit, BigInteger idPatient, BigInteger idDoc, BigInteger idKeyManifest) {
-        Persons patient = personsFacade.find(idPatient);
-        Persons doc = personsFacade.find(idDoc);
-        KeyManifest km = keyManifestFacade.find(idKeyManifest);
-        visit.setPatientId(patient);
-        visit.setDoctorId(doc);
-        visit.setKeyManifestId(km);
-        visitFacade.create(visit);
-        return true;
+    public List<PersonsDTO> findPersonByZip(int zip) {
+        try {
+            return personsBean.findPersonByZip(zip);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return null;
+        }
+
     }
 
-    public boolean addTreatment(Treatment treatment, BigInteger idVisit, BigInteger idKeyManifest) {
-        Visit v = visitFacade.find(idVisit);
-        KeyManifest km = keyManifestFacade.find(idKeyManifest);
-        treatment.setVisitId(v);
-        treatment.setKeyManifestId(km);
-        treatmentFacade.create(treatment);
-        return true;
+    public PersonsDTO findPersonById(BigInteger idPerson) {
+        try {
+            return personsBean.findPersonById(idPerson);
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return null;
+        }
+    }
+
+    public boolean addVisit(VisitDTO visitToAddDTO, BigInteger idPatient, BigInteger idDoctor) {
+        try {
+            return visitBean.createVisit(visitToAddDTO, idPatient, idDoctor);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return false;
+        }
+    }
+
+    public boolean editVisit(VisitDTO visitToAddDTO) {
+        try {
+            return visitBean.editVisit(visitToAddDTO);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return false;
+        }
+    }
+
+    public List<VisitDTO> findVisitByBatient(BigInteger idPatient) {
+        List<VisitDTO> result = new ArrayList<VisitDTO>();
+        try {
+            result = visitBean.findVisitByPatient(idPatient);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return result;
+    }
+
+    public boolean removeVisit(BigInteger idVisit) {
+        try {
+            return visitBean.removeVisit(idVisit);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return false;
+        }
+    }
+
+    public boolean addTreatment(TreatmentDTO treatmentToAddDTO, BigInteger idVisit) {
+        try {
+            return treatmentBean.createTreatment(treatmentToAddDTO, idVisit);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return false;
+        }
+    }
+
+    public boolean editTreatment(TreatmentDTO treatmentToEditDTO) {
+        try {
+            return treatmentBean.editTreatment(treatmentToEditDTO);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return false;
+        }
+    }
+
+    public List<TreatmentDTO> findTreatmentByVisit(BigInteger idVisit) {
+        List<TreatmentDTO> result = new ArrayList<TreatmentDTO>();
+        try {
+            result = treatmentBean.findTreatmentByVisit(idVisit);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return result;
+
+    }
+
+    public List<TreatmentDTO> findTreatmentByPatient(BigInteger idPatient) {
+        List<TreatmentDTO> result = new ArrayList<TreatmentDTO>();
+        try {
+            result = treatmentBean.findTreatmentByPatient(idPatient);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return result;
+
+    }
+
+    public boolean removeTreatment(BigInteger idTreatment) {
+        try {
+            return treatmentBean.removeTreatment(idTreatment);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return false;
+        }
     }
 }

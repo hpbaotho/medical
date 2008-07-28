@@ -22,9 +22,11 @@ public interface TreatmentLocal {
     boolean createTreatment(TreatmentDTO treatmentToAddDTO, BigInteger idVisit) throws CryptographyException, DatabaseException;
     
     boolean editTreatment(TreatmentDTO treatmentToEditDTO) throws CryptographyException, DatabaseException;
-        
-    List<TreatmentDTO> findByVisit(BigInteger idVisit) throws CryptographyException;
     
-    List<TreatmentDTO> findByPatient(BigInteger idPatient) throws CryptographyException;
+    boolean removeTreatment(BigInteger idTreatment);
+        
+    List<TreatmentDTO> findTreatmentByVisit(BigInteger idVisit) throws CryptographyException;
+    
+    List<TreatmentDTO> findTreatmentByPatient(BigInteger idPatient) throws CryptographyException;
     
 }

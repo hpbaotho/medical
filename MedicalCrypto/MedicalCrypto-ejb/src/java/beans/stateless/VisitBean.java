@@ -55,6 +55,8 @@ public class VisitBean implements VisitLocal {
                                 encryptionRequest.getData().get(Dict.INFOCOLUMN),
                                 visitToAddDTO.getDate(),
                                 encryptionRequest.getIv());
+                        visitToAddEntity.setDoctorId(doctorEntity);
+                        visitToAddEntity.setPatientId(parientEntity);
                         KeyManifest keyManifest = keyManifestFacade.find(encryptionRequest.getAliasId());
                         if (keyManifest != null) {
                             visitToAddEntity.setKeyManifestId(keyManifest);
@@ -143,7 +145,7 @@ public class VisitBean implements VisitLocal {
         return false;
     }
 
-    public List<VisitDTO> findByPatient(BigInteger idPatient) throws CryptographyException {
+    public List<VisitDTO> findVisitByPatient(BigInteger idPatient) throws CryptographyException {
         List<VisitDTO> result = new ArrayList<VisitDTO>();
         if (idPatient != null) {
             Persons patientEntity = personsFacade.find(idPatient);

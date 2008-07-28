@@ -25,7 +25,9 @@ public interface VisitLocal {
     boolean editVisitPatient(VisitDTO visitToEditDTO, BigInteger idPatient);
 
     boolean editVisitDoctor(VisitDTO visitToEditDTO, BigInteger idDoctor);
+    
+     boolean removeVisit(BigInteger idVisit);
 
-    List<VisitDTO> findByPatient(BigInteger idPatient) throws CryptographyException;
-
+    List<VisitDTO> findVisitByPatient(BigInteger idPatient) throws CryptographyException;
+    
 }

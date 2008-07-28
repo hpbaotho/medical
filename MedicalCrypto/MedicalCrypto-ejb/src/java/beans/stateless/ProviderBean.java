@@ -67,7 +67,7 @@ public class ProviderBean implements ProviderLocal {
             for (Iterator it = columnsToEncrypt.iterator(); it.hasNext();) {
                 String column = (String) it.next();
                 String plainText = (String) encryptionRequestData.get(column);
-                String cipherText = new String(cryptoMachineBean.encrypt(plainText.getBytes(), iv, secKeyTransparent));
+                String cipherText = bytes2HexString(cryptoMachineBean.encrypt(plainText.getBytes(), iv, secKeyTransparent));
                 encryptionRequestData.put(column, cipherText);
             }
             encryptRequest.setAliasId(liveKeyManifest.getIdKeyManifest());
@@ -101,7 +101,7 @@ public class ProviderBean implements ProviderLocal {
                 for (Iterator it = columnsToDecrypt.iterator(); it.hasNext();) {
                     String column = (String) it.next();
                     String cipherText = (String) decryptionRequestData.get(column);
-                    String plainText = new String(cryptoMachineBean.decrypt(cipherText.getBytes(), iv, secKeyTransparent));
+                    String plainText = new String(cryptoMachineBean.decrypt(hexString2Bytes(cipherText), iv, secKeyTransparent));
                     decryptionRequestData.put(column, plainText);
                 }
                 return decryptionRequest;
@@ -171,14 +171,41 @@ public class ProviderBean implements ProviderLocal {
         SecureRandom ivGenerator = SecureRandom.getInstance("SHA1PRNG");
         int size;
         if ("Blowfish".equals(algorithm) || "DES".equals(algorithm) || "DESede".equals(algorithm) || "RC2".equals(algorithm)) {
-            size=8;
+            size = 8;
         } else if ("AES".equals(algorithm)) {
-            size=16;
+            size = 16;
         } else {
             throw new NoSuchAlgorithmException();
         }
         byte[] iv = new byte[size];
         ivGenerator.nextBytes(iv);
         return iv;
+    }
+
+    private String bytes2HexString(byte[] bytes) {
+        String result = "";
+        String convertedByte;
+        for (int i = 0; i < bytes.length; i++) {
+            convertedByte = Integer.toHexString(bytes[i]);
+            if (convertedByte.length() < 2) {
+                convertedByte = "00".substring(convertedByte.length()) + convertedByte;
+            } else if (convertedByte.length() > 2) {
+                convertedByte = convertedByte.substring(convertedByte.length() - 2);
+            }
+            result += convertedByte.toUpperCase();
+        }
+        return result;
+    }
+
+    private byte[] hexString2Bytes(String hexString) {
+        byte[] bytes = new byte[hexString.length() / 2];
+        byte leftHalf = 0x0;
+        byte rightHalf = 0x0;
+        for (int i = 0, j = 0; i < hexString.length() / 2; i++, j = i * 2) {
+            rightHalf = (byte) (Byte.parseByte(hexString.substring(j + 1, j + 2), 16) & (byte) 0xF);
+            leftHalf = (byte) ((Byte.parseByte(hexString.substring(j, j + 1), 16) << 4) & (byte) 0xF0);
+            bytes[i] = (byte) (leftHalf | rightHalf);
+        }
+        return bytes;
     }
 }
