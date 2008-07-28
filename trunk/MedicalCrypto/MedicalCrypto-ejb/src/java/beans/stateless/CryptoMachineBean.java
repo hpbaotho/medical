@@ -7,13 +7,14 @@ package beans.stateless;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
+import java.security.spec.AlgorithmParameterSpec;
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.IvParameterSpec;
-import javax.crypto.spec.SecretKeySpec;
+import javax.crypto.spec.RC2ParameterSpec;
 import javax.ejb.Stateless;
 
 /**
@@ -30,11 +31,14 @@ public class CryptoMachineBean implements CryptoMachineLocal {
             InvalidAlgorithmParameterException,
             IllegalBlockSizeException,
             BadPaddingException {
-        String algorithm = seckey.getAlgorithm();
-        IvParameterSpec initializationVector = new IvParameterSpec(iv);
-        Cipher cipher = this.initializeCipher(algorithm);
-        SecretKey key = new SecretKeySpec(seckey.getEncoded(), algorithm);
-        cipher.init(Cipher.ENCRYPT_MODE, key, initializationVector);
+        AlgorithmParameterSpec initializationVector;
+        if ("RC2".equals(seckey.getAlgorithm())) {
+            initializationVector = new RC2ParameterSpec(seckey.getEncoded().length, iv);
+        } else {
+            initializationVector = new IvParameterSpec(iv);
+        }
+        Cipher cipher = this.initializeCipher(seckey.getAlgorithm());
+        cipher.init(Cipher.ENCRYPT_MODE, seckey, initializationVector);
         return cipher.doFinal(plainText);
     }
 
@@ -45,11 +49,14 @@ public class CryptoMachineBean implements CryptoMachineLocal {
             InvalidAlgorithmParameterException,
             IllegalBlockSizeException,
             BadPaddingException {
-        String algorithm = seckey.getAlgorithm();
-        IvParameterSpec initializationVector = new IvParameterSpec(iv);
-        Cipher cipher = this.initializeCipher(algorithm);
-        SecretKey key = new SecretKeySpec(seckey.getEncoded(), algorithm);
-        cipher.init(Cipher.DECRYPT_MODE, key, initializationVector);
+        AlgorithmParameterSpec initializationVector;
+        if ("RC2".equals(seckey.getAlgorithm())) {
+            initializationVector = new RC2ParameterSpec(seckey.getEncoded().length, iv);
+        } else {
+            initializationVector = new IvParameterSpec(iv);
+        }
+        Cipher cipher = this.initializeCipher(seckey.getAlgorithm());
+        cipher.init(Cipher.DECRYPT_MODE, seckey, initializationVector);
         return cipher.doFinal(cipherText);
     }
 

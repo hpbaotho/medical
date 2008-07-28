@@ -27,12 +27,12 @@ public interface PersonsLocal {
     
     boolean removePerson(BigInteger idPersonToRemove);
     
-    List<PersonsDTO> findByInitials(String name, String surname) throws CryptographyException;
+    List<PersonsDTO> findPersonByInitials(String name, String surname) throws CryptographyException;
     
-    List<PersonsDTO> findByZip(int zip) throws CryptographyException;
+    List<PersonsDTO> findPersonByZip(int zip) throws CryptographyException;
     
-    PersonsDTO findById(BigInteger idPerson) throws CryptographyException;
+    PersonsDTO findPersonById(BigInteger idPerson) throws CryptographyException;
     
-    PersonsDTO findByPesel(BigInteger pesel) throws CryptographyException;
+    PersonsDTO findPersonByPesel(BigInteger pesel) throws CryptographyException;
     
 }
