@@ -11,8 +11,12 @@ package exceptions;
  */
 public class DatabaseException extends Exception{
     
-    public DatabaseException(Throwable reason){
-        super("Database exception",reason);
+    public DatabaseException(){
+        super("Database exception");
     }
+    
+    public DatabaseException(String message){
+        super(message);
+    } 
 
 }

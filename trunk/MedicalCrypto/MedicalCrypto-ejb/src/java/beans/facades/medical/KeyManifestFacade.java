@@ -34,10 +34,12 @@ public class KeyManifestFacade implements KeyManifestFacadeLocal {
     }
 
     public KeyManifest find(Object id) {
+        em.flush();
         return em.find(entities.medical.KeyManifest.class, id);
     }
     
     public List<KeyManifest> findByFamilyStatus(String family, String status) {
+        em.flush();
         Query queryByFamilyStatus = em.createNamedQuery("KeyManifest.findByKeyFamilyStatus");
         queryByFamilyStatus.setParameter("keyFamily", family);
         queryByFamilyStatus.setParameter("status", status);
@@ -45,6 +47,7 @@ public class KeyManifestFacade implements KeyManifestFacadeLocal {
     }
 
     public List<KeyManifest> findAll() {
+        em.flush();
         return em.createQuery("select object(o) from KeyManifest as o").getResultList();
     }
 

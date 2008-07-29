@@ -8,6 +8,7 @@ package beans.stateless;
 import entities.medical.dto.PersonsDTO;
 import exceptions.CryptographyException;
 import exceptions.DatabaseException;
+import exceptions.DoctorRemoveException;
 import exceptions.PersonsLoginException;
 import exceptions.PersonsPeselException;
 import java.math.BigInteger;
@@ -21,11 +22,13 @@ import javax.ejb.Local;
 @Local
 public interface PersonsLocal {
 
-    boolean createPerson(PersonsDTO personToAddDTO) throws PersonsLoginException, PersonsPeselException, CryptographyException, DatabaseException;
+    boolean createPerson(PersonsDTO personToAddDTO) throws PersonsPeselException, CryptographyException, DatabaseException;
     
     boolean editPerson(PersonsDTO personToEditDTO) throws PersonsPeselException, CryptographyException;
     
-    boolean removePerson(BigInteger idPersonToRemove);
+    boolean removePatient(BigInteger idPersonToRemove);
+    
+    boolean removeDoctor(BigInteger idDoctorToRemove) throws DoctorRemoveException;
     
     List<PersonsDTO> findPersonByInitials(String name, String surname) throws CryptographyException;
     
@@ -34,5 +37,7 @@ public interface PersonsLocal {
     PersonsDTO findPersonById(BigInteger idPerson) throws CryptographyException;
     
     PersonsDTO findPersonByPesel(BigInteger pesel) throws CryptographyException;
+    
+    BigInteger getLoggedUserId();
     
 }

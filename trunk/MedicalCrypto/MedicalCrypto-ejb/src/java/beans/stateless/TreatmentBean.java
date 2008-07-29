@@ -16,6 +16,7 @@ import entities.medical.dto.Dict;
 import entities.medical.dto.TreatmentDTO;
 import exceptions.CryptographyException;
 import exceptions.DatabaseException;
+import exceptions.KeyManifestException;
 import java.math.BigInteger;
 import java.security.GeneralSecurityException;
 import java.util.ArrayList;
@@ -58,16 +59,19 @@ public class TreatmentBean implements TreatmentLocal {
                     treatmentToAddEntity.setVisitId(visitEntity);
                     KeyManifest keyManifest = keyManifestFacade.find(encryptionRequest.getAliasId());
                     if (keyManifest != null) {
-                        treatmentToAddEntity.setKeyManifestId(keyManifest);
-                        treatmentFacade.create(treatmentToAddEntity);
-                        return true;
+                        if (keyManifest.getIdKeyManifest().equals(encryptionRequest.getAliasId())) {
+                            treatmentToAddEntity.setKeyManifestId(keyManifest);
+                            treatmentFacade.create(treatmentToAddEntity);
+                            return true;
+                        }
+                        throw new KeyManifestException();
                     }
                 } catch (GeneralSecurityException ex) {
                     ex.printStackTrace();
                     throw new CryptographyException(ex);
                 } catch (PersistenceException ex) {
                     ex.printStackTrace();
-                    throw new DatabaseException(ex);
+                    throw new DatabaseException();
                 }
             }
         }
@@ -87,9 +91,12 @@ public class TreatmentBean implements TreatmentLocal {
                     treatmentToEditEntity.setIv(encryptionRequest.getIv());
                     KeyManifest keyManifest = keyManifestFacade.find(encryptionRequest.getAliasId());
                     if (keyManifest != null) {
-                        treatmentToEditEntity.setKeyManifestId(keyManifest);
-                        treatmentFacade.edit(treatmentToEditEntity);
-                        return true;
+                        if (keyManifest.getIdKeyManifest().equals(encryptionRequest.getAliasId())) {
+                            treatmentToEditEntity.setKeyManifestId(keyManifest);
+                            treatmentFacade.edit(treatmentToEditEntity);
+                            return true;
+                        }
+                        throw new KeyManifestException();
                     }
                 } catch (GeneralSecurityException ex) {
                     ex.printStackTrace();
@@ -113,38 +120,12 @@ public class TreatmentBean implements TreatmentLocal {
 
     public List<TreatmentDTO> findTreatmentByVisit(BigInteger idVisit) throws CryptographyException {
         List<TreatmentDTO> result = new ArrayList<TreatmentDTO>();
-        Visit visitEntity = visitFacade.find(idVisit);
-        if (visitEntity != null) {
-            List<Treatment> treatmentEntityList = visitEntity.getTreatmentList();
-            for (int i = 0; i < treatmentEntityList.size(); i++) {
-                Treatment treatmentEntity = treatmentEntityList.get(i);
-                HashMap<String, String> decryptionRequestData = createCipherTaskData(treatmentEntity.getMedicine(), treatmentEntity.getDosage());
-                CipherTask decryptionRequest = new CipherTask(decryptionRequestData, treatmentEntity.getIv(), treatmentEntity.getKeyManifestId().getIdKeyManifest());
-                try {
-                    decryptionRequest = providerBean.decrypt(decryptionRequest);
-                    TreatmentDTO treatmentDTO = new TreatmentDTO(treatmentEntity);
-                    treatmentDTO.setMedicine(decryptionRequest.getData().get(Dict.MEDICINECOLUMN));
-                    treatmentDTO.setDosage(decryptionRequest.getData().get(Dict.DOSAGECOLUMN));
-                    result.add(treatmentDTO);
-                } catch (GeneralSecurityException ex) {
-                    ex.printStackTrace();
-                    throw new CryptographyException(ex.getCause());
-                }
-            }
-        }
-        return result;
-    }
-
-    public List<TreatmentDTO> findTreatmentByPatient(BigInteger idPatient) throws CryptographyException {
-        List<TreatmentDTO> result = new ArrayList<TreatmentDTO>();
-        Persons patientEntity = personsFacade.find(idPatient);
-        if (patientEntity != null) {
-            List<Visit> visitEntityList = patientEntity.getVisitPatientList();
-            for (int i = 0; i < visitEntityList.size(); i++) {
-                Visit visitEntity = visitEntityList.get(i);
+        if (idVisit != null) {
+            Visit visitEntity = visitFacade.find(idVisit);
+            if (visitEntity != null) {
                 List<Treatment> treatmentEntityList = visitEntity.getTreatmentList();
-                for (int j = 0; j < treatmentEntityList.size(); j++) {
-                    Treatment treatmentEntity = treatmentEntityList.get(j);
+                for (int i = 0; i < treatmentEntityList.size(); i++) {
+                    Treatment treatmentEntity = treatmentEntityList.get(i);
                     HashMap<String, String> decryptionRequestData = createCipherTaskData(treatmentEntity.getMedicine(), treatmentEntity.getDosage());
                     CipherTask decryptionRequest = new CipherTask(decryptionRequestData, treatmentEntity.getIv(), treatmentEntity.getKeyManifestId().getIdKeyManifest());
                     try {
@@ -156,6 +137,36 @@ public class TreatmentBean implements TreatmentLocal {
                     } catch (GeneralSecurityException ex) {
                         ex.printStackTrace();
                         throw new CryptographyException(ex.getCause());
+                    }
+                }
+            }
+        }
+        return result;
+    }
+
+    public List<TreatmentDTO> findTreatmentByPatient(BigInteger idPatient) throws CryptographyException {
+        List<TreatmentDTO> result = new ArrayList<TreatmentDTO>();
+        if (idPatient != null) {
+            Persons patientEntity = personsFacade.find(idPatient);
+            if (patientEntity != null) {
+                List<Visit> visitEntityList = patientEntity.getVisitPatientList();
+                for (int i = 0; i < visitEntityList.size(); i++) {
+                    Visit visitEntity = visitEntityList.get(i);
+                    List<Treatment> treatmentEntityList = visitEntity.getTreatmentList();
+                    for (int j = 0; j < treatmentEntityList.size(); j++) {
+                        Treatment treatmentEntity = treatmentEntityList.get(j);
+                        HashMap<String, String> decryptionRequestData = createCipherTaskData(treatmentEntity.getMedicine(), treatmentEntity.getDosage());
+                        CipherTask decryptionRequest = new CipherTask(decryptionRequestData, treatmentEntity.getIv(), treatmentEntity.getKeyManifestId().getIdKeyManifest());
+                        try {
+                            decryptionRequest = providerBean.decrypt(decryptionRequest);
+                            TreatmentDTO treatmentDTO = new TreatmentDTO(treatmentEntity);
+                            treatmentDTO.setMedicine(decryptionRequest.getData().get(Dict.MEDICINECOLUMN));
+                            treatmentDTO.setDosage(decryptionRequest.getData().get(Dict.DOSAGECOLUMN));
+                            result.add(treatmentDTO);
+                        } catch (GeneralSecurityException ex) {
+                            ex.printStackTrace();
+                            throw new CryptographyException(ex.getCause());
+                        }
                     }
                 }
             }

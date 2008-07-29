@@ -30,4 +30,6 @@ public interface VisitLocal {
 
     List<VisitDTO> findVisitByPatient(BigInteger idPatient) throws CryptographyException;
     
+    List<VisitDTO> findVisitByDoctor(BigInteger idDoctor) throws CryptographyException;
+    
 }
