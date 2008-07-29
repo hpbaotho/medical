@@ -36,10 +36,12 @@ public class SeckeyFacade implements SeckeyFacadeLocal {
 
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
     public Seckey find(Object id) {
+        em.flush();
         return em.find(entities.crypto.Seckey.class, id);
     }
 
     public List<Seckey> findAll() {
+        em.flush();
         return em.createQuery("select object(o) from Seckey as o").getResultList();
     }
 

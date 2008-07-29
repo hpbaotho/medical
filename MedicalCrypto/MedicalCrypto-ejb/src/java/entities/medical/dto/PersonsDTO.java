@@ -47,7 +47,7 @@ public class PersonsDTO implements Serializable {
         this.surname = null;
         this.street = null;
         this.number = personsEntity.getNumber();
-        this.city = null;
+        this.city = personsEntity.getCity();
         this.zip = personsEntity.getZip();
         this.phone = null;
         this.pesel = personsEntity.getPesel();

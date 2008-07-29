@@ -32,7 +32,7 @@ public interface TestRemote {
 
     boolean removeVisit(BigInteger idVisit);
 
-    List<VisitDTO> findVisitByBatient(BigInteger idPatient);
+    List<VisitDTO> findVisitByPatient(BigInteger idPatient);
 
     boolean addTreatment(TreatmentDTO treatmentToAddDTO, BigInteger idVisit);
 

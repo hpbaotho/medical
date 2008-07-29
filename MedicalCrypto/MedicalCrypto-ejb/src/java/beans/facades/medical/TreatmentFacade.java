@@ -33,10 +33,12 @@ public class TreatmentFacade implements TreatmentFacadeLocal {
     }
 
     public Treatment find(Object id) {
+        em.flush();
         return em.find(entities.medical.Treatment.class, id);
     }
 
     public List<Treatment> findAll() {
+        em.flush();
         return em.createQuery("select object(o) from Treatment as o").getResultList();
     }
 

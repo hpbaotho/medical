@@ -33,10 +33,12 @@ public class VisitFacade implements VisitFacadeLocal {
     }
 
     public Visit find(Object id) {
+        em.flush();
         return em.find(entities.medical.Visit.class, id);
     }
 
     public List<Visit> findAll() {
+        em.flush();
         return em.createQuery("select object(o) from Visit as o").getResultList();
     }
 

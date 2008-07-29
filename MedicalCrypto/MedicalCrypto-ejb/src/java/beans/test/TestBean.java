@@ -86,7 +86,7 @@ public class TestBean implements TestRemote {
         }
     }
 
-    public List<VisitDTO> findVisitByBatient(BigInteger idPatient) {
+    public List<VisitDTO> findVisitByPatient(BigInteger idPatient) {
         List<VisitDTO> result = new ArrayList<VisitDTO>();
         try {
             result = visitBean.findVisitByPatient(idPatient);

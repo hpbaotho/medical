@@ -14,6 +14,7 @@ import entities.medical.dto.Dict;
 import entities.medical.dto.VisitDTO;
 import exceptions.CryptographyException;
 import exceptions.DatabaseException;
+import exceptions.KeyManifestException;
 import java.math.BigInteger;
 import java.security.GeneralSecurityException;
 import java.util.ArrayList;
@@ -59,16 +60,19 @@ public class VisitBean implements VisitLocal {
                         visitToAddEntity.setPatientId(parientEntity);
                         KeyManifest keyManifest = keyManifestFacade.find(encryptionRequest.getAliasId());
                         if (keyManifest != null) {
-                            visitToAddEntity.setKeyManifestId(keyManifest);
-                            visitFacade.create(visitToAddEntity);
-                            return true;
+                            if (keyManifest.getIdKeyManifest().equals(encryptionRequest.getAliasId())) {
+                                visitToAddEntity.setKeyManifestId(keyManifest);
+                                visitFacade.create(visitToAddEntity);
+                                return true;
+                            }
+                            throw new KeyManifestException();
                         }
                     } catch (GeneralSecurityException ex) {
                         ex.printStackTrace();
                         throw new CryptographyException(ex);
                     } catch (PersistenceException ex) {
                         ex.printStackTrace();
-                        throw new DatabaseException(ex);
+                        throw new DatabaseException();
                     }
                 }
             }
@@ -91,9 +95,12 @@ public class VisitBean implements VisitLocal {
                     visitToEditEntity.setIv(encryptionRequest.getIv());
                     KeyManifest keyManifest = keyManifestFacade.find(encryptionRequest.getAliasId());
                     if (keyManifest != null) {
-                        visitToEditEntity.setKeyManifestId(keyManifest);
-                        visitFacade.edit(visitToEditEntity);
-                        return true;
+                        if (keyManifest.getIdKeyManifest().equals(encryptionRequest.getAliasId())) {
+                            visitToEditEntity.setKeyManifestId(keyManifest);
+                            visitFacade.edit(visitToEditEntity);
+                            return true;
+                        }
+                        throw new KeyManifestException();
                     }
                 } catch (GeneralSecurityException ex) {
                     ex.printStackTrace();
@@ -133,11 +140,11 @@ public class VisitBean implements VisitLocal {
         }
         return false;
     }
-    
-    public boolean removeVisit(BigInteger idVisit){
-        if(idVisit!=null){
-            Visit visitToRemoveEntity= visitFacade.find(idVisit);
-            if(visitToRemoveEntity!=null){
+
+    public boolean removeVisit(BigInteger idVisit) {
+        if (idVisit != null) {
+            Visit visitToRemoveEntity = visitFacade.find(idVisit);
+            if (visitToRemoveEntity != null) {
                 visitFacade.remove(visitToRemoveEntity);
                 return true;
             }
@@ -157,7 +164,33 @@ public class VisitBean implements VisitLocal {
                     CipherTask decryptionRequest = new CipherTask(decryptionRequestData, visitEntity.getIv(), visitEntity.getKeyManifestId().getIdKeyManifest());
                     try {
                         decryptionRequest = providerBean.decrypt(decryptionRequest);
-                        VisitDTO visitDTO= new VisitDTO(visitEntity);
+                        VisitDTO visitDTO = new VisitDTO(visitEntity);
+                        visitDTO.setDiagnose(decryptionRequest.getData().get(Dict.DIAGNOSECOLUMN));
+                        visitDTO.setInfo(decryptionRequest.getData().get(Dict.INFOCOLUMN));
+                        result.add(visitDTO);
+                    } catch (GeneralSecurityException ex) {
+                        ex.printStackTrace();
+                        throw new CryptographyException(ex.getCause());
+                    }
+                }
+            }
+        }
+        return result;
+    }
+
+    public List<VisitDTO> findVisitByDoctor(BigInteger idDoctor) throws CryptographyException {
+        List<VisitDTO> result = new ArrayList<VisitDTO>();
+        if (idDoctor != null) {
+            Persons doctorEntity = personsFacade.find(idDoctor);
+            if (doctorEntity != null && "doctor".equals(doctorEntity.getRole())) {
+                List<Visit> visitEntityList = doctorEntity.getVisitDocList();
+                for (int i = 0; i < visitEntityList.size(); i++) {
+                    Visit visitEntity = visitEntityList.get(i);
+                    HashMap<String, String> decryptionRequestData = createCipherTaskData(visitEntity.getDiagnose(), visitEntity.getInfo());
+                    CipherTask decryptionRequest = new CipherTask(decryptionRequestData, visitEntity.getIv(), visitEntity.getKeyManifestId().getIdKeyManifest());
+                    try {
+                        decryptionRequest = providerBean.decrypt(decryptionRequest);
+                        VisitDTO visitDTO = new VisitDTO(visitEntity);
                         visitDTO.setDiagnose(decryptionRequest.getData().get(Dict.DIAGNOSECOLUMN));
                         visitDTO.setInfo(decryptionRequest.getData().get(Dict.INFOCOLUMN));
                         result.add(visitDTO);
