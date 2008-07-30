@@ -20,7 +20,7 @@ public interface VisitLocal {
 
     boolean createVisit(VisitDTO visitToAddDTO, BigInteger idPatient, BigInteger idDoctor) throws CryptographyException, DatabaseException;
 
-    boolean editVisit(VisitDTO visitToEditDTO) throws CryptographyException, DatabaseException;
+    boolean editVisit(VisitDTO visitToEditDTO) throws CryptographyException;
 
     boolean editVisitPatient(VisitDTO visitToEditDTO, BigInteger idPatient);
 
@@ -31,5 +31,7 @@ public interface VisitLocal {
     List<VisitDTO> findVisitByPatient(BigInteger idPatient) throws CryptographyException;
     
     List<VisitDTO> findVisitByDoctor(BigInteger idDoctor) throws CryptographyException;
+    
+    List<VisitDTO> findVisitByDoctorPatient(BigInteger idDoctor, BigInteger idPatient) throws CryptographyException;
     
 }

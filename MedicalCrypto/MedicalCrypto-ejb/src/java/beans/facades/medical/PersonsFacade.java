@@ -65,6 +65,13 @@ public class PersonsFacade implements PersonsFacadeLocal {
         queryByZip.setParameter("zip", zip);
         return queryByZip.getResultList();
     }
+    
+    public List<Persons> findByRole(String role) {
+        em.flush();
+        Query queryByZip = em.createNamedQuery("Persons.findByRole");
+        queryByZip.setParameter("role", role);
+        return queryByZip.getResultList();
+    }
 
     public List<Persons> findAll() {
         em.flush();

@@ -9,12 +9,12 @@ import beans.facades.medical.PersonsFacadeLocal;
 import entities.medical.KeyManifest;
 import entities.medical.Persons;
 import entities.medical.dto.Dict;
+import entities.medical.dto.DoctorDTO;
 import entities.medical.dto.PersonsDTO;
 import exceptions.CryptographyException;
 import exceptions.DatabaseException;
 import exceptions.DoctorRemoveException;
 import exceptions.KeyManifestException;
-import exceptions.PersonsLoginException;
 import exceptions.PersonsPeselException;
 import java.math.BigInteger;
 import java.security.GeneralSecurityException;
@@ -259,6 +259,30 @@ public class PersonsBean implements PersonsLocal {
                 }
             }
         }
+        return result;
+    }
+
+    public List<DoctorDTO> findDoctors() throws CryptographyException {
+        List<DoctorDTO> result = new ArrayList<DoctorDTO>();
+        List<Persons> doctorsEntityList = personsFacade.findByRole("doctor");
+        for (int i = 0; i < doctorsEntityList.size(); i++) {
+            Persons doctorEntity = doctorsEntityList.get(i);
+            HashMap<String, String> decryptionRequestData = new HashMap<String, String>();
+            decryptionRequestData.put(Dict.NAMECOLUMN, doctorEntity.getName());
+            decryptionRequestData.put(Dict.SURNAMECOLUMN, doctorEntity.getSurname());
+            CipherTask decryptionRequest = new CipherTask(decryptionRequestData, doctorEntity.getIv(), doctorEntity.getKeyManifestId().getIdKeyManifest());
+            try {
+                decryptionRequest = providerBean.decrypt(decryptionRequest);
+                DoctorDTO doctorDTO = new DoctorDTO(doctorEntity);
+                doctorDTO.setName(decryptionRequest.getData().get(Dict.NAMECOLUMN));
+                doctorDTO.setSurname(decryptionRequest.getData().get(Dict.SURNAMECOLUMN));
+                result.add(doctorDTO);
+            } catch (GeneralSecurityException ex) {
+                ex.printStackTrace();
+                throw new CryptographyException(ex.getCause());
+            }
+        }
+
         return result;
     }
 

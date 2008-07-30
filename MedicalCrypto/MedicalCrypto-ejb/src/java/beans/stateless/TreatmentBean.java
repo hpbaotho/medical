@@ -78,7 +78,7 @@ public class TreatmentBean implements TreatmentLocal {
         return false;
     }
 
-    public boolean editTreatment(TreatmentDTO treatmentToEditDTO) throws CryptographyException, DatabaseException {
+    public boolean editTreatment(TreatmentDTO treatmentToEditDTO) throws CryptographyException {
         if (treatmentToEditDTO.getIdTreatment() != null && treatmentToEditDTO.getMedicine() != null && treatmentToEditDTO.getDosage() != null) {
             Treatment treatmentToEditEntity = treatmentFacade.find(treatmentToEditDTO.getIdTreatment());
             if (treatmentToEditEntity != null) {
