@@ -21,7 +21,7 @@ public interface TreatmentLocal {
 
     boolean createTreatment(TreatmentDTO treatmentToAddDTO, BigInteger idVisit) throws CryptographyException, DatabaseException;
     
-    boolean editTreatment(TreatmentDTO treatmentToEditDTO) throws CryptographyException, DatabaseException;
+    boolean editTreatment(TreatmentDTO treatmentToEditDTO) throws CryptographyException;
     
     boolean removeTreatment(BigInteger idTreatment);
         

@@ -5,11 +5,11 @@
 
 package beans.stateless;
 
+import entities.medical.dto.DoctorDTO;
 import entities.medical.dto.PersonsDTO;
 import exceptions.CryptographyException;
 import exceptions.DatabaseException;
 import exceptions.DoctorRemoveException;
-import exceptions.PersonsLoginException;
 import exceptions.PersonsPeselException;
 import java.math.BigInteger;
 import java.util.List;
@@ -37,6 +37,8 @@ public interface PersonsLocal {
     PersonsDTO findPersonById(BigInteger idPerson) throws CryptographyException;
     
     PersonsDTO findPersonByPesel(BigInteger pesel) throws CryptographyException;
+    
+    List<DoctorDTO> findDoctors() throws CryptographyException;
     
     BigInteger getLoggedUserId();
     

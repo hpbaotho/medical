@@ -80,7 +80,7 @@ public class VisitBean implements VisitLocal {
         return false;
     }
 
-    public boolean editVisit(VisitDTO visitToEditDTO) throws CryptographyException, DatabaseException {
+    public boolean editVisit(VisitDTO visitToEditDTO) throws CryptographyException {
         if (visitToEditDTO.getIdVisit() != null && visitToEditDTO.getDiagnose() != null &&
                 visitToEditDTO.getInfo() != null && visitToEditDTO.getDate() != null) {
             Visit visitToEditEntity = visitFacade.find(visitToEditDTO.getIdVisit());
@@ -197,6 +197,34 @@ public class VisitBean implements VisitLocal {
                     } catch (GeneralSecurityException ex) {
                         ex.printStackTrace();
                         throw new CryptographyException(ex.getCause());
+                    }
+                }
+            }
+        }
+        return result;
+    }
+
+    public List<VisitDTO> findVisitByDoctorPatient(BigInteger idDoctor, BigInteger idPatient) throws CryptographyException {
+        List<VisitDTO> result = new ArrayList<VisitDTO>();
+        if (idDoctor != null && idPatient != null) {
+            Persons doctorEntity = personsFacade.find(idDoctor);
+            if (doctorEntity != null && "doctor".equals(doctorEntity.getRole())) {
+                List<Visit> visitEntityList = doctorEntity.getVisitDocList();
+                for (int i = 0; i < visitEntityList.size(); i++) {
+                    Visit visitEntity = visitEntityList.get(i);
+                    if (visitEntity.getPatientId().equals(idPatient)) {
+                        HashMap<String, String> decryptionRequestData = createCipherTaskData(visitEntity.getDiagnose(), visitEntity.getInfo());
+                        CipherTask decryptionRequest = new CipherTask(decryptionRequestData, visitEntity.getIv(), visitEntity.getKeyManifestId().getIdKeyManifest());
+                        try {
+                            decryptionRequest = providerBean.decrypt(decryptionRequest);
+                            VisitDTO visitDTO = new VisitDTO(visitEntity);
+                            visitDTO.setDiagnose(decryptionRequest.getData().get(Dict.DIAGNOSECOLUMN));
+                            visitDTO.setInfo(decryptionRequest.getData().get(Dict.INFOCOLUMN));
+                            result.add(visitDTO);
+                        } catch (GeneralSecurityException ex) {
+                            ex.printStackTrace();
+                            throw new CryptographyException(ex.getCause());
+                        }
                     }
                 }
             }

@@ -30,6 +30,8 @@ public interface PersonsFacadeLocal {
     List<Persons> findByInitials(char inn, char ins);
     
     List<Persons> findByZip(int zip);
+    
+    List<Persons> findByRole(String role);
 
     List<Persons> findAll();
 

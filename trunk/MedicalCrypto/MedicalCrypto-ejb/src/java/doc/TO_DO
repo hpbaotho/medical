@@ -1,4 +1,11 @@
-//1. Refreshe przy szukaniu i pobieraniu z bazy
-2. Sprawdzenie przed zapisem keyManifest czy id= to ktorym szyfrowano dane
-//3. Zastanowic sie nad wyszukiwaniem wizyt i recept po doktorze.
-//4. Zastanowic sie nad usuwaniem uzytkownikow
+//01. Refreshe przy szukaniu i pobieraniu z bazy
+//02. Sprawdzenie przed zapisem keyManifest czy id= to ktorym szyfrowano dane
+03. Zastanowic sie nad wyszukiwaniem wizyt i recept po doktorze.
+//04. Zastanowic sie nad usuwaniem uzytkownikow
+04. Pomyslec jeszcze raz nad kaskadami
+05. Transakcje ustawic
+06. Uwaga na logowanie trzeba bedzie odwracac wpisany login- ciekawe co na to realm
+07. Wyszukiwanie wizyt po dacie lub po przedzialach dat\
+//08. Lekarz powinien wyszukiwac wizyty po pacjencie czy tylko po pacjencie i sowim id?
+09. Cryptography Exception powinno byc RuntimeException przy findach?
+10. Czy powinien byc admin?
