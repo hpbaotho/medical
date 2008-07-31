@@ -212,7 +212,7 @@ public class VisitBean implements VisitLocal {
                 List<Visit> visitEntityList = doctorEntity.getVisitDocList();
                 for (int i = 0; i < visitEntityList.size(); i++) {
                     Visit visitEntity = visitEntityList.get(i);
-                    if (visitEntity.getPatientId().equals(idPatient)) {
+                    if (visitEntity.getPatientId().getIdPersons().equals(idPatient)) {
                         HashMap<String, String> decryptionRequestData = createCipherTaskData(visitEntity.getDiagnose(), visitEntity.getInfo());
                         CipherTask decryptionRequest = new CipherTask(decryptionRequestData, visitEntity.getIv(), visitEntity.getKeyManifestId().getIdKeyManifest());
                         try {
