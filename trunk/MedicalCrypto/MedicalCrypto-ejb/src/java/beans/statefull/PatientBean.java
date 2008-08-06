@@ -16,6 +16,7 @@ import exceptions.DatabaseException;
 import exceptions.PersonsPeselException;
 import java.math.BigInteger;
 import java.util.List;
+import javax.annotation.security.RolesAllowed;
 import javax.ejb.EJB;
 import javax.ejb.Stateful;
 
@@ -23,7 +24,8 @@ import javax.ejb.Stateful;
  *
  * @author Piotrek
  */
-@Stateful
+@Stateful(name="PatientBean",mappedName="ejb/PatientBean")
+@RolesAllowed(value={"patient"})
 public class PatientBean implements PatientRemote {
 
     @EJB

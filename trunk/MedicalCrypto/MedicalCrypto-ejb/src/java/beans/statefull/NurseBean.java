@@ -17,6 +17,7 @@ import exceptions.DoctorRemoveException;
 import exceptions.PersonsPeselException;
 import java.math.BigInteger;
 import java.util.List;
+import javax.annotation.security.RolesAllowed;
 import javax.ejb.EJB;
 import javax.ejb.Stateful;
 
@@ -24,7 +25,8 @@ import javax.ejb.Stateful;
  *
  * @author Piotrek
  */
-@Stateful
+@Stateful(name="NurseBean",mappedName="ejb/NurseBean")
+@RolesAllowed(value={"nurse"})
 public class NurseBean implements NurseRemote {
 
     @EJB
@@ -62,7 +64,7 @@ public class NurseBean implements NurseRemote {
         return personsBean.findPersonByZip(zip);
     }
     
-     public PersonsDTO findPersonByPesel(BigInteger pesel) throws CryptographyException {
+     public PersonsDTO findPersonByPesel(String pesel) throws CryptographyException {
         return personsBean.findPersonByPesel(pesel);
     }
     

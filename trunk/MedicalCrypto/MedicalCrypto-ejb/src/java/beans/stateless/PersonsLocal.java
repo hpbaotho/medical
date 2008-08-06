@@ -36,7 +36,7 @@ public interface PersonsLocal {
     
     PersonsDTO findPersonById(BigInteger idPerson) throws CryptographyException;
     
-    PersonsDTO findPersonByPesel(BigInteger pesel) throws CryptographyException;
+    PersonsDTO findPersonByPesel(String pesel) throws CryptographyException;
     
     List<DoctorDTO> findDoctors() throws CryptographyException;
     

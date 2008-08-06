@@ -32,6 +32,8 @@ import javax.persistence.PersistenceException;
 public class VisitBean implements VisitLocal {
 
     @EJB
+    private PersonsLocal personsBean;
+    @EJB
     private ProviderLocal providerBean;
     @EJB
     private VisitFacadeLocal visitFacade;
@@ -158,8 +160,10 @@ public class VisitBean implements VisitLocal {
             Persons patientEntity = personsFacade.find(idPatient);
             if (patientEntity != null) {
                 List<Visit> visitEntityList = patientEntity.getVisitPatientList();
+                //PersonsDTO patientDTO = personsBean.findPersonById(idPatient);
                 for (int i = 0; i < visitEntityList.size(); i++) {
                     Visit visitEntity = visitEntityList.get(i);
+                    //PersonsDTO doctorDTO = personsBean.findPersonById(visitEntity.getDoctorId().getIdPersons());
                     HashMap<String, String> decryptionRequestData = createCipherTaskData(visitEntity.getDiagnose(), visitEntity.getInfo());
                     CipherTask decryptionRequest = new CipherTask(decryptionRequestData, visitEntity.getIv(), visitEntity.getKeyManifestId().getIdKeyManifest());
                     try {
@@ -167,6 +171,10 @@ public class VisitBean implements VisitLocal {
                         VisitDTO visitDTO = new VisitDTO(visitEntity);
                         visitDTO.setDiagnose(decryptionRequest.getData().get(Dict.DIAGNOSECOLUMN));
                         visitDTO.setInfo(decryptionRequest.getData().get(Dict.INFOCOLUMN));
+                        //visitDTO.setPatientName(patientDTO.getName());
+                        //visitDTO.setPatientSurname(patientDTO.getSurname());
+                        //visitDTO.setDoctorName(doctorDTO.getName());
+                        //visitDTO.setDoctorSurname(doctorDTO.getSurname());
                         result.add(visitDTO);
                     } catch (GeneralSecurityException ex) {
                         ex.printStackTrace();

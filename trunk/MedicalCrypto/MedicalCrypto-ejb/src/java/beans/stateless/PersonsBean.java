@@ -216,7 +216,7 @@ public class PersonsBean implements PersonsLocal {
         return result;
     }
 
-    public PersonsDTO findPersonByPesel(BigInteger pesel) throws CryptographyException {
+    public PersonsDTO findPersonByPesel(String pesel) throws CryptographyException {
         PersonsDTO result = null;
         if (pesel != null) {
             Persons personEntity = personsFacade.findByPesel(pesel);
@@ -289,7 +289,7 @@ public class PersonsBean implements PersonsLocal {
     public BigInteger getLoggedUserId() {
         Principal loggedUser;
         loggedUser = ctx.getCallerPrincipal();
-        Persons loggedUserEntity = personsFacade.findByPesel(new BigInteger(loggedUser.getName()));
+        Persons loggedUserEntity = personsFacade.findByPesel(loggedUser.getName());
         if (loggedUserEntity != null) {
             return loggedUserEntity.getIdPersons();
         }

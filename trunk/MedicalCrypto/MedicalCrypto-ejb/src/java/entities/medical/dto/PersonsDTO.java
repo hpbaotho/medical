@@ -23,7 +23,7 @@ public class PersonsDTO implements Serializable {
     private String city;
     private int zip;
     private String phone;
-    private BigInteger pesel;
+    private String pesel;
     private String role;
 
     public PersonsDTO() {
@@ -55,7 +55,7 @@ public class PersonsDTO implements Serializable {
     }
 
     public PersonsDTO(String pass, String name, String surname, String street, int number,
-            String city, int zip, String phone, BigInteger pesel, String role) {
+            String city, int zip, String phone, String pesel, String role) {
         this.idPersons = null;
         this.pass = pass;
         this.name = name;
@@ -65,7 +65,7 @@ public class PersonsDTO implements Serializable {
         this.city = city;
         this.zip = zip;
         this.phone = phone;
-        this.pesel = this.flipPesel(pesel);
+        this.pesel = flipPesel(pesel);
         this.role = role;
     }
 
@@ -141,15 +141,15 @@ public class PersonsDTO implements Serializable {
         this.phone = phone;
     }
 
-    public BigInteger getPesel() {
+    public String getPesel() {
         return pesel;
     }
 
-    public BigInteger getFlippedPesel() {
-        return this.flipPesel(pesel);
+    public String getFlippedPesel() {
+        return flipPesel(pesel);
     }
 
-    public void setPesel(BigInteger pesel) {
+    public void setPesel(String pesel) {
         this.pesel = pesel;
     }
 
@@ -161,12 +161,12 @@ public class PersonsDTO implements Serializable {
         this.role = role;
     }
 
-    private BigInteger flipPesel(BigInteger pesel) {
-        char[] peselToFlip = pesel.toString().toCharArray();
+    private static String flipPesel(String pesel) {
+        char[] peselToFlip = pesel.toCharArray();
         char[] flippedPesel = new char[peselToFlip.length];
         for (int i = peselToFlip.length - 1, j = 0; i >= 0; i--, j++) {
             flippedPesel[j] = peselToFlip[i];
         }
-        return new BigInteger(new String(flippedPesel));
+        return new String(flippedPesel);
     }
 }

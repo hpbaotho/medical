@@ -25,7 +25,7 @@ public interface DoctorRemote {
 
     List<PersonsDTO> findPersonByInitials(String name, String surname) throws CryptographyException;
 
-    PersonsDTO findPersonByPesel(BigInteger pesel) throws CryptographyException;
+    PersonsDTO findPersonByPesel(String pesel) throws CryptographyException;
 
     PersonsDTO findMe() throws CryptographyException, DatabaseException;
 

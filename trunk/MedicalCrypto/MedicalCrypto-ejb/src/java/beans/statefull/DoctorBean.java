@@ -15,6 +15,7 @@ import exceptions.DatabaseException;
 import exceptions.PersonsPeselException;
 import java.math.BigInteger;
 import java.util.List;
+import javax.annotation.security.RolesAllowed;
 import javax.ejb.EJB;
 import javax.ejb.Stateful;
 
@@ -22,7 +23,8 @@ import javax.ejb.Stateful;
  *
  * @author Piotrek
  */
-@Stateful
+@Stateful(name="DoctorBean",mappedName="ejb/DoctorBean")
+@RolesAllowed(value={"doctor"})
 public class DoctorBean implements DoctorRemote {
 
     @EJB
@@ -43,7 +45,7 @@ public class DoctorBean implements DoctorRemote {
         return personsBean.findPersonByInitials(name, surname);
     }
 
-    public PersonsDTO findPersonByPesel(BigInteger pesel) throws CryptographyException {
+    public PersonsDTO findPersonByPesel(String pesel) throws CryptographyException {
         return personsBean.findPersonByPesel(pesel);
     }
 
