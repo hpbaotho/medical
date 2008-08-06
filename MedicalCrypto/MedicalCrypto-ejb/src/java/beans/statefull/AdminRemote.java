@@ -38,7 +38,7 @@ public interface AdminRemote {
     
     List<PersonsDTO> findPersonByZip(int zip) throws CryptographyException;
     
-    PersonsDTO findPersonByPesel(BigInteger pesel) throws CryptographyException;
+    PersonsDTO findPersonByPesel(String pesel) throws CryptographyException;
     
     PersonsDTO findMe() throws CryptographyException, DatabaseException;
     

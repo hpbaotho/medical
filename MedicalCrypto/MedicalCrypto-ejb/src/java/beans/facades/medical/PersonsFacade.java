@@ -5,7 +5,6 @@
 package beans.facades.medical;
 
 import entities.medical.Persons;
-import java.math.BigInteger;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -40,7 +39,7 @@ public class PersonsFacade implements PersonsFacadeLocal {
         return em.find(entities.medical.Persons.class, id);
     }
 
-    public Persons findByPesel(BigInteger pesel) {
+    public Persons findByPesel(String pesel) {
         em.flush();
         Query queryByPesel = em.createNamedQuery("Persons.findByPesel");
         queryByPesel.setParameter("pesel", pesel);

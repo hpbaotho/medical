@@ -9,14 +9,6 @@
     <exclude-unlisted-classes>true</exclude-unlisted-classes>
     <properties/>
   </persistence-unit>
-  <persistence-unit name="Crypto-admincryptoPU" transaction-type="JTA">
-    <jta-data-source>jdbc/crypto-admincrypto</jta-data-source>
-    <class>entities.crypto.Ekey</class>
-    <class>entities.crypto.Engine</class>
-    <class>entities.crypto.Seckey</class>
-    <exclude-unlisted-classes>true</exclude-unlisted-classes>
-    <properties/>
-  </persistence-unit>
   <persistence-unit name="Crypto-keyproviderPU" transaction-type="JTA">
     <jta-data-source>jdbc/crypto-keyprovider</jta-data-source>
     <class>entities.crypto.Ekey</class>

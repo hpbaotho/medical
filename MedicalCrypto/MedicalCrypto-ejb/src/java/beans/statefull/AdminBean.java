@@ -17,6 +17,7 @@ import exceptions.DoctorRemoveException;
 import exceptions.PersonsPeselException;
 import java.math.BigInteger;
 import java.util.List;
+import javax.annotation.security.RolesAllowed;
 import javax.ejb.EJB;
 import javax.ejb.Stateful;
 
@@ -24,7 +25,8 @@ import javax.ejb.Stateful;
  *
  * @author Piotrek
  */
-@Stateful
+@Stateful(name="AdminBean",mappedName="ejb/AdminBean")
+@RolesAllowed(value={"admin"})
 public class AdminBean implements AdminRemote {
 
     @EJB
@@ -62,7 +64,7 @@ public class AdminBean implements AdminRemote {
         return personsBean.findPersonByZip(zip);
     }
 
-    public PersonsDTO findPersonByPesel(BigInteger pesel) throws CryptographyException {
+    public PersonsDTO findPersonByPesel(String pesel) throws CryptographyException {
         return personsBean.findPersonByPesel(pesel);
     }
 

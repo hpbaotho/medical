@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sun-ejb-jar PUBLIC "-//Sun Microsystems, Inc.//DTD Application Server 9.0 EJB 3.0//EN" "http://www.sun.com/software/appserver/dtds/sun-ejb-jar_3_0-0.dtd">
+<sun-ejb-jar>
+  <security-role-mapping>
+    <role-name>patient</role-name>
+    <group-name>patient</group-name>
+  </security-role-mapping>
+  <security-role-mapping>
+    <role-name>doctor</role-name>
+    <group-name>doctor</group-name>
+  </security-role-mapping>
+  <security-role-mapping>
+    <role-name>nurse</role-name>
+    <group-name>nurse</group-name>
+  </security-role-mapping>
+  <security-role-mapping>
+    <role-name>admin</role-name>
+    <group-name>admin</group-name>
+  </security-role-mapping>
+  <enterprise-beans>
+    <ejb>
+      <ejb-name>AdminBean</ejb-name>
+      <jndi-name>ejb/AdminBean</jndi-name>
+      <!--<ior-security-config>
+                <transport-config>
+                    <integrity>required</integrity>
+                    <confidentiality>required</confidentiality>
+                    <establish-trust-in-target>none</establish-trust-in-target>
+                    <establish-trust-in-client>none</establish-trust-in-client>
+                </transport-config>
+                <sas-context>
+                    <caller-propagation>none</caller-propagation>
+                </sas-context>
+            </ior-security-config>-->
+    </ejb>
+    <ejb>
+      <ejb-name>DoctorBean</ejb-name>
+      <jndi-name>ejb/DoctorBean</jndi-name>
+    </ejb>
+    <ejb>
+      <ejb-name>NurseBean</ejb-name>
+      <jndi-name>ejb/NurseBean</jndi-name>
+    </ejb>
+    <ejb>
+      <ejb-name>PatientBean</ejb-name>
+      <jndi-name>ejb/PatientBean</jndi-name>
+    </ejb>
+    <ejb>
+      <ejb-name>LoggingBean</ejb-name>
+      <jndi-name>ejb/LoggingBean</jndi-name>
+    </ejb>
+  </enterprise-beans>
+</sun-ejb-jar>

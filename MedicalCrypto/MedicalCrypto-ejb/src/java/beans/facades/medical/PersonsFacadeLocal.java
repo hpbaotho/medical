@@ -6,7 +6,6 @@
 package beans.facades.medical;
 
 import entities.medical.Persons;
-import java.math.BigInteger;
 import java.util.List;
 import javax.ejb.Local;
 
@@ -25,7 +24,7 @@ public interface PersonsFacadeLocal {
 
     Persons find(Object id);
     
-    Persons findByPesel(BigInteger pesel);
+    Persons findByPesel(String pesel);
     
     List<Persons> findByInitials(char inn, char ins);
     
