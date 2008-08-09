@@ -46,7 +46,7 @@ public class PersonsBean implements PersonsLocal {
 
     public boolean createPerson(PersonsDTO personToAddDTO) throws PersonsPeselException, CryptographyException, DatabaseException {
         if (personToAddDTO.getPass() != null && personToAddDTO.getName() != null &&
-                personToAddDTO.getSurname() != null && personToAddDTO.getStreet() != null && personToAddDTO.getNumber() > 0 &&
+                personToAddDTO.getSurname() != null && personToAddDTO.getStreet() != null && personToAddDTO.getNumber() != null &&
                 personToAddDTO.getCity() != null && personToAddDTO.getZip() > 0 && personToAddDTO.getPesel() != null &&
                 personToAddDTO.getRole() != null) {
             Persons personToAddEntity = personsFacade.findByPesel(personToAddDTO.getPesel());
@@ -93,7 +93,7 @@ public class PersonsBean implements PersonsLocal {
 
     public boolean editPerson(PersonsDTO personToEditDTO) throws PersonsPeselException, CryptographyException {
         if (personToEditDTO.getIdPersons() != null && personToEditDTO.getPass() != null && personToEditDTO.getName() != null &&
-                personToEditDTO.getSurname() != null && personToEditDTO.getStreet() != null && personToEditDTO.getNumber() > 0 &&
+                personToEditDTO.getSurname() != null && personToEditDTO.getStreet() != null && personToEditDTO.getNumber() != null &&
                 personToEditDTO.getCity() != null && personToEditDTO.getZip() > 0 && personToEditDTO.getPesel() != null &&
                 personToEditDTO.getRole() != null) {
 

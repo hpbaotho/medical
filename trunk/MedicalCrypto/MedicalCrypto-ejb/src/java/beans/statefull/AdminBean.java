@@ -55,19 +55,7 @@ public class AdminBean implements AdminRemote {
     public List<DoctorDTO> findDoctors() throws CryptographyException {
         return personsBean.findDoctors();
     }
-
-    public List<PersonsDTO> findPersonByInitials(String name, String surname) throws CryptographyException {
-        return personsBean.findPersonByInitials(name, surname);
-    }
-
-    public List<PersonsDTO> findPersonByZip(int zip) throws CryptographyException {
-        return personsBean.findPersonByZip(zip);
-    }
-
-    public PersonsDTO findPersonByPesel(String pesel) throws CryptographyException {
-        return personsBean.findPersonByPesel(pesel);
-    }
-
+    
     public PersonsDTO findMe() throws CryptographyException, DatabaseException {
         BigInteger myId = personsBean.getLoggedUserId();
         PersonsDTO result = personsBean.findPersonById(myId);

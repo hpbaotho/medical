@@ -7,6 +7,7 @@ package beans.statefull;
 import beans.stateless.PersonsLocal;
 import beans.stateless.TreatmentLocal;
 import beans.stateless.VisitLocal;
+import entities.medical.dto.DoctorDTO;
 import entities.medical.dto.PersonsDTO;
 import entities.medical.dto.TreatmentDTO;
 import entities.medical.dto.VisitDTO;
@@ -23,8 +24,8 @@ import javax.ejb.Stateful;
  *
  * @author Piotrek
  */
-@Stateful(name="DoctorBean",mappedName="ejb/DoctorBean")
-@RolesAllowed(value={"doctor"})
+@Stateful(name = "DoctorBean", mappedName = "ejb/DoctorBean")
+@RolesAllowed(value = {"doctor"})
 public class DoctorBean implements DoctorRemote {
 
     @EJB
@@ -41,12 +42,8 @@ public class DoctorBean implements DoctorRemote {
         return false;
     }
 
-    public List<PersonsDTO> findPersonByInitials(String name, String surname) throws CryptographyException {
-        return personsBean.findPersonByInitials(name, surname);
-    }
-
-    public PersonsDTO findPersonByPesel(String pesel) throws CryptographyException {
-        return personsBean.findPersonByPesel(pesel);
+    public List<DoctorDTO> findDoctors() throws CryptographyException {
+        return personsBean.findDoctors();
     }
 
     public PersonsDTO findMe() throws CryptographyException, DatabaseException {
@@ -66,12 +63,16 @@ public class DoctorBean implements DoctorRemote {
         return visitBean.editVisit(visitToEditDTO);
     }
 
-    public List<VisitDTO> findVisitByDoctorPatient(BigInteger idPatient) throws CryptographyException {
-        return visitBean.findVisitByDoctorPatient(idPatient, personsBean.getLoggedUserId());
+    public List<VisitDTO> findVisitByDoctorPatient(BigInteger idDoctor, BigInteger idPatient) throws CryptographyException {
+        return visitBean.findVisitByDoctorPatient(idDoctor, idPatient);
     }
 
     public List<VisitDTO> findVisitByDoctor() throws CryptographyException {
         return visitBean.findVisitByDoctor(personsBean.getLoggedUserId());
+    }
+
+    public List<VisitDTO> findVisitByPatient(BigInteger idPatient) throws CryptographyException {
+        return visitBean.findVisitByPatient(idPatient);
     }
 
     public boolean createTreatment(TreatmentDTO treatmentToAddDTO, BigInteger idVisit) throws CryptographyException, DatabaseException {

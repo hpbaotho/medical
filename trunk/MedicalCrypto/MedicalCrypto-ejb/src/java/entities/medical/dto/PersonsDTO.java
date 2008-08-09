@@ -12,14 +12,14 @@ import java.math.BigInteger;
  *
  * @author Piotrek
  */
-public class PersonsDTO implements Serializable {
+public class PersonsDTO implements Serializable, Comparable {
 
     private BigInteger idPersons;
     private String pass;
     private String name;
     private String surname;
     private String street;
-    private int number;
+    private String number;
     private String city;
     private int zip;
     private String phone;
@@ -32,7 +32,7 @@ public class PersonsDTO implements Serializable {
         this.name = null;
         this.surname = null;
         this.street = null;
-        this.number = -1;
+        this.number = null;
         this.city = null;
         this.zip = -1;
         this.phone = null;
@@ -54,7 +54,7 @@ public class PersonsDTO implements Serializable {
         this.role = personsEntity.getRole();
     }
 
-    public PersonsDTO(String pass, String name, String surname, String street, int number,
+    public PersonsDTO(String pass, String name, String surname, String street, String number,
             String city, int zip, String phone, String pesel, String role) {
         this.idPersons = null;
         this.pass = pass;
@@ -109,11 +109,11 @@ public class PersonsDTO implements Serializable {
         this.street = street;
     }
 
-    public int getNumber() {
+    public String getNumber() {
         return number;
     }
 
-    public void setNumber(int number) {
+    public void setNumber(String number) {
         this.number = number;
     }
 
@@ -161,12 +161,22 @@ public class PersonsDTO implements Serializable {
         this.role = role;
     }
 
-    private static String flipPesel(String pesel) {
+    public static String flipPesel(String pesel) {
         char[] peselToFlip = pesel.toCharArray();
         char[] flippedPesel = new char[peselToFlip.length];
         for (int i = peselToFlip.length - 1, j = 0; i >= 0; i--, j++) {
             flippedPesel[j] = peselToFlip[i];
         }
         return new String(flippedPesel);
+    }
+    
+    @Override
+    public String toString(){
+        return surname+" "+name;
+    }
+    
+    public int compareTo(Object o) {
+        PersonsDTO compare = (PersonsDTO) o;
+        return surname.compareToIgnoreCase(compare.surname);
     }
 }
