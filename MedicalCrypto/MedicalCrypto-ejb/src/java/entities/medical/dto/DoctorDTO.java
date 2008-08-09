@@ -12,7 +12,7 @@ import java.math.BigInteger;
  *
  * @author Piotrek
  */
-public class DoctorDTO implements Serializable {
+public class DoctorDTO implements Serializable, Comparable {
 
     private BigInteger idPersons;
     private String name;
@@ -55,5 +55,15 @@ public class DoctorDTO implements Serializable {
 
     public String getRole() {
         return role;
+    }
+
+    @Override
+    public String toString() {
+        return surname + " " + name;
+    }
+
+    public int compareTo(Object o) {
+        DoctorDTO compare = (DoctorDTO) o;
+        return surname.compareToIgnoreCase(compare.surname);
     }
 }

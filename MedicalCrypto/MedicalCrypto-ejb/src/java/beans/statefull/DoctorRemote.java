@@ -4,6 +4,7 @@
  */
 package beans.statefull;
 
+import entities.medical.dto.DoctorDTO;
 import entities.medical.dto.PersonsDTO;
 import entities.medical.dto.TreatmentDTO;
 import entities.medical.dto.VisitDTO;
@@ -23,17 +24,19 @@ public interface DoctorRemote {
 
     boolean editDoctor(PersonsDTO personToEdit) throws DatabaseException, CryptographyException, PersonsPeselException;
 
-    List<PersonsDTO> findPersonByInitials(String name, String surname) throws CryptographyException;
-
-    PersonsDTO findPersonByPesel(String pesel) throws CryptographyException;
+    List<DoctorDTO> findDoctors() throws CryptographyException;
 
     PersonsDTO findMe() throws CryptographyException, DatabaseException;
 
     boolean createVisit(VisitDTO visitToAdd, BigInteger idPatient) throws CryptographyException, DatabaseException;
 
     boolean editVisit(VisitDTO visitToEdit) throws CryptographyException;
+    
+    List<VisitDTO> findVisitByDoctorPatient(BigInteger idDoctor, BigInteger idPatient) throws CryptographyException;
 
     List<VisitDTO> findVisitByDoctor() throws CryptographyException;
+    
+    List<VisitDTO> findVisitByPatient(BigInteger idPatient) throws CryptographyException;
 
     boolean createTreatment(TreatmentDTO treatmentToAddDTO, BigInteger idVisit) throws CryptographyException, DatabaseException;
 

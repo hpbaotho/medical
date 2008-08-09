@@ -65,7 +65,7 @@ public class Persons implements Serializable {
     @Column(name = "street", nullable = false)
     private String street;
     @Column(name = "number", nullable = false)
-    private int number;
+    private String number;
     @Column(name = "city", nullable = false)
     private String city;
     @Column(name = "zip", nullable = false)
@@ -93,7 +93,7 @@ public class Persons implements Serializable {
     public Persons() {
     }
 
-    public Persons(String pass, String name, char inn, String surname, char ins, String street, int number,
+    public Persons(String pass, String name, char inn, String surname, char ins, String street, String number,
             String city, int zip, String phone, String pesel, String role, byte[] iv) {
         this.pass = pass;
         this.name = name;
@@ -162,11 +162,11 @@ public class Persons implements Serializable {
         this.street = street;
     }
 
-    public int getNumber() {
+    public String getNumber() {
         return number;
     }
 
-    public void setNumber(int number) {
+    public void setNumber(String number) {
         this.number = number;
     }
 

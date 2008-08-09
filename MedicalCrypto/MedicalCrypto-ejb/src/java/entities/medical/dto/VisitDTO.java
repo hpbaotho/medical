@@ -7,23 +7,25 @@ package entities.medical.dto;
 import entities.medical.Visit;
 import java.io.Serializable;
 import java.math.BigInteger;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
  *
  * @author Piotrek
  */
-public class VisitDTO implements Serializable {
+public class VisitDTO implements Serializable, Comparable {
 
     private BigInteger idVisit;
     private String diagnose;
     private String info;
     private Date date;
+    private DateFormat df = new SimpleDateFormat("dd-MM-yyyy");
 //    private String patientName;
 //    private String patientSurname;
 //    private String doctorName;
 //    private String doctorSurname;
-
     public VisitDTO() {
         this.idVisit = null;
         this.diagnose = null;
@@ -46,7 +48,7 @@ public class VisitDTO implements Serializable {
 //        this.doctorSurname = null;
     }
 
-    public VisitDTO(String diagnose, String info, Date date){//, String patientName, String patientSurname, String doctorName, String doctorSurname) {
+    public VisitDTO(String diagnose, String info, Date date) {//, String patientName, String patientSurname, String doctorName, String doctorSurname) {
         this.idVisit = null;
         this.diagnose = diagnose;
         this.info = info;
@@ -87,6 +89,22 @@ public class VisitDTO implements Serializable {
 
     public void setDate(Date date) {
         this.date = date;
+    }
+
+    @Override
+    public String toString() {
+        return df.format(date)+" "+diagnose;
+    }
+
+    public int compareTo(Object o) {
+        VisitDTO compare = (VisitDTO) o;
+        if (date.before(compare.getDate())) {
+            return -1;
+        } else if (date.after(compare.getDate())) {
+            return 1;
+        } else {
+            return 0;
+        }
     }
 //
 //    public String getPatientName() {

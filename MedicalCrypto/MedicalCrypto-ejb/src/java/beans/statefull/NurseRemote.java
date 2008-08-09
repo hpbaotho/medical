@@ -34,12 +34,6 @@ public interface NurseRemote {
     
     List<DoctorDTO> findDoctors() throws CryptographyException;
     
-    List<PersonsDTO> findPersonByInitials(String name, String surname) throws CryptographyException;
-    
-    List<PersonsDTO> findPersonByZip(int zip) throws CryptographyException;
-    
-    PersonsDTO findPersonByPesel(String pesel) throws CryptographyException;
-    
     PersonsDTO findMe() throws CryptographyException, DatabaseException;
     
     boolean editVisitDoctor(VisitDTO visitToEditDTO, BigInteger idDoctor);
