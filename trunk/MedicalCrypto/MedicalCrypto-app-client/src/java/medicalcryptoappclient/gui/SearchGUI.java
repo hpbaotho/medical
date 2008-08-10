@@ -1,5 +1,5 @@
 /*
- * Search.java
+ * SearchGUI.java
  *
  * Created on 9 sierpień 2008, 15:28
  */
@@ -15,22 +15,20 @@ import java.util.logging.Logger;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import medicalcryptoappclient.gui.tablemodels.UserTableModel;
-import medicalcryptoappclient.gui.validators.NameValidator;
-import medicalcryptoappclient.gui.validators.PeselValidator;
-import medicalcryptoappclient.gui.validators.SurnameValidator;
 
 /**
  *
  * @author  Piotrek
  */
-public class Search extends javax.swing.JFrame {
+public class SearchGUI extends javax.swing.JFrame {
 
-    /** Creates new form Search */
-    public Search(JFrame parent, SearchRemote searchBean, PersonsDTO searchedPersonDTO) {
+    /** Creates new form SearchGUI */
+    public SearchGUI(JFrame parent, SearchRemote searchBean, boolean treatment) {
         initComponents();
         this.parent = parent;
         this.searchBean = searchBean;
-        this.searchedPersonDTO= searchedPersonDTO;
+        this.treatment = treatment;
+    //this.searchedPersonDTO= searchedPersonDTO;
     }
 
     /** This method is called from within the constructor to
@@ -200,7 +198,7 @@ private void searchPeselButtonActionPerformed(java.awt.event.ActionEvent evt) {/
         UserTableModel tableModel = new UserTableModel(personsDTOList);
         jTable1.setModel(tableModel);
     } catch (CryptographyException ex) {
-        Logger.getLogger(Search.class.getName()).log(Level.SEVERE, null, ex);
+        Logger.getLogger(SearchGUI.class.getName()).log(Level.SEVERE, null, ex);
     }
 
 }//GEN-LAST:event_searchPeselButtonActionPerformed
@@ -208,12 +206,12 @@ private void searchPeselButtonActionPerformed(java.awt.event.ActionEvent evt) {/
 private void searchInitialsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchInitialsButtonActionPerformed
     try {
         List<PersonsDTO> personsDTOList = searchBean.findPersonByInitials(namejTextField.getText(), surnamejTextField.getText());//GEN-LAST:event_searchInitialsButtonActionPerformed
-        UserTableModel tableModel = new UserTableModel(personsDTOList);
-        jTable1.setModel(tableModel);
-    } catch (CryptographyException ex) {
-        Logger.getLogger(Search.class.getName()).log(Level.SEVERE, null, ex);
+            UserTableModel tableModel = new UserTableModel(personsDTOList);
+            jTable1.setModel(tableModel);
+        } catch (CryptographyException ex) {
+            Logger.getLogger(SearchGUI.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
-}
 
 private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelButtonActionPerformed
     this.setVisible(false);
@@ -221,28 +219,31 @@ private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
 }//GEN-LAST:event_cancelButtonActionPerformed
 
 private void OKButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_OKButtonActionPerformed
-List<PersonsDTO> selectedPersonsDTOList= new ArrayList<PersonsDTO>();
-    for(int i=0; i<jTable1.getRowCount(); i++){
-    if((Boolean)jTable1.getValueAt(i, 0)){
-       selectedPersonsDTOList.add((PersonsDTO)jTable1.getValueAt(i, 2)); 
+    List<PersonsDTO> selectedPersonsDTOList = new ArrayList<PersonsDTO>();
+    for (int i = 0; i < jTable1.getRowCount(); i++) {
+        if ((Boolean) jTable1.getValueAt(i, 0)) {
+            selectedPersonsDTOList.add((PersonsDTO) jTable1.getValueAt(i, 2));
+        }
     }
-}
-if(selectedPersonsDTOList.size()==1){
-    if(parent instanceof GUIDoctor){
-     GUIDoctor parentGUI= (GUIDoctor)parent;
-     parentGUI.setPatientDTO(selectedPersonsDTOList.get(0));
-     parentGUI.callVisitDoctorItemActionPerformed(evt);
-    }
-    
-    this.setVisible(false);
-    parent.setEnabled(true);
-}
-else{
- JOptionPane.showMessageDialog(this,
+    if (selectedPersonsDTOList.size() == 1) {
+        if (parent instanceof GUIDoctor) {
+            GUIDoctor parentGUI = (GUIDoctor) parent;
+            parentGUI.setPatientDTO(selectedPersonsDTOList.get(0));
+            if (treatment) {
+                parentGUI.callTreatmentDoctorItemActionPerformed(evt);
+            } else {
+                parentGUI.callVisitDoctorItemActionPerformed(evt);
+            }
+        }
+
+        this.setVisible(false);
+        parent.setEnabled(true);
+    } else {
+        JOptionPane.showMessageDialog(this,
                 "Zaznacz dokładnie jedna osobę z listy",
                 "Błąd",
-                JOptionPane.ERROR_MESSAGE);   
-}
+                JOptionPane.ERROR_MESSAGE);
+    }
 }//GEN-LAST:event_OKButtonActionPerformed
 
     /**
@@ -267,5 +268,6 @@ else{
     // End of variables declaration//GEN-END:variables
 JFrame parent= null;
 SearchRemote searchBean= null;
-PersonsDTO searchedPersonDTO= null;
+boolean treatment;
+//PersonsDTO searchedPersonDTO= null;
 }
