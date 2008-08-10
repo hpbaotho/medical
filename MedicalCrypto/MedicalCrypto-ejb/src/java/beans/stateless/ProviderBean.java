@@ -118,6 +118,7 @@ public class ProviderBean implements ProviderLocal {
         KeyManifest liveKeyManifest = null;
         for (int i = keyManifestList.size() - 1; i >= 0; i--) {
             KeyManifest keyManifest = keyManifestList.get(i);
+            keyManifestFacade.refresh(keyManifest);
             if (keyManifest.getKeyActivationDate().after(now)) {
                 continue;
             } else {

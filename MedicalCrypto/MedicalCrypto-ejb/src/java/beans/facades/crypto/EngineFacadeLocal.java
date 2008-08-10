@@ -25,5 +25,7 @@ public interface EngineFacadeLocal {
     Engine find(Object id);
 
     List<Engine> findAll();
+    
+    void refresh(Engine toRefresh);
 
 }

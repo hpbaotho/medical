@@ -33,13 +33,15 @@ public class EkeyFacade implements EkeyFacadeLocal {
     }
 
     public Ekey find(Object id) {
-        em.flush();
         return em.find(entities.crypto.Ekey.class, id);
     }
 
     public List<Ekey> findAll() {
-        em.flush();
         return em.createQuery("select object(o) from Ekey as o").getResultList();
+    }
+    
+    public void refresh(Ekey toRefresh){
+        em.refresh(toRefresh);
     }
 
 }

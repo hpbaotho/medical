@@ -73,6 +73,7 @@ public class PersonsBean implements PersonsLocal {
                         encryptionRequest.getIv());
                 KeyManifest keyManifest = keyManifestFacade.find(encryptionRequest.getAliasId());
                 if (keyManifest != null) {
+                    keyManifestFacade.refresh(keyManifest);
                     if (keyManifest.getIdKeyManifest().equals(encryptionRequest.getAliasId())) {
                         personToAddEntity.setKeyManifestId(keyManifest);
                         personsFacade.create(personToAddEntity);
@@ -125,6 +126,7 @@ public class PersonsBean implements PersonsLocal {
                     personToEditEntity.setIv(encryptionRequest.getIv());
                     KeyManifest keyManifest = keyManifestFacade.find(encryptionRequest.getAliasId());
                     if (keyManifest != null) {
+                        keyManifestFacade.refresh(keyManifest);
                         if (keyManifest.getIdKeyManifest().equals(encryptionRequest.getAliasId())) {
                             personToEditEntity.setKeyManifestId(keyManifest);
                             personsFacade.edit(personToEditEntity);
@@ -172,6 +174,7 @@ public class PersonsBean implements PersonsLocal {
             List<Persons> personsEntityList = personsFacade.findByInitials(name.charAt(0), surname.charAt(0));
             for (int i = 0; i < personsEntityList.size(); i++) {
                 Persons personEntity = personsEntityList.get(i);
+                personsFacade.refresh(personEntity);
                 HashMap<String, String> decryptionRequestData = createCipherTaskData(personEntity.getName(), personEntity.getSurname(), personEntity.getStreet(), personEntity.getPhone());
                 CipherTask decryptionRequest = new CipherTask(decryptionRequestData, personEntity.getIv(), personEntity.getKeyManifestId().getIdKeyManifest());
                 try {
@@ -197,6 +200,7 @@ public class PersonsBean implements PersonsLocal {
             List<Persons> personsEntityList = personsFacade.findByZip(zip);
             for (int i = 0; i < personsEntityList.size(); i++) {
                 Persons personEntity = personsEntityList.get(i);
+                personsFacade.refresh(personEntity);
                 HashMap<String, String> decryptionRequestData = createCipherTaskData(personEntity.getName(), personEntity.getSurname(), personEntity.getStreet(), personEntity.getPhone());
                 CipherTask decryptionRequest = new CipherTask(decryptionRequestData, personEntity.getIv(), personEntity.getKeyManifestId().getIdKeyManifest());
                 try {
@@ -221,6 +225,7 @@ public class PersonsBean implements PersonsLocal {
         if (pesel != null) {
             Persons personEntity = personsFacade.findByPesel(pesel);
             if (personEntity != null) {
+                personsFacade.refresh(personEntity);
                 HashMap<String, String> decryptionRequestData = createCipherTaskData(personEntity.getName(), personEntity.getSurname(), personEntity.getStreet(), personEntity.getPhone());
                 CipherTask decryptionRequest = new CipherTask(decryptionRequestData, personEntity.getIv(), personEntity.getKeyManifestId().getIdKeyManifest());
                 try {
@@ -244,6 +249,7 @@ public class PersonsBean implements PersonsLocal {
         if (idPerson != null) {
             Persons personEntity = personsFacade.find(idPerson);
             if (personEntity != null) {
+                personsFacade.refresh(personEntity);
                 HashMap<String, String> decryptionRequestData = createCipherTaskData(personEntity.getName(), personEntity.getSurname(), personEntity.getStreet(), personEntity.getPhone());
                 CipherTask decryptionRequest = new CipherTask(decryptionRequestData, personEntity.getIv(), personEntity.getKeyManifestId().getIdKeyManifest());
                 try {
@@ -267,6 +273,7 @@ public class PersonsBean implements PersonsLocal {
         List<Persons> doctorsEntityList = personsFacade.findByRole("doctor");
         for (int i = 0; i < doctorsEntityList.size(); i++) {
             Persons doctorEntity = doctorsEntityList.get(i);
+            personsFacade.refresh(doctorEntity);
             HashMap<String, String> decryptionRequestData = new HashMap<String, String>();
             decryptionRequestData.put(Dict.NAMECOLUMN, doctorEntity.getName());
             decryptionRequestData.put(Dict.SURNAMECOLUMN, doctorEntity.getSurname());
@@ -291,6 +298,7 @@ public class PersonsBean implements PersonsLocal {
         loggedUser = ctx.getCallerPrincipal();
         Persons loggedUserEntity = personsFacade.findByPesel(loggedUser.getName());
         if (loggedUserEntity != null) {
+            personsFacade.refresh(loggedUserEntity);
             return loggedUserEntity.getIdPersons();
         }
         return null;

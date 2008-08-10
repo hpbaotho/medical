@@ -33,13 +33,15 @@ public class EngineFacade implements EngineFacadeLocal {
     }
 
     public Engine find(Object id) {
-        em.flush();
         return em.find(entities.crypto.Engine.class, id);
     }
 
     public List<Engine> findAll() {
-        em.flush();
         return em.createQuery("select object(o) from Engine as o").getResultList();
+    }
+    
+    public void refresh(Engine toRefresh){
+        em.refresh(toRefresh);
     }
 
 }

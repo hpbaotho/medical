@@ -59,6 +59,8 @@ public class TreatmentBean implements TreatmentLocal {
                     treatmentToAddEntity.setVisitId(visitEntity);
                     KeyManifest keyManifest = keyManifestFacade.find(encryptionRequest.getAliasId());
                     if (keyManifest != null) {
+                        keyManifestFacade.refresh(keyManifest);
+                        keyManifestFacade.refresh(keyManifest);
                         if (keyManifest.getIdKeyManifest().equals(encryptionRequest.getAliasId())) {
                             treatmentToAddEntity.setKeyManifestId(keyManifest);
                             treatmentFacade.create(treatmentToAddEntity);
@@ -91,6 +93,8 @@ public class TreatmentBean implements TreatmentLocal {
                     treatmentToEditEntity.setIv(encryptionRequest.getIv());
                     KeyManifest keyManifest = keyManifestFacade.find(encryptionRequest.getAliasId());
                     if (keyManifest != null) {
+                        keyManifestFacade.refresh(keyManifest);
+                        keyManifestFacade.refresh(keyManifest);
                         if (keyManifest.getIdKeyManifest().equals(encryptionRequest.getAliasId())) {
                             treatmentToEditEntity.setKeyManifestId(keyManifest);
                             treatmentFacade.edit(treatmentToEditEntity);
@@ -126,6 +130,7 @@ public class TreatmentBean implements TreatmentLocal {
                 List<Treatment> treatmentEntityList = visitEntity.getTreatmentList();
                 for (int i = 0; i < treatmentEntityList.size(); i++) {
                     Treatment treatmentEntity = treatmentEntityList.get(i);
+                    treatmentFacade.refresh(treatmentEntity);
                     HashMap<String, String> decryptionRequestData = createCipherTaskData(treatmentEntity.getMedicine(), treatmentEntity.getDosage());
                     CipherTask decryptionRequest = new CipherTask(decryptionRequestData, treatmentEntity.getIv(), treatmentEntity.getKeyManifestId().getIdKeyManifest());
                     try {
@@ -155,6 +160,7 @@ public class TreatmentBean implements TreatmentLocal {
                     List<Treatment> treatmentEntityList = visitEntity.getTreatmentList();
                     for (int j = 0; j < treatmentEntityList.size(); j++) {
                         Treatment treatmentEntity = treatmentEntityList.get(j);
+                        treatmentFacade.refresh(treatmentEntity);
                         HashMap<String, String> decryptionRequestData = createCipherTaskData(treatmentEntity.getMedicine(), treatmentEntity.getDosage());
                         CipherTask decryptionRequest = new CipherTask(decryptionRequestData, treatmentEntity.getIv(), treatmentEntity.getKeyManifestId().getIdKeyManifest());
                         try {
