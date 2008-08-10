@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package medicalcryptoappclient.gui.tablemodels;
+package medicalcryptoappclient.gui.models;
 
 import entities.medical.dto.PersonsDTO;
 import java.util.ArrayList;
