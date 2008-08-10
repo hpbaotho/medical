@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package medicalcryptoappclient.gui.tablemodels;
+package medicalcryptoappclient.gui.models;
 
 import entities.medical.dto.PersonsDTO;
 import java.util.ArrayList;
@@ -16,7 +16,7 @@ import javax.swing.table.AbstractTableModel;
 public class UserTableModel extends AbstractTableModel {
 
     private List<Object[]> rows = new ArrayList<Object[]>();
-    private String[] columns = {"LP", "PESEL", "NAZWISKO IMIĘ"};
+    private String[] columns = {"Zaznacz", "PESEL", "Pacjent"};
 
     public UserTableModel(List<PersonsDTO> tuplets) {
         this.setContent(tuplets);

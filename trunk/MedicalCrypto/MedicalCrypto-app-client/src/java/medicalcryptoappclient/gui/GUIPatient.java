@@ -835,8 +835,8 @@ private void treatmentjComboBoxActionPerformed(java.awt.event.ActionEvent evt) {
                 DefaultTreeModel model= (DefaultTreeModel) treatmentJTree.getModel();
                 model.setRoot(root);
                 mainPanel.setVisible(false);
-                treatmentPanel.setVisible(false);
-                visitPanel.setVisible(true);
+                treatmentPanel.setVisible(true);
+                visitPanel.setVisible(false);
             }
         } else {
             treatmentAllItemActionPerformed(evt);
