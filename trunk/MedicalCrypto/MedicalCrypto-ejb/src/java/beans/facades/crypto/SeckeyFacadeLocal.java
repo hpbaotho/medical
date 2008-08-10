@@ -25,5 +25,7 @@ public interface SeckeyFacadeLocal {
     Seckey find(Object id);
 
     List<Seckey> findAll();
+    
+    void refresh(Seckey toRefresh);
 
 }

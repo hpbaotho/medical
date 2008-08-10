@@ -33,5 +33,7 @@ public interface PersonsFacadeLocal {
     List<Persons> findByRole(String role);
 
     List<Persons> findAll();
+    
+    void refresh(Persons toRefresh);
 
 }

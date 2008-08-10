@@ -27,5 +27,7 @@ public interface KeyManifestFacadeLocal {
     List<KeyManifest> findByFamilyStatus(String family, String status);
 
     List<KeyManifest> findAll();
+    
+    void refresh(KeyManifest toRefresh);
 
 }

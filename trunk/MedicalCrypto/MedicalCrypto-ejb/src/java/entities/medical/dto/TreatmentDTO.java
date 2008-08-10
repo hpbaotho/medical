@@ -59,4 +59,9 @@ public class TreatmentDTO implements Serializable {
     public void setDosage(String dosage) {
         this.dosage = dosage;
     }
+    
+    @Override
+    public String toString(){
+        return medicine;
+    }
 }

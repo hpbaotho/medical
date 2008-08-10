@@ -62,6 +62,7 @@ public class VisitBean implements VisitLocal {
                         visitToAddEntity.setPatientId(parientEntity);
                         KeyManifest keyManifest = keyManifestFacade.find(encryptionRequest.getAliasId());
                         if (keyManifest != null) {
+                            keyManifestFacade.refresh(keyManifest);
                             if (keyManifest.getIdKeyManifest().equals(encryptionRequest.getAliasId())) {
                                 visitToAddEntity.setKeyManifestId(keyManifest);
                                 visitFacade.create(visitToAddEntity);
@@ -97,6 +98,7 @@ public class VisitBean implements VisitLocal {
                     visitToEditEntity.setIv(encryptionRequest.getIv());
                     KeyManifest keyManifest = keyManifestFacade.find(encryptionRequest.getAliasId());
                     if (keyManifest != null) {
+                        keyManifestFacade.refresh(keyManifest);
                         if (keyManifest.getIdKeyManifest().equals(encryptionRequest.getAliasId())) {
                             visitToEditEntity.setKeyManifestId(keyManifest);
                             visitFacade.edit(visitToEditEntity);
@@ -163,6 +165,7 @@ public class VisitBean implements VisitLocal {
                 //PersonsDTO patientDTO = personsBean.findPersonById(idPatient);
                 for (int i = 0; i < visitEntityList.size(); i++) {
                     Visit visitEntity = visitEntityList.get(i);
+                    visitFacade.refresh(visitEntity);
                     //PersonsDTO doctorDTO = personsBean.findPersonById(visitEntity.getDoctorId().getIdPersons());
                     HashMap<String, String> decryptionRequestData = createCipherTaskData(visitEntity.getDiagnose(), visitEntity.getInfo());
                     CipherTask decryptionRequest = new CipherTask(decryptionRequestData, visitEntity.getIv(), visitEntity.getKeyManifestId().getIdKeyManifest());
@@ -194,6 +197,7 @@ public class VisitBean implements VisitLocal {
                 List<Visit> visitEntityList = doctorEntity.getVisitDocList();
                 for (int i = 0; i < visitEntityList.size(); i++) {
                     Visit visitEntity = visitEntityList.get(i);
+                    visitFacade.refresh(visitEntity);
                     HashMap<String, String> decryptionRequestData = createCipherTaskData(visitEntity.getDiagnose(), visitEntity.getInfo());
                     CipherTask decryptionRequest = new CipherTask(decryptionRequestData, visitEntity.getIv(), visitEntity.getKeyManifestId().getIdKeyManifest());
                     try {
@@ -220,6 +224,7 @@ public class VisitBean implements VisitLocal {
                 List<Visit> visitEntityList = doctorEntity.getVisitDocList();
                 for (int i = 0; i < visitEntityList.size(); i++) {
                     Visit visitEntity = visitEntityList.get(i);
+                    visitFacade.refresh(visitEntity);
                     if (visitEntity.getPatientId().getIdPersons().equals(idPatient)) {
                         HashMap<String, String> decryptionRequestData = createCipherTaskData(visitEntity.getDiagnose(), visitEntity.getInfo());
                         CipherTask decryptionRequest = new CipherTask(decryptionRequestData, visitEntity.getIv(), visitEntity.getKeyManifestId().getIdKeyManifest());

@@ -25,5 +25,7 @@ public interface EkeyFacadeLocal {
     Ekey find(Object id);
 
     List<Ekey> findAll();
+    
+    void refresh(Ekey toRefresh);
 
 }

@@ -93,7 +93,7 @@ public class VisitDTO implements Serializable, Comparable {
 
     @Override
     public String toString() {
-        return df.format(date)+" "+diagnose;
+        return df.format(date);
     }
 
     public int compareTo(Object o) {

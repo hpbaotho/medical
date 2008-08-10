@@ -25,5 +25,7 @@ public interface TreatmentFacadeLocal {
     Treatment find(Object id);
 
     List<Treatment> findAll();
+    
+    void refresh(Treatment toRefresh);
 
 }

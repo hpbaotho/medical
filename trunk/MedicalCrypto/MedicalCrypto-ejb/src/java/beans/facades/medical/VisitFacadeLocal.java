@@ -25,5 +25,7 @@ public interface VisitFacadeLocal {
     Visit find(Object id);
 
     List<Visit> findAll();
+    
+    void refresh(Visit toRefresh);
 
 }

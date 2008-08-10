@@ -35,12 +35,10 @@ public class PersonsFacade implements PersonsFacadeLocal {
     }
 
     public Persons find(Object id) {
-        em.flush();
         return em.find(entities.medical.Persons.class, id);
     }
 
     public Persons findByPesel(String pesel) {
-        em.flush();
         Query queryByPesel = em.createNamedQuery("Persons.findByPesel");
         queryByPesel.setParameter("pesel", pesel);
         try {
@@ -51,7 +49,6 @@ public class PersonsFacade implements PersonsFacadeLocal {
     }
 
     public List<Persons> findByInitials(char inn, char ins) {
-        em.flush();
         Query queryByInitials = em.createNamedQuery("Persons.findByInitials");
         queryByInitials.setParameter("inn", inn);
         queryByInitials.setParameter("ins", ins);
@@ -59,21 +56,22 @@ public class PersonsFacade implements PersonsFacadeLocal {
     }
 
     public List<Persons> findByZip(int zip) {
-        em.flush();
         Query queryByZip = em.createNamedQuery("Persons.findByZip");
         queryByZip.setParameter("zip", zip);
         return queryByZip.getResultList();
     }
-    
+
     public List<Persons> findByRole(String role) {
-        em.flush();
         Query queryByZip = em.createNamedQuery("Persons.findByRole");
         queryByZip.setParameter("role", role);
         return queryByZip.getResultList();
     }
 
     public List<Persons> findAll() {
-        em.flush();
         return em.createQuery("select object(o) from Persons as o").getResultList();
+    }
+    
+    public void refresh(Persons toRefresh){
+        em.refresh(toRefresh);
     }
 }
