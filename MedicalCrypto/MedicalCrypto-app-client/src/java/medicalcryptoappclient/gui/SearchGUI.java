@@ -8,6 +8,7 @@ package medicalcryptoappclient.gui;
 import beans.statefull.SearchRemote;
 import entities.medical.dto.PersonsDTO;
 import exceptions.CryptographyException;
+import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -23,11 +24,12 @@ import medicalcryptoappclient.gui.models.UserTableModel;
 public class SearchGUI extends javax.swing.JFrame {
 
     /** Creates new form SearchGUI */
-    public SearchGUI(JFrame parent, SearchRemote searchBean, boolean treatment) {
+    public SearchGUI(JFrame parent, SearchRemote searchBean, ActionEvent sourceEvt) {
         initComponents();
         this.parent = parent;
         this.searchBean = searchBean;
-        this.treatment = treatment;
+        this.sourceEvt = sourceEvt;
+        System.out.println("Wywolalem szukanie z evt= " + sourceEvt.getActionCommand());
     //this.searchedPersonDTO= searchedPersonDTO;
     }
 
@@ -137,6 +139,7 @@ public class SearchGUI extends javax.swing.JFrame {
         jScrollPane1.setViewportView(jTable1);
 
         OKButton.setText("OK");
+        OKButton.setActionCommand("Edytuj dane użytkowników");
         OKButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 OKButtonActionPerformed(evt);
@@ -226,13 +229,28 @@ private void OKButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
         }
     }
     if (selectedPersonsDTOList.size() == 1) {
-        if (parent instanceof GUIDoctor) {
+        if (parent instanceof GUINurse) {
+            GUINurse parentGUI = (GUINurse) parent;
+            parentGUI.setPatientDTO(selectedPersonsDTOList.get(0));
+            if (sourceEvt.getActionCommand().equals("uzytkownicyPielegniarka")) {
+                System.out.println("Wracam do panelu leczenia");
+                parentGUI.callUserItemActionPerformed(sourceEvt);
+            } else if (sourceEvt.getActionCommand().equals("wizytyLekarz")) {
+                //parentGUI.callVisitDoctorItemActionPerformed(evt);
+                System.out.println("Wracam do panelu wizyt");
+            } else {
+                System.out.println("wracam do panelu edycji");
+                parentGUI.callEditDataItemActionPerformed(sourceEvt);
+            }
+        } else if (parent instanceof GUIDoctor) {
             GUIDoctor parentGUI = (GUIDoctor) parent;
             parentGUI.setPatientDTO(selectedPersonsDTOList.get(0));
-            if (treatment) {
-                parentGUI.callTreatmentDoctorItemActionPerformed(evt);
-            } else {
+            if (sourceEvt.getActionCommand().equals("leczenieLekarz")) {
+                System.out.println("Wracam do panelu leczenia");
+                parentGUI.callTreatmentDoctorItemActionPerformed(sourceEvt);
+            } else if (sourceEvt.getActionCommand().equals("wizytyLekarz")) {
                 parentGUI.callVisitDoctorItemActionPerformed(evt);
+                System.out.println("Wracam do panelu wizyt");
             }
         }
 
@@ -268,6 +286,6 @@ private void OKButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
     // End of variables declaration//GEN-END:variables
 JFrame parent= null;
 SearchRemote searchBean= null;
-boolean treatment;
+ActionEvent sourceEvt;
 //PersonsDTO searchedPersonDTO= null;
 }

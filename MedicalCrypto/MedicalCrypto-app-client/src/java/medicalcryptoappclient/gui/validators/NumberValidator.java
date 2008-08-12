@@ -19,7 +19,7 @@ import javax.swing.JTextField;
 public class NumberValidator extends InputVerifier {
 
     JLabel errorLabel;
-    Pattern pattern = Pattern.compile("[0-9]{1,4}([/][0-9]{1,4})?");
+    Pattern pattern = Pattern.compile("[0-9]{1,4}");
 
     public NumberValidator(JLabel errorLabel) {
         this.errorLabel = errorLabel;
