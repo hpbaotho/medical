@@ -127,10 +127,11 @@ public class TreatmentBean implements TreatmentLocal {
         if (idVisit != null) {
             Visit visitEntity = visitFacade.find(idVisit);
             if (visitEntity != null) {
+                visitFacade.refresh(visitEntity);
                 List<Treatment> treatmentEntityList = visitEntity.getTreatmentList();
                 for (int i = 0; i < treatmentEntityList.size(); i++) {
                     Treatment treatmentEntity = treatmentEntityList.get(i);
-                    treatmentFacade.refresh(treatmentEntity);
+                    //treatmentFacade.refresh(treatmentEntity);
                     HashMap<String, String> decryptionRequestData = createCipherTaskData(treatmentEntity.getMedicine(), treatmentEntity.getDosage());
                     CipherTask decryptionRequest = new CipherTask(decryptionRequestData, treatmentEntity.getIv(), treatmentEntity.getKeyManifestId().getIdKeyManifest());
                     try {
@@ -154,13 +155,14 @@ public class TreatmentBean implements TreatmentLocal {
         if (idPatient != null) {
             Persons patientEntity = personsFacade.find(idPatient);
             if (patientEntity != null) {
+                personsFacade.refresh(patientEntity);
                 List<Visit> visitEntityList = patientEntity.getVisitPatientList();
                 for (int i = 0; i < visitEntityList.size(); i++) {
                     Visit visitEntity = visitEntityList.get(i);
                     List<Treatment> treatmentEntityList = visitEntity.getTreatmentList();
                     for (int j = 0; j < treatmentEntityList.size(); j++) {
                         Treatment treatmentEntity = treatmentEntityList.get(j);
-                        treatmentFacade.refresh(treatmentEntity);
+                        //treatmentFacade.refresh(treatmentEntity);
                         HashMap<String, String> decryptionRequestData = createCipherTaskData(treatmentEntity.getMedicine(), treatmentEntity.getDosage());
                         CipherTask decryptionRequest = new CipherTask(decryptionRequestData, treatmentEntity.getIv(), treatmentEntity.getKeyManifestId().getIdKeyManifest());
                         try {

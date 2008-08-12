@@ -26,6 +26,13 @@ public class DoctorDTO implements Serializable, Comparable {
         this.role = null;
     }
 
+    public DoctorDTO(PersonsDTO personDTO) {
+        this.idPersons = personDTO.getIdPersons();
+        this.name = personDTO.getName();
+        this.surname = personDTO.getSurname();
+        this.role = personDTO.getRole();
+    }
+
     public DoctorDTO(Persons personsEntity) {
         this.idPersons = personsEntity.getIdPersons();
         this.name = null;

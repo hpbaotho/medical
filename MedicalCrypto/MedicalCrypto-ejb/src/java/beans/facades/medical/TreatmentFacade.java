@@ -2,7 +2,6 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package beans.facades.medical;
 
 import entities.medical.Treatment;
@@ -17,7 +16,8 @@ import javax.persistence.PersistenceContext;
  */
 @Stateless
 public class TreatmentFacade implements TreatmentFacadeLocal {
-    @PersistenceContext(unitName="Medical-adminmedPU")
+
+    @PersistenceContext(unitName = "Medical-adminmedPU")
     private EntityManager em;
 
     public void create(Treatment treatment) {
@@ -39,9 +39,8 @@ public class TreatmentFacade implements TreatmentFacadeLocal {
     public List<Treatment> findAll() {
         return em.createQuery("select object(o) from Treatment as o").getResultList();
     }
-    
-    public void refresh(Treatment toRefresh){
+
+    public void refresh(Treatment toRefresh) {
         em.refresh(toRefresh);
     }
-
 }

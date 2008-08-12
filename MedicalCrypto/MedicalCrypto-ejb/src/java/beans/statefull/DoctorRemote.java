@@ -31,16 +31,20 @@ public interface DoctorRemote {
     boolean createVisit(VisitDTO visitToAdd, BigInteger idPatient) throws CryptographyException, DatabaseException;
 
     boolean editVisit(VisitDTO visitToEdit) throws CryptographyException;
-    
+
+    boolean removeVisit(VisitDTO visitToRemoveDTO);
+
     List<VisitDTO> findVisitByDoctorPatient(BigInteger idDoctor, BigInteger idPatient) throws CryptographyException;
 
     List<VisitDTO> findVisitByDoctor() throws CryptographyException;
-    
+
     List<VisitDTO> findVisitByPatient(BigInteger idPatient) throws CryptographyException;
 
     boolean createTreatment(TreatmentDTO treatmentToAddDTO, BigInteger idVisit) throws CryptographyException, DatabaseException;
 
     boolean editTreatment(TreatmentDTO treatmentToEditDTO) throws CryptographyException;
+
+    boolean removeTreatment(TreatmentDTO treatmentToRemoveDTO);
 
     List<TreatmentDTO> findTreatmentByVisit(BigInteger idVisit) throws CryptographyException;
 
