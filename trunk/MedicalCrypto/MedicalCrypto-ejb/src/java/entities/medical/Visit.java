@@ -9,6 +9,7 @@ import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Date;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -58,7 +59,7 @@ public class Visit implements Serializable {
     @Version
     @Column(name = "version")
     private Integer version;
-    @OneToMany(mappedBy = "visitId")
+    @OneToMany(mappedBy = "visitId", cascade={CascadeType.REFRESH})
     private List<Treatment> treatmentList= new ArrayList<Treatment>();
     @JoinColumn(name = "key_manifest_id", referencedColumnName = "id_key_manifest")
     @ManyToOne

@@ -62,6 +62,10 @@ public class DoctorBean implements DoctorRemote {
     public boolean editVisit(VisitDTO visitToEditDTO) throws CryptographyException {
         return visitBean.editVisit(visitToEditDTO);
     }
+    
+    public boolean removeVisit(VisitDTO visitToRemoveDTO){
+        return visitBean.removeVisit(visitToRemoveDTO.getIdVisit());
+    }
 
     public List<VisitDTO> findVisitByDoctorPatient(BigInteger idDoctor, BigInteger idPatient) throws CryptographyException {
         return visitBean.findVisitByDoctorPatient(idDoctor, idPatient);
@@ -81,6 +85,10 @@ public class DoctorBean implements DoctorRemote {
 
     public boolean editTreatment(TreatmentDTO treatmentToEditDTO) throws CryptographyException {
         return treatmentBean.editTreatment(treatmentToEditDTO);
+    }
+    
+    public boolean removeTreatment(TreatmentDTO treatmentToRemoveDTO){
+        return treatmentBean.removeTreatment(treatmentToRemoveDTO.getIdTreatment());
     }
 
     public List<TreatmentDTO> findTreatmentByVisit(BigInteger idVisit) throws CryptographyException {

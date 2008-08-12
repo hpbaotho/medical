@@ -30,7 +30,7 @@ public class VisitFacade implements VisitFacadeLocal {
 
     public void remove(Visit visit) {
         em.remove(em.merge(visit));
-    }
+        }
 
     public Visit find(Object id) {
         return em.find(entities.medical.Visit.class, id);

@@ -82,9 +82,9 @@ public class Persons implements Serializable {
     @Version
     @Column(name = "version")
     private Integer version;
-    @OneToMany(mappedBy = "doctorId")
+    @OneToMany(mappedBy = "doctorId", cascade={CascadeType.REFRESH})
     private List<Visit> visitDocList = new ArrayList<Visit>();
-    @OneToMany(mappedBy = "patientId")
+    @OneToMany(mappedBy = "patientId", cascade={CascadeType.REFRESH})
     private List<Visit> visitPatientList = new ArrayList<Visit>();
     @JoinColumn(name = "key_manifest_id", referencedColumnName = "id_key_manifest", nullable = false)
     @ManyToOne
