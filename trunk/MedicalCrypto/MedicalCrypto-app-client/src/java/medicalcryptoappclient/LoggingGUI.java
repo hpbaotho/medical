@@ -9,10 +9,12 @@ import beans.statefull.DoctorRemote;
 import com.sun.appserv.security.ProgrammaticLogin;
 import javax.naming.InitialContext;
 import beans.statefull.LoggingRemote;
+import beans.statefull.NurseRemote;
 import beans.statefull.PatientRemote;
 import beans.statefull.SearchRemote;
 import entities.medical.dto.PersonsDTO;
 import medicalcryptoappclient.gui.GUIDoctor;
+import medicalcryptoappclient.gui.GUINurse;
 import medicalcryptoappclient.gui.GUIPatient;
 
 /**
@@ -122,30 +124,34 @@ public class LoggingGUI extends javax.swing.JFrame {
             }
             String user = new String(flippedLogin);
             programmaticLogin.login(user, pass);
-            InitialContext ic= new InitialContext();
-            LoggingRemote loggingBean= (LoggingRemote) ic.lookup("ejb/LoggingBean");
-            PersonsDTO loggedUser= loggingBean.getLoggedUser();
-            String role= loggedUser.getRole();
-            if("admin".equals(role)){
+            InitialContext ic = new InitialContext();
+            LoggingRemote loggingBean = (LoggingRemote) ic.lookup("ejb/LoggingBean");
+            PersonsDTO loggedUser = loggingBean.getLoggedUser();
+            String role = loggedUser.getRole();
+            if ("admin".equals(role)) {
                 System.out.println("Admin");
-            } else if("doctor".equals(role)){
+            } else if ("doctor".equals(role)) {
                 System.out.println("Doctor");
-                DoctorRemote doctorBean= (DoctorRemote) ic.lookup("ejb/DoctorBean");
-                SearchRemote searchBean= (SearchRemote) ic.lookup("ejb/SearchBean");
+                DoctorRemote doctorBean = (DoctorRemote) ic.lookup("ejb/DoctorBean");
+                SearchRemote searchBean = (SearchRemote) ic.lookup("ejb/SearchBean");
                 this.setVisible(false);
-                GUIDoctor mainWindow= new GUIDoctor(loggedUser,doctorBean, searchBean);
+                GUIDoctor mainWindow = new GUIDoctor(loggedUser, doctorBean, searchBean);
                 mainWindow.setVisible(true);
-            }else if("patient".equals(role)){
+            } else if ("patient".equals(role)) {
                 System.out.println("Patient");
-                PatientRemote patientBean= (PatientRemote) ic.lookup("ejb/PatientBean");
+                PatientRemote patientBean = (PatientRemote) ic.lookup("ejb/PatientBean");
                 this.setVisible(false);
-                GUIPatient mainWindow= new GUIPatient(loggedUser,patientBean);
+                GUIPatient mainWindow = new GUIPatient(loggedUser, patientBean);
                 mainWindow.setVisible(true);
-                System.out.println("Wyświetlam okno");
-            }else if("nurse".equals(role)){
+            } else if ("nurse".equals(role)) {
                 System.out.println("Nurse");
-            }else{
-                System.out.println("Nieznany");
+                NurseRemote nurseBean = (NurseRemote) ic.lookup("ejb/NurseBean");
+                SearchRemote searchBean = (SearchRemote) ic.lookup("ejb/SearchBean");
+                this.setVisible(false);
+                GUINurse mainWindow = new GUINurse(loggedUser, nurseBean, searchBean);
+                mainWindow.setVisible(true);
+            } else {
+                throw new Exception();
             }
         } catch (Exception ex) {
             ex.printStackTrace();

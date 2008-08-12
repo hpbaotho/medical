@@ -5,7 +5,7 @@
  */
 package medicalcryptoappclient.gui;
 
-import beans.statefull.DoctorRemote;
+import beans.statefull.NurseRemote;
 import beans.statefull.SearchRemote;
 import com.sun.appserv.security.ProgrammaticLogin;
 import entities.medical.dto.DoctorDTO;
@@ -13,7 +13,10 @@ import entities.medical.dto.PersonsDTO;
 import entities.medical.dto.TreatmentDTO;
 import entities.medical.dto.VisitDTO;
 import exceptions.CryptographyException;
+import exceptions.DoctorRemoveException;
+import exceptions.PersonsPeselException;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import javax.swing.JOptionPane;
@@ -21,6 +24,7 @@ import javax.swing.JPopupMenu;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
+import medicalcryptoappclient.gui.models.RoleModel;
 import medicalcryptoappclient.gui.validators.CityValidator;
 import medicalcryptoappclient.gui.validators.NameValidator;
 import medicalcryptoappclient.gui.validators.NumberValidator;
@@ -35,21 +39,20 @@ import medicalcryptoappclient.gui.validators.ZipValidator;
  *
  * @author  Piotrek
  */
-public class GUIDoctor extends javax.swing.JFrame {
+public class GUINurse extends javax.swing.JFrame {
 
     /** Creates new form GUIPatient */
-    public GUIDoctor(PersonsDTO user, DoctorRemote doctorBean, SearchRemote searchBean) {
+    public GUINurse(PersonsDTO user, NurseRemote nurseBean, SearchRemote searchBean) {
         try {
             System.out.println("iNICJUJE OKNA");
             initComponents();
             mainPanel.setVisible(true);
             visitPatientPanel.setVisible(false);
-            visitDoctorPanel.setVisible(false);
             treatmentPatientPanel.setVisible(false);
-            treatmentDoctorPanel.setVisible(false);
             editPersonPanel.setVisible(false);
+            usersNursePanel.setVisible(false);
             this.loggedUser = user;
-            this.doctorBean = doctorBean;
+            this.nurseBean = nurseBean;
             this.searchBean = searchBean;
             setLoggedUserName();
         } catch (Exception ex) {
@@ -80,7 +83,7 @@ public class GUIDoctor extends javax.swing.JFrame {
         return parent;
     }
 
-    private void loadUserData(PersonsDTO user) {
+    private void loadUserData(PersonsDTO user, boolean comboEnabled, int comboIndex) {
         peseljTextField.setText(user.getFlippedPesel());
         passjTextField.setText(user.getPass());
         namejTextField.setText(user.getName());
@@ -90,16 +93,33 @@ public class GUIDoctor extends javax.swing.JFrame {
         zipjTextField.setText(String.valueOf(user.getZip()));
         cityjTextField.setText(user.getCity());
         phonejTextField.setText(user.getPhone());
-        rolejComboBox.setSelectedIndex(1);
+        if (comboEnabled) {
+            rolejComboBox.setEnabled(comboEnabled);
+        }
+        rolejComboBox.setSelectedIndex(comboIndex);
+    }
 
+    private void vipeUserData() {
+        String empty = "";
+        peseljTextField.setText(empty);
+        passjTextField.setText(empty);
+        namejTextField.setText(empty);
+        surnamejTextField.setText(empty);
+        streetjTextField.setText(empty);
+        numberjTextField.setText(empty);
+        zipjTextField.setText(empty);
+        cityjTextField.setText(empty);
+        phonejTextField.setText(empty);
+        rolejComboBox.setEnabled(true);
     }
 
     private void setLoggedUserName() {
         this.loggedUserLabel.setText("Zalogowany: " + loggedUser.getName() + " " + loggedUser.getSurname());
     }
 
-    private void maybeShowPopup(MouseEvent e, JPopupMenu menu) {
+    private void maybeShowPopup(MouseEvent e, JPopupMenu menu, boolean enabled) {
         if (e.getButton() == 3) {
+            changeDoctorItem.setEnabled(enabled);
             menu.show(e.getComponent(),
                     e.getX(), e.getY());
         }
@@ -109,28 +129,10 @@ public class GUIDoctor extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        visitDoctorAddjPopupMenu = new javax.swing.JPopupMenu();
-        addVisitjMenuItem = new javax.swing.JMenuItem();
-        visitDoctorEditjPopupMenu = new javax.swing.JPopupMenu();
-        editVisitjMenuItem = new javax.swing.JMenuItem();
-        deleteVisitjMenuItem = new javax.swing.JMenuItem();
-        treatmentDoctorAddjPopupMenu = new javax.swing.JPopupMenu();
-        addTreatmentjMenuItem = new javax.swing.JMenuItem();
-        treatmentDoctorEditjPopupMenu = new javax.swing.JPopupMenu();
-        editTreatmentjMenuItem = new javax.swing.JMenuItem();
-        deleteTreatmentjMenuItem = new javax.swing.JMenuItem();
-        visitDoctorPanel = new javax.swing.JPanel();
-        jPanel4 = new javax.swing.JPanel();
-        jLabel17 = new javax.swing.JLabel();
-        jLabel18 = new javax.swing.JLabel();
-        visitDoctorDiagnosejTextField = new javax.swing.JTextField();
-        jScrollPane3 = new javax.swing.JScrollPane();
-        visitDoctorInfojTextArea1 = new javax.swing.JTextArea();
-        jLabel19 = new javax.swing.JLabel();
-        visitDoctorjTreeScrollPane = new javax.swing.JScrollPane();
-        visitDoctorJTree = new javax.swing.JTree();
-        visitDoctorSearchPatientjButton = new javax.swing.JButton();
-        visitDoctorPatientLabel = new javax.swing.JLabel();
+        userNursejPopupMenu = new javax.swing.JPopupMenu();
+        editUserItem = new javax.swing.JMenuItem();
+        deleteUserItem = new javax.swing.JMenuItem();
+        changeDoctorItem = new javax.swing.JMenuItem();
         visitPatientPanel = new javax.swing.JPanel();
         jPanel3 = new javax.swing.JPanel();
         jLabel4 = new javax.swing.JLabel();
@@ -142,18 +144,12 @@ public class GUIDoctor extends javax.swing.JFrame {
         visitjTreeScrollPane = new javax.swing.JScrollPane();
         visitJTree1 = new javax.swing.JTree();
         doctorsjComboBox = new javax.swing.JComboBox();
-        treatmentDoctorPanel = new javax.swing.JPanel();
-        jLabel20 = new javax.swing.JLabel();
-        jPanel5 = new javax.swing.JPanel();
-        jLabel21 = new javax.swing.JLabel();
-        jLabel22 = new javax.swing.JLabel();
-        treatmentDoctorMedicinejTextField = new javax.swing.JTextField();
-        jScrollPane4 = new javax.swing.JScrollPane();
-        treatmentDoctorDosagejTextArea = new javax.swing.JTextArea();
-        treatmentDoctorjTreeScrollPane = new javax.swing.JScrollPane();
-        treatmentDoctorJTree = new javax.swing.JTree();
-        treatmentDoctorSearchPatientjButton = new javax.swing.JButton();
-        treatmentDoctorPatientLabel = new javax.swing.JLabel();
+        usersNursePanel = new javax.swing.JPanel();
+        jLabel19 = new javax.swing.JLabel();
+        usersNursejTreeScrollPane = new javax.swing.JScrollPane();
+        usersNurseJTree = new javax.swing.JTree();
+        usersNurseSearchPatientjButton = new javax.swing.JButton();
+        usersNursePatientLabel = new javax.swing.JLabel();
         treatmentPatientPanel = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
@@ -206,159 +202,42 @@ public class GUIDoctor extends javax.swing.JFrame {
         mainPanelItem = new javax.swing.JMenuItem();
         editDataItem = new javax.swing.JMenuItem();
         endItem = new javax.swing.JMenuItem();
+        usersMenu = new javax.swing.JMenu();
+        addUserItem = new javax.swing.JMenuItem();
+        editUserDataItem = new javax.swing.JMenuItem();
+        usersItem = new javax.swing.JMenuItem();
         visitMenu = new javax.swing.JMenu();
         visitPatientItem = new javax.swing.JMenuItem();
-        visitDoctorItem = new javax.swing.JMenuItem();
         treatmentMenu = new javax.swing.JMenu();
         treatmentPatientItem = new javax.swing.JMenuItem();
-        treatmentDoctorItem = new javax.swing.JMenuItem();
 
-        addVisitjMenuItem.setText("Dodaj wizytę");
-        addVisitjMenuItem.addActionListener(new java.awt.event.ActionListener() {
+        editUserItem.setText("Edytuj użytkownika");
+        editUserItem.setActionCommand("Edytuj dane użytkowników");
+        editUserItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                addVisitjMenuItemActionPerformed(evt);
+                editUserItemActionPerformed(evt);
             }
         });
-        visitDoctorAddjPopupMenu.add(addVisitjMenuItem);
+        userNursejPopupMenu.add(editUserItem);
 
-        editVisitjMenuItem.setText("Edytuj wizytę");
-        editVisitjMenuItem.addActionListener(new java.awt.event.ActionListener() {
+        deleteUserItem.setText("Usuń użytkownika");
+        deleteUserItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                editVisitjMenuItemActionPerformed(evt);
+                deleteUserItemActionPerformed(evt);
             }
         });
-        visitDoctorEditjPopupMenu.add(editVisitjMenuItem);
+        userNursejPopupMenu.add(deleteUserItem);
 
-        deleteVisitjMenuItem.setText("Usuń wizytę");
-        deleteVisitjMenuItem.addActionListener(new java.awt.event.ActionListener() {
+        changeDoctorItem.setText("Przenieś wizyty");
+        changeDoctorItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                deleteVisitjMenuItemActionPerformed(evt);
+                changeDoctorItemActionPerformed(evt);
             }
         });
-        visitDoctorEditjPopupMenu.add(deleteVisitjMenuItem);
-
-        addTreatmentjMenuItem.setText("Dodaj leczenie");
-        addTreatmentjMenuItem.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                addTreatmentjMenuItemActionPerformed(evt);
-            }
-        });
-        treatmentDoctorAddjPopupMenu.add(addTreatmentjMenuItem);
-
-        editTreatmentjMenuItem.setText("Edytuj leczenie");
-        editTreatmentjMenuItem.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                editTreatmentjMenuItemActionPerformed(evt);
-            }
-        });
-        treatmentDoctorEditjPopupMenu.add(editTreatmentjMenuItem);
-
-        deleteTreatmentjMenuItem.setText("Usuń leczenie");
-        deleteTreatmentjMenuItem.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                deleteTreatmentjMenuItemActionPerformed(evt);
-            }
-        });
-        treatmentDoctorEditjPopupMenu.add(deleteTreatmentjMenuItem);
+        userNursejPopupMenu.add(changeDoctorItem);
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Przychodnia");
-
-        visitDoctorPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Wizyty:"));
-
-        jLabel17.setText("Diagnoza:");
-        jLabel17.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-
-        jLabel18.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel18.setText("Informacje:");
-
-        visitDoctorDiagnosejTextField.setEditable(false);
-
-        visitDoctorInfojTextArea1.setBackground(new java.awt.Color(240, 240, 240));
-        visitDoctorInfojTextArea1.setColumns(20);
-        visitDoctorInfojTextArea1.setEditable(false);
-        visitDoctorInfojTextArea1.setLineWrap(true);
-        visitDoctorInfojTextArea1.setRows(5);
-        jScrollPane3.setViewportView(visitDoctorInfojTextArea1);
-
-        javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
-        jPanel4.setLayout(jPanel4Layout);
-        jPanel4Layout.setHorizontalGroup(
-            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel4Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addComponent(jLabel17, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jLabel18, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 328, Short.MAX_VALUE)
-                    .addComponent(visitDoctorDiagnosejTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 328, Short.MAX_VALUE))
-                .addContainerGap())
-        );
-        jPanel4Layout.setVerticalGroup(
-            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel4Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel17, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(visitDoctorDiagnosejTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel18, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jScrollPane3))
-                .addContainerGap())
-        );
-
-        jLabel19.setText("Pacjent:");
-
-        visitDoctorJTree.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                visitDoctorJTreeMouseClicked(evt);
-            }
-        });
-        visitDoctorJTree.addTreeSelectionListener(new javax.swing.event.TreeSelectionListener() {
-            public void valueChanged(javax.swing.event.TreeSelectionEvent evt) {
-                visitDoctorJTreeValueChanged(evt);
-            }
-        });
-        visitDoctorjTreeScrollPane.setViewportView(visitDoctorJTree);
-
-        visitDoctorSearchPatientjButton.setText("Szukaj");
-        visitDoctorSearchPatientjButton.setActionCommand("wizytyLekarz");
-        visitDoctorSearchPatientjButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                visitDoctorSearchPatientjButtonActionPerformed(evt);
-            }
-        });
-
-        javax.swing.GroupLayout visitDoctorPanelLayout = new javax.swing.GroupLayout(visitDoctorPanel);
-        visitDoctorPanel.setLayout(visitDoctorPanelLayout);
-        visitDoctorPanelLayout.setHorizontalGroup(
-            visitDoctorPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(visitDoctorPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel19)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(visitDoctorPatientLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 275, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(visitDoctorSearchPatientjButton)
-                .addContainerGap())
-            .addComponent(jPanel4, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(visitDoctorjTreeScrollPane, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 408, Short.MAX_VALUE)
-        );
-        visitDoctorPanelLayout.setVerticalGroup(
-            visitDoctorPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(visitDoctorPanelLayout.createSequentialGroup()
-                .addGroup(visitDoctorPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel19, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(visitDoctorSearchPatientjButton)
-                    .addComponent(visitDoctorPatientLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(visitDoctorjTreeScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 144, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-        );
 
         visitPatientPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Wizyty:"));
 
@@ -430,7 +309,7 @@ public class GUIDoctor extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(jLabel7)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(doctorsjComboBox, 0, 304, Short.MAX_VALUE)
+                .addComponent(doctorsjComboBox, 0, 0, Short.MAX_VALUE)
                 .addContainerGap())
             .addComponent(jPanel3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(visitjTreeScrollPane, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 408, Short.MAX_VALUE)
@@ -447,98 +326,48 @@ public class GUIDoctor extends javax.swing.JFrame {
                 .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
-        treatmentDoctorPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Leczenie:"));
+        usersNursePanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Użytkownicy:"));
 
-        jLabel20.setText("Pacjent:");
+        jLabel19.setText("Użytkownik:");
 
-        jLabel21.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel21.setText("Lek:");
-
-        jLabel22.setText("Dawkowanie:");
-
-        treatmentDoctorMedicinejTextField.setEditable(false);
-
-        treatmentDoctorDosagejTextArea.setBackground(new java.awt.Color(240, 240, 240));
-        treatmentDoctorDosagejTextArea.setColumns(20);
-        treatmentDoctorDosagejTextArea.setEditable(false);
-        treatmentDoctorDosagejTextArea.setRows(5);
-        jScrollPane4.setViewportView(treatmentDoctorDosagejTextArea);
-
-        javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
-        jPanel5.setLayout(jPanel5Layout);
-        jPanel5Layout.setHorizontalGroup(
-            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel5Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addComponent(jLabel21, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jLabel22, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 320, Short.MAX_VALUE)
-                    .addComponent(treatmentDoctorMedicinejTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 320, Short.MAX_VALUE))
-                .addContainerGap())
-        );
-        jPanel5Layout.setVerticalGroup(
-            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel5Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel21, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(treatmentDoctorMedicinejTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel22, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jScrollPane4))
-                .addContainerGap())
-        );
-
-        treatmentDoctorJTree.addMouseListener(new java.awt.event.MouseAdapter() {
+        usersNurseJTree.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                treatmentDoctorJTreeMouseClicked(evt);
+                usersNurseJTreeMouseClicked(evt);
             }
         });
-        treatmentDoctorJTree.addTreeSelectionListener(new javax.swing.event.TreeSelectionListener() {
-            public void valueChanged(javax.swing.event.TreeSelectionEvent evt) {
-                treatmentDoctorJTreeValueChanged(evt);
-            }
-        });
-        treatmentDoctorjTreeScrollPane.setViewportView(treatmentDoctorJTree);
+        usersNursejTreeScrollPane.setViewportView(usersNurseJTree);
 
-        treatmentDoctorSearchPatientjButton.setText("Szukaj");
-        treatmentDoctorSearchPatientjButton.setActionCommand("leczenieLekarz");
-        treatmentDoctorSearchPatientjButton.addActionListener(new java.awt.event.ActionListener() {
+        usersNurseSearchPatientjButton.setText("Szukaj");
+        usersNurseSearchPatientjButton.setActionCommand("uzytkownicyPielegniarka");
+        usersNurseSearchPatientjButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                treatmentDoctorSearchPatientjButtonActionPerformed(evt);
+                usersNurseSearchPatientjButtonActionPerformed(evt);
             }
         });
 
-        javax.swing.GroupLayout treatmentDoctorPanelLayout = new javax.swing.GroupLayout(treatmentDoctorPanel);
-        treatmentDoctorPanel.setLayout(treatmentDoctorPanelLayout);
-        treatmentDoctorPanelLayout.setHorizontalGroup(
-            treatmentDoctorPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(treatmentDoctorPanelLayout.createSequentialGroup()
+        javax.swing.GroupLayout usersNursePanelLayout = new javax.swing.GroupLayout(usersNursePanel);
+        usersNursePanel.setLayout(usersNursePanelLayout);
+        usersNursePanelLayout.setHorizontalGroup(
+            usersNursePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(usersNursePanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel20)
+                .addComponent(jLabel19)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(treatmentDoctorPatientLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 275, Short.MAX_VALUE)
+                .addComponent(usersNursePatientLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 257, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(treatmentDoctorSearchPatientjButton)
+                .addComponent(usersNurseSearchPatientjButton)
                 .addContainerGap())
-            .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(treatmentDoctorjTreeScrollPane, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 408, Short.MAX_VALUE)
+            .addComponent(usersNursejTreeScrollPane, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 408, Short.MAX_VALUE)
         );
-        treatmentDoctorPanelLayout.setVerticalGroup(
-            treatmentDoctorPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(treatmentDoctorPanelLayout.createSequentialGroup()
-                .addGroup(treatmentDoctorPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel20, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(treatmentDoctorSearchPatientjButton)
-                    .addComponent(treatmentDoctorPatientLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
+        usersNursePanelLayout.setVerticalGroup(
+            usersNursePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(usersNursePanelLayout.createSequentialGroup()
+                .addGroup(usersNursePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel19, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(usersNurseSearchPatientjButton)
+                    .addComponent(usersNursePatientLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(treatmentDoctorjTreeScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 144, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(usersNursejTreeScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 264, Short.MAX_VALUE))
         );
 
         treatmentPatientPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Leczenie:"));
@@ -658,8 +487,7 @@ public class GUIDoctor extends javax.swing.JFrame {
         jLabel16.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel16.setText("Użytkownik:");
 
-        peseljTextField.setEditable(false);
-        peseljTextField.setInputVerifier(new PeselValidator(nameErrorjLabel));
+        peseljTextField.setInputVerifier(new PeselValidator(peselErrorjLabel));
 
         passjTextField.setInputVerifier(new PassValidator(passErrorjLabel));
 
@@ -677,8 +505,10 @@ public class GUIDoctor extends javax.swing.JFrame {
 
         phonejTextField.setInputVerifier(new PhoneValidator(phoneErrorjLabel));
 
-        rolejComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Pacjent", "Doktor", "Pielęgniarka", "Administrator" }));
         rolejComboBox.setEnabled(false);
+        rolejComboBox.addItem(new RoleModel("patient", "Pacjent"));
+        rolejComboBox.addItem(new RoleModel("doctor", "Doktor"));
+        rolejComboBox.addItem(new RoleModel("nurse", "Pielgniarka"));
 
         peselErrorjLabel.setFont(new java.awt.Font("Tahoma", 0, 10));
         peselErrorjLabel.setForeground(new java.awt.Color(255, 0, 0));
@@ -885,7 +715,7 @@ public class GUIDoctor extends javax.swing.JFrame {
         fileMenu.add(mainPanelItem);
 
         editDataItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_E, java.awt.event.InputEvent.CTRL_MASK));
-        editDataItem.setText("Edytuj swoje dane");
+        editDataItem.setText("Edytuj własne dane");
         editDataItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 editDataItemActionPerformed(evt);
@@ -904,6 +734,38 @@ public class GUIDoctor extends javax.swing.JFrame {
 
         mainjMenuBar.add(fileMenu);
 
+        usersMenu.setText("Użytkownicy");
+
+        addUserItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_D, java.awt.event.InputEvent.CTRL_MASK));
+        addUserItem.setText("Dodaj użytkownika");
+        addUserItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                addUserItemActionPerformed(evt);
+            }
+        });
+        usersMenu.add(addUserItem);
+
+        editUserDataItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_U, java.awt.event.InputEvent.CTRL_MASK));
+        editUserDataItem.setText("Edytuj dane użytkowników");
+        editUserDataItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                editUserDataItemActionPerformed(evt);
+            }
+        });
+        usersMenu.add(editUserDataItem);
+
+        usersItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_P, java.awt.event.InputEvent.CTRL_MASK));
+        usersItem.setText("Przeglądaj użytkowników");
+        usersItem.setActionCommand("uzytkownicyPielegniarka");
+        usersItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                usersItemActionPerformed(evt);
+            }
+        });
+        usersMenu.add(usersItem);
+
+        mainjMenuBar.add(usersMenu);
+
         visitMenu.setText("Wizyty");
 
         visitPatientItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_W, java.awt.event.InputEvent.ALT_MASK));
@@ -914,16 +776,6 @@ public class GUIDoctor extends javax.swing.JFrame {
             }
         });
         visitMenu.add(visitPatientItem);
-
-        visitDoctorItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_W, java.awt.event.InputEvent.ALT_MASK | java.awt.event.InputEvent.CTRL_MASK));
-        visitDoctorItem.setText("Przeglądaj wizyty jako lekarz");
-        visitDoctorItem.setActionCommand("wizytyLekarz");
-        visitDoctorItem.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                visitDoctorItemActionPerformed(evt);
-            }
-        });
-        visitMenu.add(visitDoctorItem);
 
         mainjMenuBar.add(visitMenu);
 
@@ -937,16 +789,6 @@ public class GUIDoctor extends javax.swing.JFrame {
             }
         });
         treatmentMenu.add(treatmentPatientItem);
-
-        treatmentDoctorItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_R, java.awt.event.InputEvent.ALT_MASK | java.awt.event.InputEvent.CTRL_MASK));
-        treatmentDoctorItem.setText("Przeglądaj leczenie jako doktor");
-        treatmentDoctorItem.setActionCommand("leczenieLekarz");
-        treatmentDoctorItem.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                treatmentDoctorItemActionPerformed(evt);
-            }
-        });
-        treatmentMenu.add(treatmentDoctorItem);
 
         mainjMenuBar.add(treatmentMenu);
 
@@ -975,12 +817,7 @@ public class GUIDoctor extends javax.swing.JFrame {
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(layout.createSequentialGroup()
                     .addGap(0, 0, Short.MAX_VALUE)
-                    .addComponent(visitDoctorPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGap(0, 0, Short.MAX_VALUE)))
-            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(layout.createSequentialGroup()
-                    .addGap(0, 0, Short.MAX_VALUE)
-                    .addComponent(treatmentDoctorPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(usersNursePanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGap(0, 0, Short.MAX_VALUE)))
         );
         layout.setVerticalGroup(
@@ -1004,12 +841,7 @@ public class GUIDoctor extends javax.swing.JFrame {
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(layout.createSequentialGroup()
                     .addGap(0, 0, Short.MAX_VALUE)
-                    .addComponent(visitDoctorPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGap(0, 0, Short.MAX_VALUE)))
-            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(layout.createSequentialGroup()
-                    .addGap(0, 0, Short.MAX_VALUE)
-                    .addComponent(treatmentDoctorPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(usersNursePanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGap(0, 0, Short.MAX_VALUE)))
         );
 
@@ -1019,7 +851,7 @@ public class GUIDoctor extends javax.swing.JFrame {
 private void visitPatientItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_visitPatientItemActionPerformed
     try {
         if (doctorsList == null) {
-            doctorsList = doctorBean.findDoctors();
+            doctorsList = nurseBean.findDoctors();
             Collections.sort(doctorsList);
         }
         if (doctorsjComboBox.getItemCount() == 1) {
@@ -1032,7 +864,7 @@ private void visitPatientItemActionPerformed(java.awt.event.ActionEvent evt) {//
         DefaultMutableTreeNode root = new DefaultMutableTreeNode(loggedUser);
         for (int i = 0; i < doctorsList.size(); i++) {
             DoctorDTO doctorDTO = doctorsList.get(i);
-            List<VisitDTO> visitList = doctorBean.findVisitByDoctorPatient(doctorDTO.getIdPersons(), loggedUser.getIdPersons());
+            List<VisitDTO> visitList = nurseBean.findVisitByDoctorPatient(doctorDTO.getIdPersons(), loggedUser.getIdPersons());
             if (visitList.isEmpty()) {
                 continue;
             }
@@ -1043,9 +875,9 @@ private void visitPatientItemActionPerformed(java.awt.event.ActionEvent evt) {//
         model.setRoot(root);
         mainPanel.setVisible(false);
         treatmentPatientPanel.setVisible(false);
-        treatmentDoctorPanel.setVisible(false);
-        visitDoctorPanel.setVisible(false);
         visitPatientPanel.setVisible(true);
+        editPersonPanel.setVisible(false);
+        usersNursePanel.setVisible(false);
     } catch (CryptographyException ex) {
         JOptionPane.showMessageDialog(this,
                 "Wystąpił błąd przy pobieraniu danych\nSkontaktuj się z przychodnią lekarską",
@@ -1081,7 +913,7 @@ private void doctorsjComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//
         Object selectedItem = doctorsjComboBox.getSelectedItem();
         if (selectedItem instanceof DoctorDTO) {
             DoctorDTO selectedDoctorDTO = (DoctorDTO) selectedItem;
-            List<VisitDTO> visitList = doctorBean.findVisitByDoctorPatient(selectedDoctorDTO.getIdPersons(), loggedUser.getIdPersons());
+            List<VisitDTO> visitList = nurseBean.findVisitByDoctorPatient(selectedDoctorDTO.getIdPersons(), loggedUser.getIdPersons());
             if (!visitList.isEmpty()) {
                 DefaultMutableTreeNode parent = new DefaultMutableTreeNode(selectedDoctorDTO);
                 root.add(addVisits(parent, visitList));
@@ -1089,9 +921,9 @@ private void doctorsjComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//
                 model.setRoot(root);
                 mainPanel.setVisible(false);
                 treatmentPatientPanel.setVisible(false);
-                treatmentDoctorPanel.setVisible(false);
-                visitDoctorPanel.setVisible(false);
                 visitPatientPanel.setVisible(true);
+                editPersonPanel.setVisible(false);
+                usersNursePanel.setVisible(false);
             }
         } else {
             visitPatientItemActionPerformed(evt);
@@ -1117,7 +949,7 @@ private void treatmentjComboBoxActionPerformed(java.awt.event.ActionEvent evt) {
         Object selectedItem = treatmentjComboBox.getSelectedItem();
         if (selectedItem instanceof VisitDTO) {
             VisitDTO selectedVisitDTO = (VisitDTO) selectedItem;
-            List<TreatmentDTO> treatmentList = doctorBean.findTreatmentByVisit(selectedVisitDTO.getIdVisit());
+            List<TreatmentDTO> treatmentList = nurseBean.findTreatmentByVisit(selectedVisitDTO.getIdVisit());
             if (!treatmentList.isEmpty()) {
                 DefaultMutableTreeNode parent = new DefaultMutableTreeNode(selectedVisitDTO);
                 root.add(addTreatment(parent, treatmentList));
@@ -1125,9 +957,9 @@ private void treatmentjComboBoxActionPerformed(java.awt.event.ActionEvent evt) {
                 model.setRoot(root);
                 mainPanel.setVisible(false);
                 treatmentPatientPanel.setVisible(false);
-                treatmentDoctorPanel.setVisible(false);
-                visitDoctorPanel.setVisible(false);
                 visitPatientPanel.setVisible(true);
+                editPersonPanel.setVisible(false);
+                usersNursePanel.setVisible(false);
             }
         } else {
             treatmentPatientItemActionPerformed(evt);
@@ -1162,36 +994,87 @@ private void visitJTree1ValueChanged(javax.swing.event.TreeSelectionEvent evt) {
 }//GEN-LAST:event_visitJTree1ValueChanged
 
 private void OKEditDatajButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_OKEditDatajButtonActionPerformed
-    mainPanel.setVisible(false);
-    visitPatientPanel.setVisible(false);
-    treatmentPatientPanel.setVisible(false);
-    treatmentDoctorPanel.setVisible(false);
-    visitDoctorPanel.setVisible(false);
-    editPersonPanel.setVisible(true);
-    loggedUser.setPass(passjTextField.getText());
-    loggedUser.setName(namejTextField.getText());
-    loggedUser.setSurname(surnamejTextField.getText());
-    loggedUser.setStreet(streetjTextField.getText());
-    loggedUser.setNumber(numberjTextField.getText());
-    loggedUser.setZip(Integer.parseInt(zipjTextField.getText()));
-    loggedUser.setCity(cityjTextField.getText());
-    loggedUser.setPhone(phonejTextField.getText());
+//    mainPanel.setVisible(false);
+//    visitPatientPanel.setVisible(false);
+//    treatmentPatientPanel.setVisible(false);
+//    treatmentDoctorPanel.setVisible(false);
+//    visitDoctorPanel.setVisible(false);
+//    editPersonPanel.setVisible(true);
     try {
-        boolean editPatient = doctorBean.editDoctor(loggedUser);
-        if (editPatient) {
-            JOptionPane.showMessageDialog(this,
-                    "Pomyślnie zmieniono dane użytkownika.",
-                    "Zmiana danych",
-                    JOptionPane.INFORMATION_MESSAGE);
+        if (personManage == 2) {
+            loggedUser.setPass(passjTextField.getText());
+            loggedUser.setName(namejTextField.getText());
+            loggedUser.setSurname(surnamejTextField.getText());
+            loggedUser.setStreet(streetjTextField.getText());
+            loggedUser.setNumber(numberjTextField.getText());
+            loggedUser.setZip(Integer.parseInt(zipjTextField.getText()));
+            loggedUser.setCity(cityjTextField.getText());
+            loggedUser.setPhone(phonejTextField.getText());
+
+            boolean editPatient = nurseBean.editPerson(loggedUser);
+            if (editPatient) {
+                JOptionPane.showMessageDialog(this,
+                        "Pomyślnie zmieniono dane użytkownika.",
+                        "Zmiana danych",
+                        JOptionPane.INFORMATION_MESSAGE);
+            }
+
+        } else if (personManage == 0) {
+
+            PersonsDTO personToAddDTO = new PersonsDTO(
+                    passjTextField.getText(),
+                    namejTextField.getText(),
+                    surnamejTextField.getText(),
+                    streetjTextField.getText(),
+                    numberjTextField.getText(),
+                    cityjTextField.getText(),
+                    Integer.parseInt(zipjTextField.getText()),
+                    phonejTextField.getText(),
+                    peseljTextField.getText(),
+                    ((RoleModel) rolejComboBox.getSelectedItem()).getRole());
+            boolean addPatient = nurseBean.createPerson(personToAddDTO);
+            if (addPatient) {
+                JOptionPane.showMessageDialog(this,
+                        "Pomyślnie dodano użytkownika.",
+                        "Dodanie użytkownika",
+                        JOptionPane.INFORMATION_MESSAGE);
+                vipeUserData();
+            }
+
+        } else if (personManage == 1) {
+            searchedPersonDTO.setPass(passjTextField.getText());
+            searchedPersonDTO.setName(namejTextField.getText());
+            searchedPersonDTO.setSurname(surnamejTextField.getText());
+            searchedPersonDTO.setStreet(streetjTextField.getText());
+            searchedPersonDTO.setNumber(numberjTextField.getText());
+            searchedPersonDTO.setZip(Integer.parseInt(zipjTextField.getText()));
+            searchedPersonDTO.setCity(cityjTextField.getText());
+            searchedPersonDTO.setPhone(phonejTextField.getText());
+            searchedPersonDTO.setRole(((RoleModel) rolejComboBox.getSelectedItem()).getRole());
+
+            boolean editPatient = nurseBean.editPerson(searchedPersonDTO);
+            if (editPatient) {
+                JOptionPane.showMessageDialog(this,
+                        "Pomyślnie zmieniono dane użytkownika.",
+                        "Zmiana danych",
+                        JOptionPane.INFORMATION_MESSAGE);
+                searchedPersonDTO = null;
+            }
         }
+
+    } catch (PersonsPeselException ex) {
+        ex.printStackTrace();
+        JOptionPane.showMessageDialog(this,
+                "Osoba o podanym numerze PESEL już istnieje",
+                "Błąd",
+                JOptionPane.ERROR_MESSAGE);
     } catch (Exception ex) {
         ex.printStackTrace();
         JOptionPane.showMessageDialog(this,
-                "Wystąpił błąd przy edycji danych\nSkontaktuj się z przychodnią lekarską",
+                "Wystąpił błąd przy przetwarzaniu danych\nSkontaktuj się z administratorem",
                 "Błąd",
                 JOptionPane.ERROR_MESSAGE);
     }
-
 
 }//GEN-LAST:event_OKEditDatajButtonActionPerformed
 
@@ -1200,13 +1083,34 @@ private void CancelEditDatajButtonActionPerformed(java.awt.event.ActionEvent evt
 }//GEN-LAST:event_CancelEditDatajButtonActionPerformed
 
 private void editDataItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editDataItemActionPerformed
-    loadUserData(loggedUser);
+    String actionCommand = evt.getActionCommand();
+    if (actionCommand.equalsIgnoreCase("Edytuj własne dane")) {
+        System.out.println("edytuje wlasne dane");
+        personManage = 2;
+        loadUserData(loggedUser, false, 2);
+    } else if (actionCommand.equalsIgnoreCase("Dodaj użytkownika")) {
+        System.out.println("dodaje uzytkownika");
+        personManage = 0;
+        vipeUserData();
+    } else if (actionCommand.equalsIgnoreCase("Edytuj dane użytkowników")) {
+        System.out.println("edytuje dane uzytkownika");
+        personManage = 1;
+        int selectedIndex = 0;
+        String role = searchedPersonDTO.getRole();
+        if (role.equals("patient")) {
+            selectedIndex = 0;
+        } else if (role.equals("doctor")) {
+            selectedIndex = 1;
+        } else if (role.equals("nurse")) {
+            selectedIndex = 2;
+        }
+        loadUserData(searchedPersonDTO, true, selectedIndex);
+    }
     mainPanel.setVisible(false);
     visitPatientPanel.setVisible(false);
     treatmentPatientPanel.setVisible(false);
-    visitDoctorPanel.setVisible(false);
     editPersonPanel.setVisible(true);
-    treatmentDoctorPanel.setVisible(false);
+    usersNursePanel.setVisible(false);
 }//GEN-LAST:event_editDataItemActionPerformed
 
 private void endItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_endItemActionPerformed
@@ -1224,15 +1128,14 @@ private void mainPanelItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN
     setLoggedUserName();
     mainPanel.setVisible(true);
     visitPatientPanel.setVisible(false);
-    visitDoctorPanel.setVisible(false);
     treatmentPatientPanel.setVisible(false);
     editPersonPanel.setVisible(false);
-    treatmentDoctorPanel.setVisible(false);
+    usersNursePanel.setVisible(false);
 }//GEN-LAST:event_mainPanelItemActionPerformed
 
 private void treatmentPatientItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_treatmentPatientItemActionPerformed
     try {
-        List<VisitDTO> visitList = doctorBean.findVisitByPatient(loggedUser.getIdPersons());
+        List<VisitDTO> visitList = nurseBean.findVisitByPatient(loggedUser.getIdPersons());
         Collections.sort(visitList);
         DefaultMutableTreeNode root = new DefaultMutableTreeNode(loggedUser);
         boolean addItems = false;
@@ -1244,7 +1147,7 @@ private void treatmentPatientItemActionPerformed(java.awt.event.ActionEvent evt)
             if (addItems) {
                 treatmentjComboBox.addItem(visitDTO);
             }
-            List<TreatmentDTO> treatmentList = doctorBean.findTreatmentByVisit(visitDTO.getIdVisit());
+            List<TreatmentDTO> treatmentList = nurseBean.findTreatmentByVisit(visitDTO.getIdVisit());
             if (treatmentList.isEmpty()) {
                 continue;
             }
@@ -1257,9 +1160,8 @@ private void treatmentPatientItemActionPerformed(java.awt.event.ActionEvent evt)
         mainPanel.setVisible(false);
         editPersonPanel.setVisible(false);
         visitPatientPanel.setVisible(false);
-        visitDoctorPanel.setVisible(false);
         treatmentPatientPanel.setVisible(true);
-        treatmentDoctorPanel.setVisible(false);
+        usersNursePanel.setVisible(false);
     } catch (CryptographyException ex) {
         JOptionPane.showMessageDialog(this,
                 "Wystąpił błąd przy pobieraniu danych\nSkontaktuj się z przychodnią lekarską",
@@ -1274,139 +1176,78 @@ private void treatmentPatientItemActionPerformed(java.awt.event.ActionEvent evt)
     }
 }//GEN-LAST:event_treatmentPatientItemActionPerformed
 
-private void visitDoctorJTreeValueChanged(javax.swing.event.TreeSelectionEvent evt) {//GEN-FIRST:event_visitDoctorJTreeValueChanged
-    System.out.println("Zaznaczono element drzewa");
-    System.out.println(evt.getPath().getLastPathComponent().getClass());
-    TreePath selectedPath = evt.getPath();
-    DefaultMutableTreeNode selectedNode = (DefaultMutableTreeNode) selectedPath.getLastPathComponent();
-    String diagnose = "";
-    String info = "";
-    if (selectedNode.getUserObject() instanceof VisitDTO) {
-        VisitDTO visitDTO = (VisitDTO) selectedNode.getUserObject();
-        diagnose = visitDTO.getDiagnose();
-        info = visitDTO.getInfo();
+private void editUserDataItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editUserDataItemActionPerformed
+    if (getPatientDTO() == null) {
+        System.out.println("Pacjent null wywoluje szukanie Edycja danych");
+        SearchGUI searchGUI = new SearchGUI(this, searchBean, evt);
+        searchGUI.setVisible(true);
+        this.setEnabled(false);
+    } else {
+        editDataItemActionPerformed(evt);
     }
-    visitDoctorDiagnosejTextField.setText(diagnose);
-    visitDoctorInfojTextArea1.setText(info);
-}//GEN-LAST:event_visitDoctorJTreeValueChanged
+}//GEN-LAST:event_editUserDataItemActionPerformed
 
-private void visitDoctorSearchPatientjButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_visitDoctorSearchPatientjButtonActionPerformed
-    SearchGUI searchGUI = new SearchGUI(this, searchBean, evt);
-    this.setEnabled(false);
-    searchGUI.setVisible(true);
-}//GEN-LAST:event_visitDoctorSearchPatientjButtonActionPerformed
+private void addUserItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addUserItemActionPerformed
+    editDataItemActionPerformed(evt);
+}//GEN-LAST:event_addUserItemActionPerformed
 
-private void visitDoctorItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_visitDoctorItemActionPerformed
-    try {
-        DefaultMutableTreeNode root = new DefaultMutableTreeNode(loggedUser);
-        if (getPatientDTO() == null) {
-            visitDoctorSearchPatientjButtonActionPerformed(evt);
-            return;
-        } else {
-            DefaultMutableTreeNode parent = new DefaultMutableTreeNode(getPatientDTO());
-            visitDoctorPatientLabel.setText(getPatientDTO().toString());
-            List<VisitDTO> visitDTOList = doctorBean.findVisitByDoctorPatient(loggedUser.getIdPersons(), getPatientDTO().getIdPersons());
-            Collections.sort(visitDTOList);
-            root.add(addVisits(parent, visitDTOList));
-        }
-
-        DefaultTreeModel model = (DefaultTreeModel) visitDoctorJTree.getModel();
-        model.setRoot(root);
-        mainPanel.setVisible(false);
-        editPersonPanel.setVisible(false);
-        visitPatientPanel.setVisible(false);
-        visitDoctorPanel.setVisible(true);
-        treatmentPatientPanel.setVisible(false);
-        treatmentDoctorPanel.setVisible(false);
-
-    } catch (CryptographyException ex) {
-        ex.printStackTrace();
-        JOptionPane.showMessageDialog(this,
-                "Wystąpił błąd przy pobieraniu danych\nSkontaktuj się z administratorem",
-                "Błąd",
-                JOptionPane.ERROR_MESSAGE);
-    } catch (Exception ex) {
-        ex.printStackTrace();
-        JOptionPane.showMessageDialog(this,
-                "Wystąpił błąd przy przetwarzaniu danych\nSkontaktuj się z administratorem",
-                "Błąd",
-                JOptionPane.ERROR_MESSAGE);
-    }
-}//GEN-LAST:event_visitDoctorItemActionPerformed
-
-private void visitDoctorJTreeMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_visitDoctorJTreeMouseClicked
+private void usersNurseJTreeMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_usersNurseJTreeMouseClicked
     System.out.println("Wcisnieto mysz");
-    DefaultMutableTreeNode selectedNode = (DefaultMutableTreeNode) visitDoctorJTree.getSelectionPath().getLastPathComponent();
-    if (!((DefaultTreeModel) visitDoctorJTree.getModel()).getRoot().equals(selectedNode)) {
+    DefaultMutableTreeNode selectedNode = (DefaultMutableTreeNode) usersNurseJTree.getSelectionPath().getLastPathComponent();
+    if (((DefaultTreeModel) usersNurseJTree.getModel()).getRoot().equals(selectedNode)) {
         if (selectedNode.getUserObject() instanceof PersonsDTO) {
-            this.maybeShowPopup(evt, visitDoctorAddjPopupMenu);
-        } else if (selectedNode.getUserObject() instanceof VisitDTO) {
-            this.maybeShowPopup(evt, visitDoctorEditjPopupMenu);
+            this.maybeShowPopup(evt, userNursejPopupMenu, false);
+        } else if (selectedNode.getUserObject() instanceof DoctorDTO) {
+            this.maybeShowPopup(evt, userNursejPopupMenu, true);
         }
     }
-}//GEN-LAST:event_visitDoctorJTreeMouseClicked
+}//GEN-LAST:event_usersNurseJTreeMouseClicked
 
-private void addVisitjMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addVisitjMenuItemActionPerformed
-    DefaultMutableTreeNode selectedNode = (DefaultMutableTreeNode) visitDoctorJTree.getSelectionPath().getLastPathComponent();
-    PersonsDTO patientVisitDTO = (PersonsDTO) selectedNode.getUserObject();
-    VisitGUI visitGUI = new VisitGUI(this, doctorBean, patientVisitDTO);
-    visitGUI.setVisible(true);
+private void usersNurseSearchPatientjButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_usersNurseSearchPatientjButtonActionPerformed
+    SearchGUI searchGUI = new SearchGUI(this, searchBean, evt);
     this.setEnabled(false);
-}//GEN-LAST:event_addVisitjMenuItemActionPerformed
+    searchGUI.setVisible(true);
+}//GEN-LAST:event_usersNurseSearchPatientjButtonActionPerformed
 
-private void editVisitjMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editVisitjMenuItemActionPerformed
-    DefaultMutableTreeNode selectedNode = (DefaultMutableTreeNode) visitDoctorJTree.getSelectionPath().getLastPathComponent();
-    VisitDTO visitDTO = (VisitDTO) selectedNode.getUserObject();
-    VisitGUI visitGUI = new VisitGUI(this, doctorBean, visitDTO);
-    visitGUI.setVisible(true);
-    this.setEnabled(false);
-}//GEN-LAST:event_editVisitjMenuItemActionPerformed
-
-private void treatmentDoctorJTreeValueChanged(javax.swing.event.TreeSelectionEvent evt) {//GEN-FIRST:event_treatmentDoctorJTreeValueChanged
-    TreePath selectedPath = evt.getPath();
-    DefaultMutableTreeNode selectedNode = (DefaultMutableTreeNode) selectedPath.getLastPathComponent();
-    String medicine = "";
-    String dosage = "";
-    if (selectedNode.getUserObject() instanceof TreatmentDTO) {
-        TreatmentDTO treatmentDTO = (TreatmentDTO) selectedNode.getUserObject();
-        medicine = treatmentDTO.getMedicine();
-        dosage = treatmentDTO.getDosage();
-    }
-    treatmentDoctorMedicinejTextField.setText(medicine);
-    treatmentDoctorDosagejTextArea.setText(dosage);
-}//GEN-LAST:event_treatmentDoctorJTreeValueChanged
-
-private void treatmentDoctorItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_treatmentDoctorItemActionPerformed
+private void usersItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_usersItemActionPerformed
     try {
-        System.out.println("Wchode w tworzenie panelu TreatmentDoctor");
-        DefaultMutableTreeNode root = new DefaultMutableTreeNode(loggedUser);
         if (getPatientDTO() == null) {
-            System.out.println("Pacjent null wywoluje szukanie");
-            treatmentDoctorSearchPatientjButtonActionPerformed(evt);
+            usersNurseSearchPatientjButtonActionPerformed(evt);
             return;
         } else {
-            System.out.println("Pacjent nie null tworze drzewo");
-            DefaultMutableTreeNode parent = new DefaultMutableTreeNode(getPatientDTO());
-            treatmentDoctorPatientLabel.setText(getPatientDTO().toString());
-            List<VisitDTO> visitDTOList = doctorBean.findVisitByDoctorPatient(loggedUser.getIdPersons(), getPatientDTO().getIdPersons());
-            Collections.sort(visitDTOList);
-            for (int i = 0; i < visitDTOList.size(); i++) {
-                VisitDTO visitDTO = visitDTOList.get(i);
-                DefaultMutableTreeNode child = new DefaultMutableTreeNode(visitDTO);
-                List<TreatmentDTO> treatmentDTOList = doctorBean.findTreatmentByVisit(visitDTO.getIdVisit());
-                parent.add(addTreatment(child, treatmentDTOList));
+            String role = getPatientDTO().getRole();
+            List<VisitDTO> visitDTOList = new ArrayList<VisitDTO>();
+            DefaultMutableTreeNode root = null;
+            if (role.equals("patient") || role.equals("admin") || role.equals("nurse")) {
+                root = new DefaultMutableTreeNode(getPatientDTO());
+                usersNursePatientLabel.setText(getPatientDTO().toString() + " (Pacjent)");
+                visitDTOList = nurseBean.findVisitByPatient(getPatientDTO().getIdPersons());
+                Collections.sort(visitDTOList);
+                DefaultMutableTreeNode parent= new DefaultMutableTreeNode("wizyty");
+                root.add(addVisits(parent, visitDTOList));
+            } else {
+                DoctorDTO doctorDTO = new DoctorDTO(getPatientDTO());
+                root = new DefaultMutableTreeNode(doctorDTO);
+                usersNursePatientLabel.setText(doctorDTO.toString() + " (Lekarz)");
+                visitDTOList = nurseBean.findVisitByDoctor(doctorDTO.getIdPersons());
+                Collections.sort(visitDTOList);
+                DefaultMutableTreeNode parentAsDoc = new DefaultMutableTreeNode("wizyty jako lekarz");
+                root.add(addVisits(parentAsDoc, visitDTOList));
+                DefaultMutableTreeNode parentAPatient = new DefaultMutableTreeNode("wizyty jako pacjent");
+                List<VisitDTO> visitDoctorDTOList= nurseBean.findVisitByPatient(doctorDTO.getIdPersons());
+                Collections.sort(visitDoctorDTOList);
+                root.add(addVisits(parentAPatient, visitDoctorDTOList));
             }
-            System.out.println("stworzylem drzewo");
-            root.add(parent);
+            
+            DefaultTreeModel model = (DefaultTreeModel) usersNurseJTree.getModel();
+            model.setRoot(root);
         }
-        DefaultTreeModel model = (DefaultTreeModel) treatmentDoctorJTree.getModel();
-        model.setRoot(root);
+
         mainPanel.setVisible(false);
         editPersonPanel.setVisible(false);
         visitPatientPanel.setVisible(false);
-        visitDoctorPanel.setVisible(false);
+        usersNursePanel.setVisible(true);
         treatmentPatientPanel.setVisible(false);
-        treatmentDoctorPanel.setVisible(true);
 
     } catch (CryptographyException ex) {
         ex.printStackTrace();
@@ -1421,120 +1262,82 @@ private void treatmentDoctorItemActionPerformed(java.awt.event.ActionEvent evt) 
                 "Błąd",
                 JOptionPane.ERROR_MESSAGE);
     }
-}//GEN-LAST:event_treatmentDoctorItemActionPerformed
+}//GEN-LAST:event_usersItemActionPerformed
 
-private void treatmentDoctorSearchPatientjButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_treatmentDoctorSearchPatientjButtonActionPerformed
-    SearchGUI searchGUI = new SearchGUI(this, searchBean, evt);
-    this.setEnabled(false);
-    searchGUI.setVisible(true);
-}//GEN-LAST:event_treatmentDoctorSearchPatientjButtonActionPerformed
+private void editUserItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editUserItemActionPerformed
+    editDataItemActionPerformed(evt);
+}//GEN-LAST:event_editUserItemActionPerformed
 
-private void addTreatmentjMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addTreatmentjMenuItemActionPerformed
-    DefaultMutableTreeNode selectedNode = (DefaultMutableTreeNode) treatmentDoctorJTree.getSelectionPath().getLastPathComponent();
-    VisitDTO visitTreatmentDTO = (VisitDTO) selectedNode.getUserObject();
-    System.out.println("Vizyta=" + visitTreatmentDTO.toString());
-    System.out.println("Id=" + visitTreatmentDTO.getIdVisit());
-    TreatmentGUI treatmentGUI = new TreatmentGUI(this, doctorBean, visitTreatmentDTO);
-    treatmentGUI.setVisible(true);
-    this.setEnabled(false);
-}//GEN-LAST:event_addTreatmentjMenuItemActionPerformed
-
-private void editTreatmentjMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editTreatmentjMenuItemActionPerformed
-    DefaultMutableTreeNode selectedNode = (DefaultMutableTreeNode) treatmentDoctorJTree.getSelectionPath().getLastPathComponent();
-    TreatmentDTO treatmentToEditDTO = (TreatmentDTO) selectedNode.getUserObject();
-    TreatmentGUI treatmentGUI = new TreatmentGUI(this, doctorBean, treatmentToEditDTO);
-    treatmentGUI.setVisible(true);
-    this.setEnabled(false);
-}//GEN-LAST:event_editTreatmentjMenuItemActionPerformed
-
-private void treatmentDoctorJTreeMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_treatmentDoctorJTreeMouseClicked
-    System.out.println("Wcisnieto mysz na TreatmentDOctor tree");
-    DefaultMutableTreeNode selectedNode = (DefaultMutableTreeNode) treatmentDoctorJTree.getSelectionPath().getLastPathComponent();
-    if (!((DefaultTreeModel) visitDoctorJTree.getModel()).getRoot().equals(selectedNode)) {
-        if (selectedNode.getUserObject() instanceof VisitDTO) {
-            this.maybeShowPopup(evt, treatmentDoctorAddjPopupMenu);
-        } else if (selectedNode.getUserObject() instanceof TreatmentDTO) {
-            this.maybeShowPopup(evt, treatmentDoctorEditjPopupMenu);
+private void changeDoctorItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_changeDoctorItemActionPerformed
+    try {
+        if (doctorsList == null || doctorsList.isEmpty()) {
+            doctorsList = nurseBean.findDoctors();
         }
+        ChangeDoctorsVisitGUI changeDoctorGUI = new ChangeDoctorsVisitGUI(this, nurseBean, doctorsList, searchedPersonDTO);
+        changeDoctorGUI.setVisible(true);
+        this.setEnabled(false);
+    } catch (CryptographyException ex) {
     }
+}//GEN-LAST:event_changeDoctorItemActionPerformed
 
-}//GEN-LAST:event_treatmentDoctorJTreeMouseClicked
-
-private void deleteVisitjMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteVisitjMenuItemActionPerformed
+private void deleteUserItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteUserItemActionPerformed
     int n = JOptionPane.showConfirmDialog(
             this,
-            "Na pewno chcesz usunąc wybraną wizytę?",
-            "Potwierdź usunięcie wizyty",
+            "Na pewno chcesz usunąc wybraną osobę?",
+            "Potwierdź usunięcie osoby",
             JOptionPane.OK_CANCEL_OPTION);
     if (n == JOptionPane.OK_OPTION) {
-        DefaultMutableTreeNode selectedNode = (DefaultMutableTreeNode) visitDoctorJTree.getSelectionPath().getLastPathComponent();
-        VisitDTO visitDTO = (VisitDTO) selectedNode.getUserObject();
+        DefaultMutableTreeNode selectedNode = (DefaultMutableTreeNode) usersNurseJTree.getSelectionPath().getLastPathComponent();
         try {
-            boolean resultOfDelete = doctorBean.removeVisit(visitDTO);
+            boolean resultOfDelete = false;
+            if (selectedNode.getUserObject() instanceof DoctorDTO) {
+                DoctorDTO doctorToRemoveDTO = (DoctorDTO) selectedNode.getUserObject();
+                resultOfDelete = nurseBean.removeDoctor(doctorToRemoveDTO.getIdPersons());
+            } else if (selectedNode.getUserObject() instanceof PersonsDTO) {
+                PersonsDTO personToRemoveDTO = (PersonsDTO) selectedNode.getUserObject();
+                resultOfDelete = nurseBean.removePatinet(personToRemoveDTO.getIdPersons());
+            }
+
             if (resultOfDelete) {
                 JOptionPane.showMessageDialog(this,
-                        "Pomyślnie usunięto wizytę",
-                        "Potwierdzenie usunięcia wizyty",
+                        "Pomyślnie usunięto osobę",
+                        "Potwierdzenie usunięcia osoby",
                         JOptionPane.INFORMATION_MESSAGE);
-                visitDoctorItemActionPerformed(evt);
+                searchedPersonDTO = null;
+                mainPanelItemActionPerformed(evt);
                 return;
             }
+        } catch (DoctorRemoveException ex) {
+            JOptionPane.showMessageDialog(this,
+                    "Lekarz nie został usunięty, przenieś wizyty",
+                    "Błąd usunięcia lekarza",
+                    JOptionPane.ERROR_MESSAGE);
+            return;
         } catch (Exception ex) {
             ex.printStackTrace();
         }
         JOptionPane.showMessageDialog(this,
-                "Wizyta nie została usunięta",
-                "Błąd usunięcia wizyty",
+                "Osoba nie została usunięta",
+                "Błąd usunięcia osoby",
                 JOptionPane.ERROR_MESSAGE);
-        return;
-    }
-}//GEN-LAST:event_deleteVisitjMenuItemActionPerformed
 
-private void deleteTreatmentjMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteTreatmentjMenuItemActionPerformed
-    int n = JOptionPane.showConfirmDialog(
-            this,
-            "Na pewno chcesz usunąc wybraną wizytę?",
-            "Potwierdź usunięcie wizyty",
-            JOptionPane.OK_CANCEL_OPTION);
-    if (n == JOptionPane.OK_OPTION) {
-        DefaultMutableTreeNode selectedNode = (DefaultMutableTreeNode) treatmentDoctorJTree.getSelectionPath().getLastPathComponent();
-        TreatmentDTO treatmentDTO = (TreatmentDTO) selectedNode.getUserObject();
-        try {
-            boolean resultOfDelete = doctorBean.removeTreatment(treatmentDTO);
-            if (resultOfDelete) {
-                JOptionPane.showMessageDialog(this,
-                        "Pomyślnie usunięto leczenie",
-                        "Potwierdzenie usunięcia leczenia",
-                        JOptionPane.INFORMATION_MESSAGE);
-                treatmentDoctorItemActionPerformed(evt);
-                return;
-            }
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-        JOptionPane.showMessageDialog(this,
-                "Leczenie nie zostało usunięte",
-                "Błąd usunięcia leczenia",
-                JOptionPane.ERROR_MESSAGE);
-        return;
     }
-}//GEN-LAST:event_deleteTreatmentjMenuItemActionPerformed
+}//GEN-LAST:event_deleteUserItemActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton CancelEditDatajButton;
     private javax.swing.JButton OKEditDatajButton;
-    private javax.swing.JMenuItem addTreatmentjMenuItem;
-    private javax.swing.JMenuItem addVisitjMenuItem;
+    private javax.swing.JMenuItem addUserItem;
+    private javax.swing.JMenuItem changeDoctorItem;
     private javax.swing.JLabel cityErrorjLabel;
     private javax.swing.JTextField cityjTextField;
-    private javax.swing.JMenuItem deleteTreatmentjMenuItem;
-    private javax.swing.JMenuItem deleteVisitjMenuItem;
+    private javax.swing.JMenuItem deleteUserItem;
     private javax.swing.JTextField diagnosejTextField;
     private javax.swing.JComboBox doctorsjComboBox;
     private javax.swing.JTextArea dosagejTextArea;
     private javax.swing.JMenuItem editDataItem;
     private javax.swing.JPanel editPersonPanel;
-    private javax.swing.JMenuItem editTreatmentjMenuItem;
-    private javax.swing.JMenuItem editVisitjMenuItem;
+    private javax.swing.JMenuItem editUserDataItem;
+    private javax.swing.JMenuItem editUserItem;
     private javax.swing.JMenuItem endItem;
     private javax.swing.JMenu fileMenu;
     private javax.swing.JLabel imageLabel;
@@ -1547,13 +1350,8 @@ private void deleteTreatmentjMenuItemActionPerformed(java.awt.event.ActionEvent 
     private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel15;
     private javax.swing.JLabel jLabel16;
-    private javax.swing.JLabel jLabel17;
-    private javax.swing.JLabel jLabel18;
     private javax.swing.JLabel jLabel19;
     private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel20;
-    private javax.swing.JLabel jLabel21;
-    private javax.swing.JLabel jLabel22;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
@@ -1563,12 +1361,8 @@ private void deleteTreatmentjMenuItemActionPerformed(java.awt.event.ActionEvent 
     private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
-    private javax.swing.JPanel jPanel4;
-    private javax.swing.JPanel jPanel5;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JScrollPane jScrollPane3;
-    private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JLabel loggedUserLabel;
     private javax.swing.JPanel mainPanel;
     private javax.swing.JMenuItem mainPanelItem;
@@ -1590,32 +1384,20 @@ private void deleteTreatmentjMenuItemActionPerformed(java.awt.event.ActionEvent 
     private javax.swing.JLabel surnameErrorjLabel;
     private javax.swing.JTextField surnamejTextField;
     private javax.swing.JLabel textLabel;
-    private javax.swing.JPopupMenu treatmentDoctorAddjPopupMenu;
-    private javax.swing.JTextArea treatmentDoctorDosagejTextArea;
-    private javax.swing.JPopupMenu treatmentDoctorEditjPopupMenu;
-    private javax.swing.JMenuItem treatmentDoctorItem;
-    private javax.swing.JTree treatmentDoctorJTree;
-    private javax.swing.JTextField treatmentDoctorMedicinejTextField;
-    private javax.swing.JPanel treatmentDoctorPanel;
-    private javax.swing.JLabel treatmentDoctorPatientLabel;
-    private javax.swing.JButton treatmentDoctorSearchPatientjButton;
-    private javax.swing.JScrollPane treatmentDoctorjTreeScrollPane;
     private javax.swing.JMenu treatmentMenu;
     private javax.swing.JMenuItem treatmentPatientItem;
     private javax.swing.JTree treatmentPatientJTree;
     private javax.swing.JPanel treatmentPatientPanel;
     private javax.swing.JScrollPane treatmentPatientjTreeScrollPane;
     private javax.swing.JComboBox treatmentjComboBox;
-    private javax.swing.JPopupMenu visitDoctorAddjPopupMenu;
-    private javax.swing.JTextField visitDoctorDiagnosejTextField;
-    private javax.swing.JPopupMenu visitDoctorEditjPopupMenu;
-    private javax.swing.JTextArea visitDoctorInfojTextArea1;
-    private javax.swing.JMenuItem visitDoctorItem;
-    private javax.swing.JTree visitDoctorJTree;
-    private javax.swing.JPanel visitDoctorPanel;
-    private javax.swing.JLabel visitDoctorPatientLabel;
-    private javax.swing.JButton visitDoctorSearchPatientjButton;
-    private javax.swing.JScrollPane visitDoctorjTreeScrollPane;
+    private javax.swing.JPopupMenu userNursejPopupMenu;
+    private javax.swing.JMenuItem usersItem;
+    private javax.swing.JMenu usersMenu;
+    private javax.swing.JTree usersNurseJTree;
+    private javax.swing.JPanel usersNursePanel;
+    private javax.swing.JLabel usersNursePatientLabel;
+    private javax.swing.JButton usersNurseSearchPatientjButton;
+    private javax.swing.JScrollPane usersNursejTreeScrollPane;
     private javax.swing.JTree visitJTree1;
     private javax.swing.JMenu visitMenu;
     private javax.swing.JMenuItem visitPatientItem;
@@ -1624,25 +1406,27 @@ private void deleteTreatmentjMenuItemActionPerformed(java.awt.event.ActionEvent 
     private javax.swing.JLabel zipErrorjLabel;
     private javax.swing.JTextField zipjTextField;
     // End of variables declaration//GEN-END:variables
-    private DoctorRemote doctorBean = null;
+    private NurseRemote nurseBean = null;
     private SearchRemote searchBean = null;
     private PersonsDTO loggedUser = null;
     private List<DoctorDTO> doctorsList = null;
-    private PersonsDTO patientDTO = null;
+    private PersonsDTO searchedPersonDTO = null;
+    int personManage = -1;
 
     public PersonsDTO getPatientDTO() {
-        return patientDTO;
+        return searchedPersonDTO;
     }
 
     public void setPatientDTO(PersonsDTO patientDTO) {
-        this.patientDTO = patientDTO;
+        this.searchedPersonDTO = patientDTO;
     }
 
-    protected void callVisitDoctorItemActionPerformed(java.awt.event.ActionEvent evt) {
-        visitDoctorItemActionPerformed(evt);
+    protected void callEditDataItemActionPerformed(java.awt.event.ActionEvent evt) {
+        System.out.println("Przed wywolaniem panelu edycji");
+        editDataItemActionPerformed(evt);
     }
 
-    protected void callTreatmentDoctorItemActionPerformed(java.awt.event.ActionEvent evt) {
-        treatmentDoctorItemActionPerformed(evt);
+    protected void callUserItemActionPerformed(java.awt.event.ActionEvent evt) {
+        usersItemActionPerformed(evt);
     }
 }
