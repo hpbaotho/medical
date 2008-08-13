@@ -36,8 +36,6 @@ public interface DoctorRemote {
 
     List<VisitDTO> findVisitByDoctorPatient(BigInteger idDoctor, BigInteger idPatient) throws CryptographyException;
 
-    List<VisitDTO> findVisitByDoctor() throws CryptographyException;
-
     List<VisitDTO> findVisitByPatient(BigInteger idPatient) throws CryptographyException;
 
     boolean createTreatment(TreatmentDTO treatmentToAddDTO, BigInteger idVisit) throws CryptographyException, DatabaseException;
@@ -47,6 +45,4 @@ public interface DoctorRemote {
     boolean removeTreatment(TreatmentDTO treatmentToRemoveDTO);
 
     List<TreatmentDTO> findTreatmentByVisit(BigInteger idVisit) throws CryptographyException;
-
-    List<TreatmentDTO> findTreatmentByPatient(BigInteger idPatient) throws CryptographyException;
 }

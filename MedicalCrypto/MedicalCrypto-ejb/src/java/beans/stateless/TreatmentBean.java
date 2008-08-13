@@ -5,11 +5,9 @@
 package beans.stateless;
 
 import beans.facades.medical.KeyManifestFacadeLocal;
-import beans.facades.medical.PersonsFacadeLocal;
 import beans.facades.medical.TreatmentFacadeLocal;
 import beans.facades.medical.VisitFacadeLocal;
 import entities.medical.KeyManifest;
-import entities.medical.Persons;
 import entities.medical.Treatment;
 import entities.medical.Visit;
 import entities.medical.dto.Dict;
@@ -22,8 +20,11 @@ import java.security.GeneralSecurityException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import javax.annotation.security.RolesAllowed;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
 import javax.persistence.PersistenceException;
 
 /**
@@ -34,8 +35,6 @@ import javax.persistence.PersistenceException;
 public class TreatmentBean implements TreatmentLocal {
 
     @EJB
-    private PersonsFacadeLocal personsFacade;
-    @EJB
     private KeyManifestFacadeLocal keyManifestFacade;
     @EJB
     private TreatmentFacadeLocal treatmentFacade;
@@ -44,6 +43,7 @@ public class TreatmentBean implements TreatmentLocal {
     @EJB
     private VisitFacadeLocal visitFacade;
 
+    @RolesAllowed(value = {"doctor"})
     public boolean createTreatment(TreatmentDTO treatmentToAddDTO, BigInteger idVisit) throws CryptographyException, DatabaseException {
         if (treatmentToAddDTO.getMedicine() != null && treatmentToAddDTO.getDosage() != null && idVisit != null) {
             Visit visitEntity = visitFacade.find(idVisit);
@@ -80,6 +80,8 @@ public class TreatmentBean implements TreatmentLocal {
         return false;
     }
 
+    @RolesAllowed(value = {"doctor"})
+    @TransactionAttribute(TransactionAttributeType.MANDATORY)
     public boolean editTreatment(TreatmentDTO treatmentToEditDTO) throws CryptographyException {
         if (treatmentToEditDTO.getIdTreatment() != null && treatmentToEditDTO.getMedicine() != null && treatmentToEditDTO.getDosage() != null) {
             Treatment treatmentToEditEntity = treatmentFacade.find(treatmentToEditDTO.getIdTreatment());
@@ -111,6 +113,8 @@ public class TreatmentBean implements TreatmentLocal {
         return false;
     }
 
+    @RolesAllowed(value = {"doctor"})
+    @TransactionAttribute(TransactionAttributeType.MANDATORY)
     public boolean removeTreatment(BigInteger idTreatment) {
         if (idTreatment != null) {
             Treatment treatmentToRemoveEntity = treatmentFacade.find(idTreatment);
@@ -122,6 +126,7 @@ public class TreatmentBean implements TreatmentLocal {
         return false;
     }
 
+    @RolesAllowed(value = {"doctor", "nurse", "patient"})
     public List<TreatmentDTO> findTreatmentByVisit(BigInteger idVisit) throws CryptographyException {
         List<TreatmentDTO> result = new ArrayList<TreatmentDTO>();
         if (idVisit != null) {
@@ -143,38 +148,6 @@ public class TreatmentBean implements TreatmentLocal {
                     } catch (GeneralSecurityException ex) {
                         ex.printStackTrace();
                         throw new CryptographyException(ex.getCause());
-                    }
-                }
-            }
-        }
-        return result;
-    }
-
-    public List<TreatmentDTO> findTreatmentByPatient(BigInteger idPatient) throws CryptographyException {
-        List<TreatmentDTO> result = new ArrayList<TreatmentDTO>();
-        if (idPatient != null) {
-            Persons patientEntity = personsFacade.find(idPatient);
-            if (patientEntity != null) {
-                personsFacade.refresh(patientEntity);
-                List<Visit> visitEntityList = patientEntity.getVisitPatientList();
-                for (int i = 0; i < visitEntityList.size(); i++) {
-                    Visit visitEntity = visitEntityList.get(i);
-                    List<Treatment> treatmentEntityList = visitEntity.getTreatmentList();
-                    for (int j = 0; j < treatmentEntityList.size(); j++) {
-                        Treatment treatmentEntity = treatmentEntityList.get(j);
-                        //treatmentFacade.refresh(treatmentEntity);
-                        HashMap<String, String> decryptionRequestData = createCipherTaskData(treatmentEntity.getMedicine(), treatmentEntity.getDosage());
-                        CipherTask decryptionRequest = new CipherTask(decryptionRequestData, treatmentEntity.getIv(), treatmentEntity.getKeyManifestId().getIdKeyManifest());
-                        try {
-                            decryptionRequest = providerBean.decrypt(decryptionRequest);
-                            TreatmentDTO treatmentDTO = new TreatmentDTO(treatmentEntity);
-                            treatmentDTO.setMedicine(decryptionRequest.getData().get(Dict.MEDICINECOLUMN));
-                            treatmentDTO.setDosage(decryptionRequest.getData().get(Dict.DOSAGECOLUMN));
-                            result.add(treatmentDTO);
-                        } catch (GeneralSecurityException ex) {
-                            ex.printStackTrace();
-                            throw new CryptographyException(ex.getCause());
-                        }
                     }
                 }
             }

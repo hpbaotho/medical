@@ -69,10 +69,6 @@ public class NurseBean implements NurseRemote {
         return visitBean.editVisitDoctor(visitToEditDTO, idDoctor);
     }
     
-    public boolean editVisitPatient(VisitDTO visitToEditDTO, BigInteger idPatient){
-        return visitBean.editVisitPatient(visitToEditDTO, idPatient);
-    }
-    
     public List<VisitDTO> findVisitByDoctor(BigInteger idDoctor) throws CryptographyException {
         return visitBean.findVisitByDoctor(idDoctor);
     }
@@ -87,9 +83,5 @@ public class NurseBean implements NurseRemote {
     
     public List<TreatmentDTO> findTreatmentByVisit(BigInteger idVisit) throws CryptographyException {
         return treatmentBean.findTreatmentByVisit(idVisit);
-    }
-    
-    public List<TreatmentDTO> findTreatmentByPatient(BigInteger idPatient) throws CryptographyException {
-        return treatmentBean.findTreatmentByPatient(idPatient);
     }
 }

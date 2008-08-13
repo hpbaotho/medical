@@ -8,6 +8,7 @@ import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.AlgorithmParameterSpec;
+import javax.annotation.security.RolesAllowed;
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
@@ -16,14 +17,18 @@ import javax.crypto.SecretKey;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.RC2ParameterSpec;
 import javax.ejb.Stateless;
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
 
 /**
  *
  * @author Piotrek
  */
 @Stateless
+@RolesAllowed(value = {"doctor", "patient", "nurse"})
 public class CryptoMachineBean implements CryptoMachineLocal {
 
+    @TransactionAttribute(TransactionAttributeType.MANDATORY)
     public byte[] encrypt(final byte[] plainText, final byte[] iv, final SecretKey seckey)
             throws NoSuchAlgorithmException,
             NoSuchPaddingException,
@@ -42,6 +47,7 @@ public class CryptoMachineBean implements CryptoMachineLocal {
         return cipher.doFinal(plainText);
     }
 
+    @TransactionAttribute(TransactionAttributeType.MANDATORY)
     public byte[] decrypt(final byte[] cipherText, final byte[] iv, final SecretKey seckey)
             throws NoSuchAlgorithmException,
             NoSuchPaddingException,

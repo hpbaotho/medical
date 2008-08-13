@@ -2,7 +2,6 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package beans.statefull;
 
 import entities.medical.dto.DoctorDTO;
@@ -23,31 +22,26 @@ import javax.ejb.Remote;
  */
 @Remote
 public interface NurseRemote {
-    
+
     boolean editPerson(PersonsDTO personToEditDTO) throws CryptographyException, PersonsPeselException;
-    
-    boolean createPerson(PersonsDTO personToAddDTO)throws CryptographyException, DatabaseException, PersonsPeselException;
-    
+
+    boolean createPerson(PersonsDTO personToAddDTO) throws CryptographyException, DatabaseException, PersonsPeselException;
+
     boolean removePatinet(BigInteger idPatient);
-    
+
     boolean removeDoctor(BigInteger idDoctor) throws DoctorRemoveException;
-    
+
     List<DoctorDTO> findDoctors() throws CryptographyException;
-    
+
     PersonsDTO findMe() throws CryptographyException, DatabaseException;
-    
+
     boolean editVisitDoctor(VisitDTO visitToEditDTO, BigInteger idDoctor);
-    
-    boolean editVisitPatient(VisitDTO visitToEditDTO, BigInteger idPatient);
-    
+
     List<VisitDTO> findVisitByDoctor(BigInteger idDoctor) throws CryptographyException;
-    
+
     List<VisitDTO> findVisitByPatient(BigInteger idPatient) throws CryptographyException;
-    
+
     List<VisitDTO> findVisitByDoctorPatient(BigInteger idDoctor, BigInteger idPatient) throws CryptographyException;
-    
+
     List<TreatmentDTO> findTreatmentByVisit(BigInteger idVisit) throws CryptographyException;
-    
-    public List<TreatmentDTO> findTreatmentByPatient(BigInteger idPatient) throws CryptographyException;
-       
 }

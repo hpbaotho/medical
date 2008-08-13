@@ -18,7 +18,7 @@ import javax.ejb.Stateful;
  * @author Piotrek
  */
 @Stateful(name="SearchBean", mappedName="ejb/SearchBean")
-@RolesAllowed(value={"admin","nurse","doctor"})
+@RolesAllowed(value={"nurse","doctor"})
 public class SearchBean implements SearchRemote {
     @EJB
     private PersonsLocal personsBean;

@@ -33,6 +33,4 @@ public interface PatientRemote {
     List<VisitDTO> findVisitByDoctorPatient(BigInteger idDoctor) throws CryptographyException;
 
     List<TreatmentDTO> findTreatmentByVisit(BigInteger idVisit) throws CryptographyException;
-
-    List<TreatmentDTO> findTreatmentByPatient() throws CryptographyException;
 }
