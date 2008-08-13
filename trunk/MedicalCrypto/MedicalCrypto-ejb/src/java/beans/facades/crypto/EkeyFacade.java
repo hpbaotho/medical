@@ -20,18 +20,6 @@ public class EkeyFacade implements EkeyFacadeLocal {
     @PersistenceContext(unitName="Crypto-keyproviderPU")
     private EntityManager em;
 
-    public void create(Ekey ekey) {
-        em.persist(ekey);
-    }
-
-    public void edit(Ekey ekey) {
-        em.merge(ekey);
-    }
-
-    public void remove(Ekey ekey) {
-        em.remove(em.merge(ekey));
-    }
-
     public Ekey find(Object id) {
         return em.find(entities.crypto.Ekey.class, id);
     }

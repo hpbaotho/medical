@@ -16,12 +16,6 @@ import javax.ejb.Local;
 @Local
 public interface EkeyFacadeLocal {
 
-    void create(Ekey ekey);
-
-    void edit(Ekey ekey);
-
-    void remove(Ekey ekey);
-
     Ekey find(Object id);
 
     List<Ekey> findAll();

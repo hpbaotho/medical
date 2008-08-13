@@ -17,4 +17,33 @@
     <exclude-unlisted-classes>true</exclude-unlisted-classes>
     <properties/>
   </persistence-unit>
+  <persistence-unit name="Medical-patientPU" transaction-type="JTA">
+    <jta-data-source>jdbc/medical-patient</jta-data-source>
+    <class>entities.medical.KeyManifest</class>
+    <class>entities.medical.Persons</class>
+    <class>entities.medical.Treatment</class>
+    <class>entities.medical.Visit</class>
+    <exclude-unlisted-classes>true</exclude-unlisted-classes>
+    <properties/>
+  </persistence-unit>
+  <persistence-unit name="Medical-doctorPU" transaction-type="JTA">
+    <jta-data-source>jdbc/medical-doctor</jta-data-source>
+    <class>entities.medical.KeyManifest</class>
+    <class>entities.medical.Persons</class>
+    <class>entities.medical.Treatment</class>
+    <class>entities.medical.Visit</class>
+    <exclude-unlisted-classes>true</exclude-unlisted-classes>
+    <properties/>
+  </persistence-unit>
+  <persistence-unit name="Medical-nursePU" transaction-type="JTA">
+    <provider>oracle.toplink.essentials.PersistenceProvider</provider>
+    <jta-data-source>jdbc/medical-nurse</jta-data-source>
+    <class>entities.medical.KeyManifest</class>
+    <class>entities.medical.Persons</class>
+    <class>entities.medical.Treatment</class>
+    <class>entities.medical.Visit</class>
+    <exclude-unlisted-classes>true</exclude-unlisted-classes>
+    <properties>
+    </properties>
+  </persistence-unit>
 </persistence>

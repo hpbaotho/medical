@@ -22,18 +22,6 @@ public class SeckeyFacade implements SeckeyFacadeLocal {
     @PersistenceContext(unitName="Crypto-keyproviderPU")
     private EntityManager em;
 
-    public void create(Seckey seckey) {
-        em.persist(seckey);
-    }
-
-    public void edit(Seckey seckey) {
-        em.merge(seckey);
-    }
-
-    public void remove(Seckey seckey) {
-        em.remove(em.merge(seckey));
-    }
-
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
     public Seckey find(Object id) {
         return em.find(entities.crypto.Seckey.class, id);

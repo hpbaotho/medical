@@ -20,18 +20,6 @@ public class EngineFacade implements EngineFacadeLocal {
     @PersistenceContext(unitName="Crypto-keyproviderPU")
     private EntityManager em;
 
-    public void create(Engine engine) {
-        em.persist(engine);
-    }
-
-    public void edit(Engine engine) {
-        em.merge(engine);
-    }
-
-    public void remove(Engine engine) {
-        em.remove(em.merge(engine));
-    }
-
     public Engine find(Object id) {
         return em.find(entities.crypto.Engine.class, id);
     }

@@ -13,26 +13,7 @@
     <role-name>nurse</role-name>
     <group-name>nurse</group-name>
   </security-role-mapping>
-  <security-role-mapping>
-    <role-name>admin</role-name>
-    <group-name>admin</group-name>
-  </security-role-mapping>
   <enterprise-beans>
-    <ejb>
-      <ejb-name>AdminBean</ejb-name>
-      <jndi-name>ejb/AdminBean</jndi-name>
-      <!--<ior-security-config>
-                <transport-config>
-                    <integrity>required</integrity>
-                    <confidentiality>required</confidentiality>
-                    <establish-trust-in-target>none</establish-trust-in-target>
-                    <establish-trust-in-client>none</establish-trust-in-client>
-                </transport-config>
-                <sas-context>
-                    <caller-propagation>none</caller-propagation>
-                </sas-context>
-            </ior-security-config>-->
-    </ejb>
     <ejb>
       <ejb-name>DoctorBean</ejb-name>
       <jndi-name>ejb/DoctorBean</jndi-name>

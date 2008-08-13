@@ -16,12 +16,6 @@ import javax.ejb.Local;
 @Local
 public interface SeckeyFacadeLocal {
 
-    void create(Seckey seckey);
-
-    void edit(Seckey seckey);
-
-    void remove(Seckey seckey);
-
     Seckey find(Object id);
 
     List<Seckey> findAll();

@@ -16,12 +16,6 @@ import javax.ejb.Local;
 @Local
 public interface EngineFacadeLocal {
 
-    void create(Engine engine);
-
-    void edit(Engine engine);
-
-    void remove(Engine engine);
-
     Engine find(Object id);
 
     List<Engine> findAll();
