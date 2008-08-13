@@ -29,7 +29,7 @@ public class ChangeDoctorsVisitGUI extends JFrame {
             doctorsjComboBox.addItem(doctorDTO);
         }
         this.doctorToChangeDTO = doctorToChangeDTO;
-        doctorjLabel.setText("Aktualny lekarz: " + doctorToChangeDTO.toString());
+        jLabel1.setText("Aktualny lekarz: " + doctorToChangeDTO.toString());
     }
 
     /** This method is called from within the constructor to
@@ -42,18 +42,19 @@ public class ChangeDoctorsVisitGUI extends JFrame {
     private void initComponents() {
 
         jPanel1 = new javax.swing.JPanel();
-        doctorjLabel = new javax.swing.JLabel();
+        jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         doctorsjComboBox = new javax.swing.JComboBox();
         OKjButton = new javax.swing.JButton();
         canceljButton = new javax.swing.JButton();
+        doctorjLabel = new javax.swing.JLabel();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         setTitle("Zmień lekarza dla wizyt");
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Wybierz lekarza:"));
 
-        doctorjLabel.setText("Aktualny lekarz:");
+        jLabel1.setText("Aktualny lekarz:");
 
         jLabel2.setText("Wybierz lekarza:");
 
@@ -78,22 +79,27 @@ public class ChangeDoctorsVisitGUI extends JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jLabel2)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(doctorsjComboBox, 0, 179, Short.MAX_VALUE))
-                    .addComponent(doctorjLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 263, Short.MAX_VALUE)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                         .addComponent(canceljButton, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(OKjButton, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(OKjButton, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(doctorjLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 177, Short.MAX_VALUE)
+                            .addComponent(doctorsjComboBox, 0, 177, Short.MAX_VALUE))))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(doctorjLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(doctorjLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -143,6 +149,8 @@ private void OKjButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIR
             }
             this.setVisible(false);
             parent.setEnabled(true);
+            parent.toFront();
+            this.dispose();
         }
     } catch (Exception ex) {
         JOptionPane.showMessageDialog(this,
@@ -156,12 +164,15 @@ private void OKjButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIR
 private void canceljButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_canceljButtonActionPerformed
     this.setVisible(false);
     parent.setEnabled(true);
+    parent.toFront();
+    this.dispose();
 }//GEN-LAST:event_canceljButtonActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton OKjButton;
     private javax.swing.JButton canceljButton;
     private javax.swing.JLabel doctorjLabel;
     private javax.swing.JComboBox doctorsjComboBox;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel jPanel1;
     // End of variables declaration//GEN-END:variables

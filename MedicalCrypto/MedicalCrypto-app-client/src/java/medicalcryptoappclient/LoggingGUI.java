@@ -128,20 +128,20 @@ public class LoggingGUI extends javax.swing.JFrame {
             LoggingRemote loggingBean = (LoggingRemote) ic.lookup("ejb/LoggingBean");
             PersonsDTO loggedUser = loggingBean.getLoggedUser();
             String role = loggedUser.getRole();
-            if ("admin".equals(role)) {
-                System.out.println("Admin");
-            } else if ("doctor".equals(role)) {
+            if ("doctor".equals(role)) {
                 System.out.println("Doctor");
                 DoctorRemote doctorBean = (DoctorRemote) ic.lookup("ejb/DoctorBean");
                 SearchRemote searchBean = (SearchRemote) ic.lookup("ejb/SearchBean");
                 this.setVisible(false);
                 GUIDoctor mainWindow = new GUIDoctor(loggedUser, doctorBean, searchBean);
+                mainWindow.setLocationRelativeTo(this);
                 mainWindow.setVisible(true);
             } else if ("patient".equals(role)) {
                 System.out.println("Patient");
                 PatientRemote patientBean = (PatientRemote) ic.lookup("ejb/PatientBean");
                 this.setVisible(false);
                 GUIPatient mainWindow = new GUIPatient(loggedUser, patientBean);
+                mainWindow.setLocationRelativeTo(this);
                 mainWindow.setVisible(true);
             } else if ("nurse".equals(role)) {
                 System.out.println("Nurse");
@@ -149,6 +149,7 @@ public class LoggingGUI extends javax.swing.JFrame {
                 SearchRemote searchBean = (SearchRemote) ic.lookup("ejb/SearchBean");
                 this.setVisible(false);
                 GUINurse mainWindow = new GUINurse(loggedUser, nurseBean, searchBean);
+                mainWindow.setLocationRelativeTo(this);
                 mainWindow.setVisible(true);
             } else {
                 throw new Exception();

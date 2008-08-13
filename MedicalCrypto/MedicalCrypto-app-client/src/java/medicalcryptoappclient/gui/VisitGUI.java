@@ -58,7 +58,7 @@ public class VisitGUI extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         infojTextArea = new javax.swing.JTextArea();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         setTitle("Wizyta");
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Wizyta:"));
@@ -151,6 +151,8 @@ public class VisitGUI extends javax.swing.JFrame {
 private void canceljButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_canceljButtonActionPerformed
     this.setVisible(false);
     parent.setEnabled(true);
+    parent.toFront();
+    this.dispose();
 }//GEN-LAST:event_canceljButtonActionPerformed
 
 private void OKjButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_OKjButtonActionPerformed
@@ -173,8 +175,9 @@ private void OKjButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIR
                 GUIDoctor parentGUI = (GUIDoctor) parent;
                 this.setVisible(false);
                 parent.setEnabled(true);
+                parent.toFront();
                 parentGUI.callVisitDoctorItemActionPerformed(evt);
-                return;
+                this.dispose();
             }
         } else {
             JOptionPane.showMessageDialog(this,

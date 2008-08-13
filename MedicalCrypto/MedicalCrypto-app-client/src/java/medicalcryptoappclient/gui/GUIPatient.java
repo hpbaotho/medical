@@ -18,6 +18,8 @@ import javax.swing.JOptionPane;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
+import medicalcryptoappclient.LoggingGUI;
+import medicalcryptoappclient.PasswordDigest;
 import medicalcryptoappclient.gui.validators.CityValidator;
 import medicalcryptoappclient.gui.validators.NameValidator;
 import medicalcryptoappclient.gui.validators.NumberValidator;
@@ -77,7 +79,7 @@ public class GUIPatient extends javax.swing.JFrame {
     private void loadUserData(PersonsDTO user) {
 
         peseljTextField.setText(user.getFlippedPesel());
-        passjTextField.setText(user.getPass());
+        jPasswordField.setText(user.getPass());
         namejTextField.setText(user.getName());
         surnamejTextField.setText(user.getSurname());
         streetjTextField.setText(user.getStreet());
@@ -130,7 +132,6 @@ public class GUIPatient extends javax.swing.JFrame {
         jLabel15 = new javax.swing.JLabel();
         jLabel16 = new javax.swing.JLabel();
         peseljTextField = new javax.swing.JTextField();
-        passjTextField = new javax.swing.JTextField();
         namejTextField = new javax.swing.JTextField();
         surnamejTextField = new javax.swing.JTextField();
         streetjTextField = new javax.swing.JTextField();
@@ -150,14 +151,16 @@ public class GUIPatient extends javax.swing.JFrame {
         phoneErrorjLabel = new javax.swing.JLabel();
         OKEditDatajButton = new javax.swing.JButton();
         CancelEditDatajButton = new javax.swing.JButton();
+        jPasswordField = new javax.swing.JPasswordField();
         mainPanel = new javax.swing.JPanel();
-        imageLabel = new javax.swing.JLabel();
         loggedUserLabel = new javax.swing.JLabel();
         textLabel = new javax.swing.JLabel();
+        jLabel17 = new javax.swing.JLabel();
         mainjMenuBar = new javax.swing.JMenuBar();
         fileMenu = new javax.swing.JMenu();
         mainPanelItem = new javax.swing.JMenuItem();
         editDataItem = new javax.swing.JMenuItem();
+        logoutItem = new javax.swing.JMenuItem();
         endItem = new javax.swing.JMenuItem();
         visitMenu = new javax.swing.JMenu();
         visitItem = new javax.swing.JMenuItem();
@@ -374,8 +377,6 @@ public class GUIPatient extends javax.swing.JFrame {
         peseljTextField.setEditable(false);
         peseljTextField.setInputVerifier(new PeselValidator(nameErrorjLabel));
 
-        passjTextField.setInputVerifier(new PassValidator(passErrorjLabel));
-
         namejTextField.setInputVerifier(new NameValidator(nameErrorjLabel));
 
         surnamejTextField.setInputVerifier(new SurnameValidator(surnameErrorjLabel));
@@ -444,6 +445,13 @@ public class GUIPatient extends javax.swing.JFrame {
             }
         });
 
+        jPasswordField.setInputVerifier(new PassValidator(passErrorjLabel));
+        jPasswordField.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                jPasswordFieldFocusGained(evt);
+            }
+        });
+
         javax.swing.GroupLayout editPersonPanelLayout = new javax.swing.GroupLayout(editPersonPanel);
         editPersonPanel.setLayout(editPersonPanelLayout);
         editPersonPanelLayout.setHorizontalGroup(
@@ -462,21 +470,21 @@ public class GUIPatient extends javax.swing.JFrame {
                     .addComponent(jLabel8, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jLabel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(editPersonPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addGroup(editPersonPanelLayout.createSequentialGroup()
+                .addGroup(editPersonPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jPasswordField)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, editPersonPanelLayout.createSequentialGroup()
                         .addComponent(CancelEditDatajButton, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(OKEditDatajButton, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(surnamejTextField, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 182, Short.MAX_VALUE)
-                    .addComponent(namejTextField, javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(passjTextField, javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(peseljTextField, javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(streetjTextField, javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(numberjTextField, javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(zipjTextField, javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(cityjTextField, javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(phonejTextField, javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(rolejComboBox, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(surnamejTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 182, Short.MAX_VALUE)
+                    .addComponent(namejTextField)
+                    .addComponent(peseljTextField)
+                    .addComponent(streetjTextField)
+                    .addComponent(numberjTextField)
+                    .addComponent(zipjTextField)
+                    .addComponent(cityjTextField)
+                    .addComponent(phonejTextField)
+                    .addComponent(rolejComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(editPersonPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(passErrorjLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 140, Short.MAX_VALUE)
@@ -500,8 +508,8 @@ public class GUIPatient extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(editPersonPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(passjTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(passErrorjLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(passErrorjLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jPasswordField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(editPersonPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -540,7 +548,7 @@ public class GUIPatient extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(editPersonPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel16, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(rolejComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(rolejComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(editPersonPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(OKEditDatajButton, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -549,8 +557,6 @@ public class GUIPatient extends javax.swing.JFrame {
         );
 
         mainPanel.setBackground(new java.awt.Color(45, 0, 111));
-
-        imageLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/medicalcryptoappclient/gui/nfz.jpg"))); // NOI18N
 
         loggedUserLabel.setFont(new java.awt.Font("Tahoma", 1, 11));
         loggedUserLabel.setForeground(new java.awt.Color(255, 255, 255));
@@ -562,6 +568,8 @@ public class GUIPatient extends javax.swing.JFrame {
         textLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         textLabel.setText("Witamy w przychodni lekarskiej");
 
+        jLabel17.setIcon(new javax.swing.ImageIcon(getClass().getResource("/medicalcryptoappclient/gui/nfz.jpg"))); // NOI18N
+
         javax.swing.GroupLayout mainPanelLayout = new javax.swing.GroupLayout(mainPanel);
         mainPanel.setLayout(mainPanelLayout);
         mainPanelLayout.setHorizontalGroup(
@@ -570,8 +578,8 @@ public class GUIPatient extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(loggedUserLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 400, Short.MAX_VALUE)
-                    .addComponent(imageLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(textLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 400, Short.MAX_VALUE))
+                    .addComponent(jLabel17, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(textLabel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 400, Short.MAX_VALUE))
                 .addContainerGap())
         );
         mainPanelLayout.setVerticalGroup(
@@ -580,7 +588,7 @@ public class GUIPatient extends javax.swing.JFrame {
                 .addGap(6, 6, 6)
                 .addComponent(loggedUserLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(imageLabel)
+                .addComponent(jLabel17)
                 .addGap(18, 18, 18)
                 .addComponent(textLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 53, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(54, Short.MAX_VALUE))
@@ -605,6 +613,15 @@ public class GUIPatient extends javax.swing.JFrame {
             }
         });
         fileMenu.add(editDataItem);
+
+        logoutItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_W, java.awt.event.InputEvent.CTRL_MASK));
+        logoutItem.setText("Wyloguj");
+        logoutItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                logoutItemActionPerformed(evt);
+            }
+        });
+        fileMenu.add(logoutItem);
 
         endItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_K, java.awt.event.InputEvent.CTRL_MASK));
         endItem.setText("Koniec");
@@ -690,6 +707,8 @@ public class GUIPatient extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
 private void visitItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_visitItemActionPerformed
+    diagnosejTextField.setText("");
+    infojTextArea.setText("");
     try {
         if (doctorsList == null) {
             doctorsList = patientBean.findDoctors();
@@ -798,7 +817,7 @@ private void doctorsjComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//
             if (!visitList.isEmpty()) {
                 DefaultMutableTreeNode parent = new DefaultMutableTreeNode(selectedDoctorDTO);
                 root.add(addVisits(parent, visitList));
-                DefaultTreeModel model= (DefaultTreeModel) visitJTree1.getModel();
+                DefaultTreeModel model = (DefaultTreeModel) visitJTree1.getModel();
                 model.setRoot(root);
                 mainPanel.setVisible(false);
                 treatmentPanel.setVisible(false);
@@ -832,7 +851,7 @@ private void treatmentjComboBoxActionPerformed(java.awt.event.ActionEvent evt) {
             if (!treatmentList.isEmpty()) {
                 DefaultMutableTreeNode parent = new DefaultMutableTreeNode(selectedVisitDTO);
                 root.add(addTreatment(parent, treatmentList));
-                DefaultTreeModel model= (DefaultTreeModel) treatmentJTree.getModel();
+                DefaultTreeModel model = (DefaultTreeModel) treatmentJTree.getModel();
                 model.setRoot(root);
                 mainPanel.setVisible(false);
                 treatmentPanel.setVisible(true);
@@ -858,7 +877,7 @@ private void treatmentjComboBoxActionPerformed(java.awt.event.ActionEvent evt) {
 
 private void visitJTree1ValueChanged(javax.swing.event.TreeSelectionEvent evt) {//GEN-FIRST:event_visitJTree1ValueChanged
     TreePath selectedPath = evt.getPath();
-    DefaultMutableTreeNode selectedNode= (DefaultMutableTreeNode) selectedPath.getLastPathComponent();
+    DefaultMutableTreeNode selectedNode = (DefaultMutableTreeNode) selectedPath.getLastPathComponent();
     String diagnose = "";
     String info = "";
     if (selectedNode.getUserObject() instanceof VisitDTO) {
@@ -875,7 +894,10 @@ private void OKEditDatajButtonActionPerformed(java.awt.event.ActionEvent evt) {/
     visitPanel.setVisible(false);
     treatmentPanel.setVisible(false);
     editPersonPanel.setVisible(true);
-    loggedUser.setPass(passjTextField.getText());
+    if (changePassword) {
+        String digestPass = new String(jPasswordField.getPassword());
+        loggedUser.setPass(PasswordDigest.digest(digestPass));
+    }
     loggedUser.setName(namejTextField.getText());
     loggedUser.setSurname(surnamejTextField.getText());
     loggedUser.setStreet(streetjTextField.getText());
@@ -886,10 +908,19 @@ private void OKEditDatajButtonActionPerformed(java.awt.event.ActionEvent evt) {/
     try {
         boolean editPatient = patientBean.editPatient(loggedUser);
         if (editPatient) {
+            if (changePassword) {
+                JOptionPane.showMessageDialog(this,
+                    "Pomyślnie zmieniono dane użytkownika.\nPonieważ zmieniono hasło nastąpi wylogowanie.",
+                    "Zmiana danych",
+                    JOptionPane.INFORMATION_MESSAGE);
+                logoutItemActionPerformed(evt);
+                return;
+            }
             JOptionPane.showMessageDialog(this,
                     "Pomyślnie zmieniono dane użytkownika.",
                     "Zmiana danych",
                     JOptionPane.INFORMATION_MESSAGE);
+            return;
         }
     } catch (Exception ex) {
         ex.printStackTrace();
@@ -897,6 +928,7 @@ private void OKEditDatajButtonActionPerformed(java.awt.event.ActionEvent evt) {/
                 "Wystąpił błąd przy edycji danych\nSkontaktuj się z przychodnią lekarską",
                 "Błąd",
                 JOptionPane.ERROR_MESSAGE);
+        mainPanelItemActionPerformed(evt);
     }
 
 
@@ -932,6 +964,22 @@ private void mainPanelItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN
     treatmentPanel.setVisible(false);
     editPersonPanel.setVisible(false);
 }//GEN-LAST:event_mainPanelItemActionPerformed
+
+private void jPasswordFieldFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jPasswordFieldFocusGained
+    jPasswordField.setText("");
+    changePassword = true;
+}//GEN-LAST:event_jPasswordFieldFocusGained
+
+private void logoutItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logoutItemActionPerformed
+ProgrammaticLogin pm= new ProgrammaticLogin();
+pm.logout();
+LoggingGUI logonGUI= new LoggingGUI();
+this.setVisible(false);
+logonGUI.setLocationRelativeTo(this);
+logonGUI.setVisible(true);
+this.dispose();
+}//GEN-LAST:event_logoutItemActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton CancelEditDatajButton;
     private javax.swing.JButton OKEditDatajButton;
@@ -944,7 +992,6 @@ private void mainPanelItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN
     private javax.swing.JPanel editPersonPanel;
     private javax.swing.JMenuItem endItem;
     private javax.swing.JMenu fileMenu;
-    private javax.swing.JLabel imageLabel;
     private javax.swing.JTextArea infojTextArea;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
@@ -954,6 +1001,7 @@ private void mainPanelItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN
     private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel15;
     private javax.swing.JLabel jLabel16;
+    private javax.swing.JLabel jLabel17;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -964,9 +1012,11 @@ private void mainPanelItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN
     private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
+    private javax.swing.JPasswordField jPasswordField;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JLabel loggedUserLabel;
+    private javax.swing.JMenuItem logoutItem;
     private javax.swing.JPanel mainPanel;
     private javax.swing.JMenuItem mainPanelItem;
     private javax.swing.JMenuBar mainjMenuBar;
@@ -976,7 +1026,6 @@ private void mainPanelItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN
     private javax.swing.JLabel numberErrorjLabel;
     private javax.swing.JTextField numberjTextField;
     private javax.swing.JLabel passErrorjLabel;
-    private javax.swing.JTextField passjTextField;
     private javax.swing.JLabel peselErrorjLabel;
     private javax.swing.JTextField peseljTextField;
     private javax.swing.JLabel phoneErrorjLabel;
@@ -1004,4 +1053,5 @@ private void mainPanelItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN
     PatientRemote patientBean = null;
     PersonsDTO loggedUser = null;
     List<DoctorDTO> doctorsList = null;
+    boolean changePassword = false;
 }
