@@ -13,9 +13,5 @@
     <role-name>nurse</role-name>
     <group-name>nurse</group-name>
   </security-role-mapping>
-  <security-role-mapping>
-    <role-name>admin</role-name>
-    <group-name>admin</group-name>
-  </security-role-mapping>
   <realm>dbRealm</realm>
 </sun-application>
