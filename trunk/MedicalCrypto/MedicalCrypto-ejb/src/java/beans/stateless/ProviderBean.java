@@ -22,6 +22,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+import javax.annotation.security.RolesAllowed;
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
@@ -30,12 +31,15 @@ import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
 
 /**
  *
  * @author Piotrek
  */
 @Stateless
+@RolesAllowed(value = {"doctor", "patient", "nurse"})
 public class ProviderBean implements ProviderLocal {
 
     @EJB
@@ -45,6 +49,7 @@ public class ProviderBean implements ProviderLocal {
     @EJB
     private SeckeyFacadeLocal seckeyFacade;
 
+    @TransactionAttribute(TransactionAttributeType.MANDATORY)
     public CipherTask encrypt(CipherTask encryptRequest, String family)
             throws NoSuchAlgorithmException,
             NoSuchPaddingException,
@@ -77,6 +82,7 @@ public class ProviderBean implements ProviderLocal {
         throw new SecKeyNotFoundException();
     }
 
+    @TransactionAttribute(TransactionAttributeType.MANDATORY)
     public CipherTask decrypt(CipherTask decryptionRequest)
             throws NoSuchAlgorithmException,
             NoSuchPaddingException,

@@ -17,7 +17,7 @@ import javax.ejb.Stateful;
  * @author Piotrek
  */
 @Stateful(name="LoggingBean",mappedName="ejb/LoggingBean")
-@RolesAllowed(value={"admin","doctor","patient","nurse"})
+@RolesAllowed(value={"doctor","patient","nurse"})
 public class LoggingBean implements LoggingRemote {
     @EJB
     private PersonsLocal personsBean;

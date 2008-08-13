@@ -23,9 +23,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import javax.annotation.Resource;
+import javax.annotation.security.RolesAllowed;
 import javax.ejb.EJB;
 import javax.ejb.SessionContext;
 import javax.ejb.Stateless;
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
 import javax.persistence.PersistenceException;
 
 /**
@@ -44,6 +47,7 @@ public class PersonsBean implements PersonsLocal {
     @Resource
     private SessionContext ctx;
 
+    @RolesAllowed(value = {"nurse"})
     public boolean createPerson(PersonsDTO personToAddDTO) throws PersonsPeselException, CryptographyException, DatabaseException {
         if (personToAddDTO.getPass() != null && personToAddDTO.getName() != null &&
                 personToAddDTO.getSurname() != null && personToAddDTO.getStreet() != null && personToAddDTO.getNumber() != null &&
@@ -92,6 +96,8 @@ public class PersonsBean implements PersonsLocal {
         return false;
     }
 
+    @RolesAllowed(value = {"doctor", "nurse", "patient"})
+    @TransactionAttribute(TransactionAttributeType.MANDATORY)
     public boolean editPerson(PersonsDTO personToEditDTO) throws PersonsPeselException, CryptographyException {
         if (personToEditDTO.getIdPersons() != null && personToEditDTO.getPass() != null && personToEditDTO.getName() != null &&
                 personToEditDTO.getSurname() != null && personToEditDTO.getStreet() != null && personToEditDTO.getNumber() != null &&
@@ -142,7 +148,9 @@ public class PersonsBean implements PersonsLocal {
         }
         return false;
     }
-    // metoda do dokonczenia- kogo mozna usuwac?
+
+    @RolesAllowed(value = {"nurse"})
+    @TransactionAttribute(TransactionAttributeType.MANDATORY)
     public boolean removePatient(BigInteger idPatientToRemove) {
         if (idPatientToRemove != null) {
             Persons patientEntity = personsFacade.find(idPatientToRemove);
@@ -154,6 +162,8 @@ public class PersonsBean implements PersonsLocal {
         return false;
     }
 
+    @RolesAllowed(value = {"nurse"})
+    @TransactionAttribute(TransactionAttributeType.MANDATORY)
     public boolean removeDoctor(BigInteger idDoctorToRemove) throws DoctorRemoveException {
         if (idDoctorToRemove != null) {
             Persons doctorEntity = personsFacade.find(idDoctorToRemove);
@@ -168,6 +178,7 @@ public class PersonsBean implements PersonsLocal {
         return false;
     }
 
+    @RolesAllowed(value = {"doctor","nurse"})
     public List<PersonsDTO> findPersonByInitials(String name, String surname) throws CryptographyException {
         List<PersonsDTO> result = new ArrayList<PersonsDTO>();
         if (name != null && surname != null) {
@@ -194,32 +205,7 @@ public class PersonsBean implements PersonsLocal {
         return result;
     }
 
-    public List<PersonsDTO> findPersonByZip(int zip) throws CryptographyException {
-        List<PersonsDTO> result = new ArrayList<PersonsDTO>();
-        if (zip > 0) {
-            List<Persons> personsEntityList = personsFacade.findByZip(zip);
-            for (int i = 0; i < personsEntityList.size(); i++) {
-                Persons personEntity = personsEntityList.get(i);
-                personsFacade.refresh(personEntity);
-                HashMap<String, String> decryptionRequestData = createCipherTaskData(personEntity.getName(), personEntity.getSurname(), personEntity.getStreet(), personEntity.getPhone());
-                CipherTask decryptionRequest = new CipherTask(decryptionRequestData, personEntity.getIv(), personEntity.getKeyManifestId().getIdKeyManifest());
-                try {
-                    decryptionRequest = providerBean.decrypt(decryptionRequest);
-                    PersonsDTO personDTO = new PersonsDTO(personEntity);
-                    personDTO.setName(decryptionRequest.getData().get(Dict.NAMECOLUMN));
-                    personDTO.setSurname(decryptionRequest.getData().get(Dict.SURNAMECOLUMN));
-                    personDTO.setStreet(decryptionRequest.getData().get(Dict.STREETCOLUMN));
-                    personDTO.setPhone(decryptionRequest.getData().get(Dict.PHONECOLUMN));
-                    result.add(personDTO);
-                } catch (GeneralSecurityException ex) {
-                    ex.printStackTrace();
-                    throw new CryptographyException(ex.getCause());
-                }
-            }
-        }
-        return result;
-    }
-
+    @RolesAllowed(value = {"doctor","nurse"})
     public PersonsDTO findPersonByPesel(String pesel) throws CryptographyException {
         PersonsDTO result = null;
         if (pesel != null) {
@@ -244,6 +230,7 @@ public class PersonsBean implements PersonsLocal {
         return result;
     }
 
+    @RolesAllowed(value = {"doctor","nurse","patient"})
     public PersonsDTO findPersonById(BigInteger idPerson) throws CryptographyException {
         PersonsDTO result = null;
         if (idPerson != null) {
@@ -268,6 +255,7 @@ public class PersonsBean implements PersonsLocal {
         return result;
     }
 
+    @RolesAllowed(value = {"doctor","nurse","patient"})
     public List<DoctorDTO> findDoctors() throws CryptographyException {
         List<DoctorDTO> result = new ArrayList<DoctorDTO>();
         List<Persons> doctorsEntityList = personsFacade.findByRole("doctor");
@@ -293,6 +281,7 @@ public class PersonsBean implements PersonsLocal {
         return result;
     }
 
+    @RolesAllowed(value = {"doctor","nurse","patient"})
     public BigInteger getLoggedUserId() {
         Principal loggedUser;
         loggedUser = ctx.getCallerPrincipal();

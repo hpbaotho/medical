@@ -32,8 +32,6 @@ public interface PersonsLocal {
     
     List<PersonsDTO> findPersonByInitials(String name, String surname) throws CryptographyException;
     
-    List<PersonsDTO> findPersonByZip(int zip) throws CryptographyException;
-    
     PersonsDTO findPersonById(BigInteger idPerson) throws CryptographyException;
     
     PersonsDTO findPersonByPesel(String pesel) throws CryptographyException;

@@ -20,8 +20,11 @@ import java.security.GeneralSecurityException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import javax.annotation.security.RolesAllowed;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
 import javax.persistence.PersistenceException;
 
 /**
@@ -32,8 +35,6 @@ import javax.persistence.PersistenceException;
 public class VisitBean implements VisitLocal {
 
     @EJB
-    private PersonsLocal personsBean;
-    @EJB
     private ProviderLocal providerBean;
     @EJB
     private VisitFacadeLocal visitFacade;
@@ -42,6 +43,7 @@ public class VisitBean implements VisitLocal {
     @EJB
     private PersonsFacadeLocal personsFacade;
 
+    @RolesAllowed(value = {"doctor"})
     public boolean createVisit(VisitDTO visitToAddDTO, BigInteger idPatient, BigInteger idDoctor) throws CryptographyException, DatabaseException {
         if (visitToAddDTO.getDiagnose() != null && visitToAddDTO.getInfo() != null && visitToAddDTO.getDate() != null &&
                 idPatient != null && idDoctor != null) {
@@ -83,6 +85,8 @@ public class VisitBean implements VisitLocal {
         return false;
     }
 
+    @RolesAllowed(value = {"doctor"})
+    @TransactionAttribute(TransactionAttributeType.MANDATORY)
     public boolean editVisit(VisitDTO visitToEditDTO) throws CryptographyException {
         if (visitToEditDTO.getIdVisit() != null && visitToEditDTO.getDiagnose() != null &&
                 visitToEditDTO.getInfo() != null && visitToEditDTO.getDate() != null) {
@@ -115,21 +119,8 @@ public class VisitBean implements VisitLocal {
         return false;
     }
 
-    public boolean editVisitPatient(VisitDTO visitToEditDTO, BigInteger idPatient) {
-        if (visitToEditDTO.getIdVisit() != null && idPatient != null) {
-            Persons parientEntity = personsFacade.find(idPatient);
-            if (parientEntity != null) {
-                Visit visitToEditEntity = visitFacade.find(visitToEditDTO.getIdVisit());
-                if (visitToEditEntity != null) {
-                    visitToEditEntity.setPatientId(parientEntity);
-                    visitFacade.edit(visitToEditEntity);
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
-
+    @RolesAllowed(value = {"nurse"})
+    @TransactionAttribute(TransactionAttributeType.MANDATORY)
     public boolean editVisitDoctor(VisitDTO visitToEditDTO, BigInteger idDoctor) {
         if (visitToEditDTO.getIdVisit() != null && idDoctor != null) {
             Persons doctorEntity = personsFacade.find(idDoctor);
@@ -145,6 +136,8 @@ public class VisitBean implements VisitLocal {
         return false;
     }
 
+    @RolesAllowed(value = {"doctor"})
+    @TransactionAttribute(TransactionAttributeType.MANDATORY)
     public boolean removeVisit(BigInteger idVisit) {
         if (idVisit != null) {
             Visit visitToRemoveEntity = visitFacade.find(idVisit);
@@ -156,6 +149,7 @@ public class VisitBean implements VisitLocal {
         return false;
     }
 
+    @RolesAllowed(value = {"doctor", "nurse", "patient"})
     public List<VisitDTO> findVisitByPatient(BigInteger idPatient) throws CryptographyException {
         List<VisitDTO> result = new ArrayList<VisitDTO>();
         if (idPatient != null) {
@@ -190,6 +184,7 @@ public class VisitBean implements VisitLocal {
         return result;
     }
 
+    @RolesAllowed(value = {"nurse"})
     public List<VisitDTO> findVisitByDoctor(BigInteger idDoctor) throws CryptographyException {
         List<VisitDTO> result = new ArrayList<VisitDTO>();
         if (idDoctor != null) {
@@ -218,6 +213,7 @@ public class VisitBean implements VisitLocal {
         return result;
     }
 
+    @RolesAllowed(value = {"doctor", "nurse", "patient"})
     public List<VisitDTO> findVisitByDoctorPatient(BigInteger idDoctor, BigInteger idPatient) throws CryptographyException {
         List<VisitDTO> result = new ArrayList<VisitDTO>();
         if (idDoctor != null && idPatient != null) {

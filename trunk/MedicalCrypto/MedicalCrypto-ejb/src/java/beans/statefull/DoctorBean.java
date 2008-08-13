@@ -71,10 +71,6 @@ public class DoctorBean implements DoctorRemote {
         return visitBean.findVisitByDoctorPatient(idDoctor, idPatient);
     }
 
-    public List<VisitDTO> findVisitByDoctor() throws CryptographyException {
-        return visitBean.findVisitByDoctor(personsBean.getLoggedUserId());
-    }
-
     public List<VisitDTO> findVisitByPatient(BigInteger idPatient) throws CryptographyException {
         return visitBean.findVisitByPatient(idPatient);
     }
@@ -93,9 +89,5 @@ public class DoctorBean implements DoctorRemote {
 
     public List<TreatmentDTO> findTreatmentByVisit(BigInteger idVisit) throws CryptographyException {
         return treatmentBean.findTreatmentByVisit(idVisit);
-    }
-
-    public List<TreatmentDTO> findTreatmentByPatient(BigInteger idPatient) throws CryptographyException {
-        return treatmentBean.findTreatmentByPatient(idPatient);
     }
 }

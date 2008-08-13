@@ -2,7 +2,6 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package beans.stateless;
 
 import entities.medical.dto.TreatmentDTO;
@@ -20,13 +19,10 @@ import javax.ejb.Local;
 public interface TreatmentLocal {
 
     boolean createTreatment(TreatmentDTO treatmentToAddDTO, BigInteger idVisit) throws CryptographyException, DatabaseException;
-    
+
     boolean editTreatment(TreatmentDTO treatmentToEditDTO) throws CryptographyException;
-    
+
     boolean removeTreatment(BigInteger idTreatment);
-        
+
     List<TreatmentDTO> findTreatmentByVisit(BigInteger idVisit) throws CryptographyException;
-    
-    List<TreatmentDTO> findTreatmentByPatient(BigInteger idPatient) throws CryptographyException;
-    
 }

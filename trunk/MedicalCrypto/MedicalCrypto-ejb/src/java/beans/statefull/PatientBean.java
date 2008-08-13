@@ -66,10 +66,4 @@ public class PatientBean implements PatientRemote {
     public List<TreatmentDTO> findTreatmentByVisit(BigInteger idVisit) throws CryptographyException {
         return treatmentBean.findTreatmentByVisit(idVisit);
     }
-    
-    public List<TreatmentDTO> findTreatmentByPatient() throws CryptographyException {
-        return treatmentBean.findTreatmentByPatient(personsBean.getLoggedUserId());
-    }
-    
-    
 }
