@@ -57,7 +57,7 @@ public class SearchGUI extends javax.swing.JFrame {
         OKButton = new javax.swing.JButton();
         cancelButton = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         setTitle("Wyszukiwanie");
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Szukaj:"));
@@ -219,6 +219,8 @@ private void searchInitialsButtonActionPerformed(java.awt.event.ActionEvent evt)
 private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelButtonActionPerformed
     this.setVisible(false);
     parent.setEnabled(true);
+    parent.toFront();
+    this.dispose();
 }//GEN-LAST:event_cancelButtonActionPerformed
 
 private void OKButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_OKButtonActionPerformed
@@ -256,6 +258,8 @@ private void OKButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
 
         this.setVisible(false);
         parent.setEnabled(true);
+        parent.toFront();
+        this.dispose();
     } else {
         JOptionPane.showMessageDialog(this,
                 "Zaznacz dokładnie jedna osobę z listy",
