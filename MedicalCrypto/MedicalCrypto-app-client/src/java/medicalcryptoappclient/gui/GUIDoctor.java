@@ -1143,10 +1143,10 @@ private void treatmentjComboBoxActionPerformed(java.awt.event.ActionEvent evt) {
                 DefaultTreeModel model = (DefaultTreeModel) treatmentPatientJTree.getModel();
                 model.setRoot(root);
                 mainPanel.setVisible(false);
-                treatmentPatientPanel.setVisible(false);
+                treatmentPatientPanel.setVisible(true);
                 treatmentDoctorPanel.setVisible(false);
                 visitDoctorPanel.setVisible(false);
-                visitPatientPanel.setVisible(true);
+                visitPatientPanel.setVisible(false);
             }
         } else {
             treatmentPatientItemActionPerformed(evt);
@@ -1203,9 +1203,9 @@ private void OKEditDatajButtonActionPerformed(java.awt.event.ActionEvent evt) {/
         if (editPatient) {
             if (changePassword) {
                 JOptionPane.showMessageDialog(this,
-                    "Pomyślnie zmieniono dane użytkownika.\nPonieważ zmieniono hasło nastąpi wylogowanie.",
-                    "Zmiana danych",
-                    JOptionPane.INFORMATION_MESSAGE);
+                        "Pomyślnie zmieniono dane użytkownika.\nPonieważ zmieniono hasło nastąpi wylogowanie.",
+                        "Zmiana danych",
+                        JOptionPane.INFORMATION_MESSAGE);
                 logoutItemActionPerformed(evt);
                 return;
             }
@@ -1267,19 +1267,20 @@ private void treatmentPatientItemActionPerformed(java.awt.event.ActionEvent evt)
         List<VisitDTO> visitList = doctorBean.findVisitByPatient(loggedUser.getIdPersons());
         Collections.sort(visitList);
         DefaultMutableTreeNode root = new DefaultMutableTreeNode(loggedUser);
-        boolean addItems = false;
-        if (treatmentjComboBox.getItemCount() == 1) {
-            addItems = true;
-        }
+        treatmentjComboBox.removeAllItems();
+        treatmentjComboBox.addItem("Wszystkie");
+//        boolean addItems = false;
+//        if (treatmentjComboBox.getItemCount() == 1) {
+//            addItems = true;
+//        }       
         for (int i = 0; i < visitList.size(); i++) {
             VisitDTO visitDTO = visitList.get(i);
-            if (addItems) {
-                treatmentjComboBox.addItem(visitDTO);
-            }
+                
             List<TreatmentDTO> treatmentList = doctorBean.findTreatmentByVisit(visitDTO.getIdVisit());
             if (treatmentList.isEmpty()) {
                 continue;
             }
+            treatmentjComboBox.addItem(visitDTO);
             DefaultMutableTreeNode parent = new DefaultMutableTreeNode(visitDTO);
             root.add(addTreatment(parent, treatmentList));
         }
