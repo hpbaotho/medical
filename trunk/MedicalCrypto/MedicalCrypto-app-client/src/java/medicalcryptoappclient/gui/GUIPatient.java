@@ -770,19 +770,20 @@ private void treatmentAllItemActionPerformed(java.awt.event.ActionEvent evt) {//
         List<VisitDTO> visitList = patientBean.findVisit();//GEN-LAST:event_treatmentAllItemActionPerformed
             Collections.sort(visitList);
             DefaultMutableTreeNode root = new DefaultMutableTreeNode(loggedUser);
-            boolean addItems = false;
-            if (treatmentjComboBox.getItemCount() == 1) {
-                addItems = true;
-            }
+            treatmentjComboBox.removeAllItems();
+            treatmentjComboBox.addItem("Wszystkie");
+//            boolean addItems = false;
+//            if (treatmentjComboBox.getItemCount() == 1) {
+//                addItems = true;
+//            }
             for (int i = 0; i < visitList.size(); i++) {
                 VisitDTO visitDTO = visitList.get(i);
-                if (addItems) {
-                    treatmentjComboBox.addItem(visitDTO);
-                }
+
                 List<TreatmentDTO> treatmentList = patientBean.findTreatmentByVisit(visitDTO.getIdVisit());
                 if (treatmentList.isEmpty()) {
                     continue;
                 }
+                treatmentjComboBox.addItem(visitDTO);
                 DefaultMutableTreeNode parent = new DefaultMutableTreeNode(visitDTO);
                 root.add(addTreatment(parent, treatmentList));
             }
@@ -910,9 +911,9 @@ private void OKEditDatajButtonActionPerformed(java.awt.event.ActionEvent evt) {/
         if (editPatient) {
             if (changePassword) {
                 JOptionPane.showMessageDialog(this,
-                    "Pomyślnie zmieniono dane użytkownika.\nPonieważ zmieniono hasło nastąpi wylogowanie.",
-                    "Zmiana danych",
-                    JOptionPane.INFORMATION_MESSAGE);
+                        "Pomyślnie zmieniono dane użytkownika.\nPonieważ zmieniono hasło nastąpi wylogowanie.",
+                        "Zmiana danych",
+                        JOptionPane.INFORMATION_MESSAGE);
                 logoutItemActionPerformed(evt);
                 return;
             }
@@ -971,15 +972,14 @@ private void jPasswordFieldFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIR
 }//GEN-LAST:event_jPasswordFieldFocusGained
 
 private void logoutItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logoutItemActionPerformed
-ProgrammaticLogin pm= new ProgrammaticLogin();
-pm.logout();
-LoggingGUI logonGUI= new LoggingGUI();
-this.setVisible(false);
-logonGUI.setLocationRelativeTo(this);
-logonGUI.setVisible(true);
-this.dispose();
+    ProgrammaticLogin pm = new ProgrammaticLogin();
+    pm.logout();
+    LoggingGUI logonGUI = new LoggingGUI();
+    this.setVisible(false);
+    logonGUI.setLocationRelativeTo(this);
+    logonGUI.setVisible(true);
+    this.dispose();
 }//GEN-LAST:event_logoutItemActionPerformed
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton CancelEditDatajButton;
     private javax.swing.JButton OKEditDatajButton;

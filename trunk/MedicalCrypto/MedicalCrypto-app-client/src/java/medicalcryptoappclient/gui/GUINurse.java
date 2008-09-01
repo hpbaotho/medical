@@ -975,8 +975,8 @@ private void treatmentjComboBoxActionPerformed(java.awt.event.ActionEvent evt) {
                 DefaultTreeModel model = (DefaultTreeModel) treatmentPatientJTree.getModel();
                 model.setRoot(root);
                 mainPanel.setVisible(false);
-                treatmentPatientPanel.setVisible(false);
-                visitPatientPanel.setVisible(true);
+                treatmentPatientPanel.setVisible(true);
+                visitPatientPanel.setVisible(false);
                 editPersonPanel.setVisible(false);
                 usersNursePanel.setVisible(false);
             }
@@ -1036,18 +1036,18 @@ private void OKEditDatajButtonActionPerformed(java.awt.event.ActionEvent evt) {/
             boolean editPatient = nurseBean.editPerson(loggedUser);
             if (editPatient) {
                 if (changePassword) {
+                    JOptionPane.showMessageDialog(this,
+                            "Pomyślnie zmieniono dane użytkownika.\nPonieważ zmieniono hasło nastąpi wylogowanie.",
+                            "Zmiana danych",
+                            JOptionPane.INFORMATION_MESSAGE);
+                    logoutItemActionPerformed(evt);
+                    return;
+                }
                 JOptionPane.showMessageDialog(this,
-                    "Pomyślnie zmieniono dane użytkownika.\nPonieważ zmieniono hasło nastąpi wylogowanie.",
-                    "Zmiana danych",
-                    JOptionPane.INFORMATION_MESSAGE);
-                logoutItemActionPerformed(evt);
+                        "Pomyślnie zmieniono dane użytkownika.",
+                        "Zmiana danych",
+                        JOptionPane.INFORMATION_MESSAGE);
                 return;
-            }
-            JOptionPane.showMessageDialog(this,
-                    "Pomyślnie zmieniono dane użytkownika.",
-                    "Zmiana danych",
-                    JOptionPane.INFORMATION_MESSAGE);
-            return;
             }
 
         } else if (personManage == 0) {
@@ -1178,19 +1178,19 @@ private void treatmentPatientItemActionPerformed(java.awt.event.ActionEvent evt)
         List<VisitDTO> visitList = nurseBean.findVisitByPatient(loggedUser.getIdPersons());
         Collections.sort(visitList);
         DefaultMutableTreeNode root = new DefaultMutableTreeNode(loggedUser);
-        boolean addItems = false;
-        if (treatmentjComboBox.getItemCount() == 1) {
-            addItems = true;
-        }
+        treatmentjComboBox.removeAllItems();
+        treatmentjComboBox.addItem("Wszystkie");
+//        boolean addItems = false;
+//        if (treatmentjComboBox.getItemCount() == 1) {
+//            addItems = true;
+//        }
         for (int i = 0; i < visitList.size(); i++) {
             VisitDTO visitDTO = visitList.get(i);
-            if (addItems) {
-                treatmentjComboBox.addItem(visitDTO);
-            }
             List<TreatmentDTO> treatmentList = nurseBean.findTreatmentByVisit(visitDTO.getIdVisit());
             if (treatmentList.isEmpty()) {
                 continue;
             }
+            treatmentjComboBox.addItem(visitDTO);
             DefaultMutableTreeNode parent = new DefaultMutableTreeNode(visitDTO);
             root.add(addTreatment(parent, treatmentList));
         }
